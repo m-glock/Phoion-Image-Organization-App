@@ -15,7 +15,7 @@
                 </OnPlatform>
             </NavigationPage.Icon>
             <x:Arguments>
-                <views:ItemsPage />
+                <views:ImageGrid />
             </x:Arguments>
         </NavigationPage>
         
