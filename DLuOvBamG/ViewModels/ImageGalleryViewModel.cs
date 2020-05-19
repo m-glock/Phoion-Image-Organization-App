@@ -3,16 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
-using System.Net;
-using System.Runtime.Serialization.Json;
-using System.Text;
 using System.Windows.Input;
-using Xamarin.Essentials;
 using Xamarin.Forms;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Runtime.Serialization;
+using DLuOvBamG.Views;
 
 namespace DLuOvBamG.ViewModels
 {
@@ -47,6 +41,7 @@ namespace DLuOvBamG.ViewModels
         public ImageGalleryViewModel(ContentPage page)
         {
             Items = new ObservableCollection<Picture>() { };
+            CurrentPage = page;
 
             string[] images = {
                 "https://farm9.staticflickr.com/8625/15806486058_7005d77438.jpg",
@@ -58,20 +53,16 @@ namespace DLuOvBamG.ViewModels
                 "https://farm9.staticflickr.com/8351/8299022203_de0cb894b0.jpg",
             };
 
-            int number = 0;
-            for (int n = 0; n < 20; n++)
+            for (int i = 0; i < images.Length; i++)
             {
-                for (int i = 0; i < images.Length; i++)
+                Picture picture = new Picture
                 {
-                    number++;
-                    Picture picture = new Picture
-                    {
-                        Id = i.ToString(),
-                        Uri = images[i]
-                    };
-                    Items.Add(picture);
-                }
+                    Id = i.ToString(),
+                    Uri = images[i]
+                };
+                Items.Add(picture);
             }
+            
         }
 
         public ICommand ItemTappedCommand
@@ -84,12 +75,12 @@ namespace DLuOvBamG.ViewModels
 
                     foreach (var picture in Items)
                     {
-                    // if (picture.Id == )Item.Id)
-                    // {
-                    // TODO: show detail page
-                    // var newPage = new xxxContentPage(Item);
-                    // currentPage.Navigation.PushAsync(newPage, true);
-                    //}
+                        if (picture.Id == Item.Id)
+                        {
+                            Console.WriteLine("tapped {0}", picture.Id);
+                            var newPage = new ImageDetailPage(picture);
+                            currentPage.Navigation.PushAsync(newPage, true);
+                        }
                 }
 
                 });

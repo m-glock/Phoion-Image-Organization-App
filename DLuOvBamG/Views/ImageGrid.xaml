@@ -5,7 +5,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
-             x:Class="DLuOvBamG.Views.ImageGrid">
+             x:Class="DLuOvBamG.Views.ImageGrid"
+             Title="Application">
     <flv:FlowListView FlowColumnCount="4" SeparatorVisibility="None" HasUnevenRows="false"
     FlowItemTappedCommand="{Binding ItemTappedCommand}" RowHeight="100" FlowItemsSource="{Binding Items}" >
         <flv:FlowListView.FlowColumnTemplate>
