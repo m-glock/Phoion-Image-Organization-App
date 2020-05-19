@@ -4,12 +4,70 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="DLuOvBamG.Views.ScanResultPage">
-    <ContentPage.Content>
+             x:Class="DLuOvBamG.Views.ScanResultPage"
+             xmlns:vm="clr-namespace:DLuOvBamG.ViewModels"
+             Title="Aufräumen Gallerie">
+
+    <ContentPage.BindingContext>
+        <vm:ScanResultViewModel />
+    </ContentPage.BindingContext>
+
+    <ScrollView>
         <StackLayout>
-            <Label x:Name="Label" Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <Label Margin="10, 40, 0, 0" x:Name="firstGroup" Text="Verschwommene Bilder"></Label>
+            <CollectionView x:Name="blurryPics" ItemsSource="{Binding GalleryImages}" ItemsLayout="HorizontalList"
+                        SelectionMode="Multiple" SelectionChanged="ImageSelectionChanged" SelectedItems="{Binding SelectedImages}" HeightRequest="100">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <ContentView Padding="2">
+                            <Image Source="{Binding ImageUrl}" 
+                               Aspect="AspectFill"
+                               WidthRequest="100"/>
+                        </ContentView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Label Margin="10, 20, 0, 0" x:Name="secondGroup" Text="Dunkle Bilder"></Label>
+            <CollectionView x:Name="darkPics" ItemsSource="{Binding GalleryImages2}" ItemsLayout="HorizontalList" HeightRequest="100">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <ContentView Padding="2">
+                            <Image Source="{Binding ImageUrl}" 
+                               Aspect="AspectFill"
+                               WidthRequest="100"/>
+                        </ContentView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Label Margin="10, 20, 0, 0" x:Name="thirdGroup" Text="Duplikate"></Label>
+            <CollectionView x:Name="duplicatePics" ItemsSource="{Binding GalleryImages}" ItemsLayout="HorizontalList" HeightRequest="100">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <ContentView Padding="2">
+                            <Image Source="{Binding ImageUrl}" 
+                               Aspect="AspectFill"
+                               WidthRequest="100"/>
+                        </ContentView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Label Margin="10, 20, 0, 0" x:Name="fourthGroup" Text="Ähnliche Bilder"></Label>
+            <CollectionView x:Name="similarPics" ItemsSource="{Binding GalleryImages2}" ItemsLayout="HorizontalList" HeightRequest="100">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <ContentView Padding="2">
+                            <Image Source="{Binding ImageUrl}" 
+                               Aspect="AspectFill"
+                               WidthRequest="100"/>
+                        </ContentView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            
         </StackLayout>
-    </ContentPage.Content>
+    </ScrollView>
+
 </ContentPage>
