@@ -20,7 +20,7 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <ContentView Padding="2">
-                            <Image Source="{Binding ImageUrl}" 
+                            <Image Source="{Binding Uri}" 
                                Aspect="AspectFill"
                                WidthRequest="100"/>
                         </ContentView>
@@ -33,7 +33,7 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <ContentView Padding="2">
-                            <Image Source="{Binding ImageUrl}" 
+                            <Image Source="{Binding Uri}" 
                                Aspect="AspectFill"
                                WidthRequest="100"/>
                         </ContentView>
@@ -46,7 +46,7 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <ContentView Padding="2">
-                            <Image Source="{Binding ImageUrl}" 
+                            <Image Source="{Binding Uri}" 
                                Aspect="AspectFill"
                                WidthRequest="100"/>
                         </ContentView>
@@ -59,7 +59,7 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <ContentView Padding="2">
-                            <Image Source="{Binding ImageUrl}" 
+                            <Image Source="{Binding Uri}" 
                                Aspect="AspectFill"
                                WidthRequest="100"/>
                         </ContentView>
