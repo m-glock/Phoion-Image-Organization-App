@@ -17,7 +17,9 @@
                     <On Platform="iOS" Value="tab_feed.png"/>
                 </OnPlatform>
             </NavigationPage.Icon>
-            
+            <x:Arguments>
+                <views:ImageGrid />
+            </x:Arguments>
         </NavigationPage>
         
         <NavigationPage Title="Aufräumen">
