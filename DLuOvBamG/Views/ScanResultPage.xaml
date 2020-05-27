@@ -13,60 +13,8 @@
     </ContentPage.BindingContext>
 
     <ScrollView>
-        <StackLayout>
-            <Label Margin="10, 40, 0, 0" x:Name="firstGroup" Text="Verschwommene Bilder"></Label>
-            <CollectionView x:Name="blurryPics" ItemsSource="{Binding GalleryImages}" ItemsLayout="HorizontalList"
-                        SelectionMode="Multiple" SelectionChanged="ImageSelectionChanged" SelectedItems="{Binding SelectedImages}" HeightRequest="100">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <ContentView Padding="2">
-                            <Image Source="{Binding Uri}" 
-                               Aspect="AspectFill"
-                               WidthRequest="100"/>
-                        </ContentView>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-
-            <Label Margin="10, 20, 0, 0" x:Name="secondGroup" Text="Dunkle Bilder"></Label>
-            <CollectionView x:Name="darkPics" ItemsSource="{Binding GalleryImages2}" ItemsLayout="HorizontalList" HeightRequest="100">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <ContentView Padding="2">
-                            <Image Source="{Binding Uri}" 
-                               Aspect="AspectFill"
-                               WidthRequest="100"/>
-                        </ContentView>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-
-            <Label Margin="10, 20, 0, 0" x:Name="thirdGroup" Text="Duplikate"></Label>
-            <CollectionView x:Name="duplicatePics" ItemsSource="{Binding GalleryImages}" ItemsLayout="HorizontalList" HeightRequest="100">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <ContentView Padding="2">
-                            <Image Source="{Binding Uri}" 
-                               Aspect="AspectFill"
-                               WidthRequest="100"/>
-                        </ContentView>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-
-            <Label Margin="10, 20, 0, 0" x:Name="fourthGroup" Text="Ähnliche Bilder"></Label>
-            <CollectionView x:Name="similarPics" ItemsSource="{Binding GalleryImages2}" ItemsLayout="HorizontalList" HeightRequest="100">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <ContentView Padding="2">
-                            <Image Source="{Binding Uri}" 
-                               Aspect="AspectFill"
-                               WidthRequest="100"/>
-                        </ContentView>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-            
+        <StackLayout x:Name="StackLayout">
+            <!-- Inhalt wird dynamisch eingefuegt, je nachdem welche Optionen ausgewaehlt wurden-->
         </StackLayout>
     </ScrollView>
 

@@ -1,5 +1,6 @@
 ﻿using DLuOvBamG.Models;
 using DLuOvBamG.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -13,44 +14,44 @@ namespace DLuOvBamG.Views
     public partial class CleanupPage : ContentPage
     {
         private CleanupViewModel vm;
-        private Dictionary<ScanOptionsEnum, Switch> optionSwitches;
+        private Dictionary<Label, Switch> optionSwitches;
 
         public CleanupPage()
         {
             InitializeComponent(); 
             vm = BindingContext as CleanupViewModel;
             vm.Navigation = Navigation;
+            vm.ScanButton = ScanButton;
             GetSwitches();
+            vm.optionSwitches = optionSwitches;
             ScanButton.IsEnabled = false;
         }
 
         private void GetSwitches()
         {
-            optionSwitches = new Dictionary<ScanOptionsEnum, Switch>();
-            optionSwitches.Add(ScanOptionsEnum.blurryPics, blurrySwitch);
-            optionSwitches.Add(ScanOptionsEnum.darkPics, darkSwitch);
-            optionSwitches.Add(ScanOptionsEnum.similarPics, similarSwitch);
-            optionSwitches.Add(ScanOptionsEnum.duplicates, duplicateSwitch);
-            optionSwitches.Add(ScanOptionsEnum.longVideos, videoSwitch);
+            optionSwitches = new Dictionary<Label, Switch>();
+            optionSwitches.Add(blurryLabel, blurrySwitch);
+            optionSwitches.Add(darkLabel, darkSwitch);
+            optionSwitches.Add(similarLabel, similarSwitch);
+            optionSwitches.Add(duplicateLabel, duplicateSwitch);
+            optionSwitches.Add(videoLabel, videoSwitch);
         }
 
         private void OptionToggled(object sender, ToggledEventArgs e)
         {
             Switch optionToggle = sender as Switch;
+            vm.UpdateScanOptions(optionToggle.ClassId);
+            if(!optionToggle.IsToggled)
+            {
+                vm.checkToDisableScanButton();
+            }
+        }
 
-            if (optionToggle.IsToggled && optionToggle != null)
-            {
-                vm.UpdateScanOptions(optionSwitches.FirstOrDefault(x => x.Value.Equals(optionToggle)).Key);
-                ScanButton.IsEnabled = true;
-            }
-            else
-            {
-                bool optionsChosen = false;
-                foreach(Switch optionSwitch in optionSwitches.Values) {
-                    if (optionSwitch.IsToggled) optionsChosen = true;
-                }
-                ScanButton.IsEnabled = optionsChosen;
-            }
+        private void OptionLabelTapped(object sender, EventArgs e)
+        {
+            Label optionLabel = sender as Label;
+            Switch optionSwitch = optionSwitches[optionLabel];
+            optionSwitch.IsToggled = !optionSwitch.IsToggled;
         }
     }
 }
