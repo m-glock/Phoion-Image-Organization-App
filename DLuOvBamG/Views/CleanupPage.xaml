@@ -7,7 +7,7 @@
              x:Class="DLuOvBamG.Views.CleanupPage"
              xmlns:vm="clr-namespace:DLuOvBamG.ViewModels"
              Title="{Binding Title}">
-    
+
     <ContentPage.BindingContext>
         <vm:CleanupViewModel />
     </ContentPage.BindingContext>

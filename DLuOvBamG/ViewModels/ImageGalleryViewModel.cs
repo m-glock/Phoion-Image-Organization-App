@@ -73,7 +73,7 @@ namespace DLuOvBamG.ViewModels
         }
 
         public ICommand OpenCleanupPage => new Command(async () => {
-            await Navigation.PushAsync(new NavigationPage(new CleanupPage()));
+            await Navigation.PushAsync(new CleanupPage());
         });
     }
 }

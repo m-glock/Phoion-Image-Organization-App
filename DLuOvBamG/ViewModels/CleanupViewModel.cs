@@ -16,7 +16,7 @@ namespace DLuOvBamG.ViewModels
 
         public CleanupViewModel()
         {
-            Title = "Test";
+            Title = "Aufräumen";
             scanOptions = new List<ScanOptionsEnum>();
         }
 
