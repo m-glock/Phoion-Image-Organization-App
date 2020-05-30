@@ -14,7 +14,7 @@ namespace DLuOvBamG
             InitializeComponent();
 
             DependencyService.Register<MockDataStore>();
-            MainPage = new MainPage();
+            MainPage = new NavigationPage(new ImageGrid());
         }
 
         protected override void OnStart()

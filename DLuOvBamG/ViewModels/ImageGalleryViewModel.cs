@@ -13,21 +13,7 @@ namespace DLuOvBamG.ViewModels
     public class ImageGalleryViewModel : INotifyPropertyChanged
     {
         public ObservableCollection<Picture> Items { get; set; }
-
-        private ContentPage currentPage;
-        public ContentPage CurrentPage
-        {
-            get
-            {
-                return currentPage;
-            }
-
-            set
-            {
-                currentPage = value;
-            }
-
-        }
+        public INavigation Navigation;
 
         [DataContract]
         class ImageList
@@ -38,10 +24,9 @@ namespace DLuOvBamG.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ImageGalleryViewModel(ContentPage page)
+        public ImageGalleryViewModel()
         {
             Items = new ObservableCollection<Picture>() { };
-            CurrentPage = page;
 
             string[] images = {
                 "https://farm9.staticflickr.com/8625/15806486058_7005d77438.jpg",
@@ -62,7 +47,7 @@ namespace DLuOvBamG.ViewModels
                 };
                 Items.Add(picture);
             }
-            
+
         }
 
         public ICommand ItemTappedCommand
@@ -79,12 +64,16 @@ namespace DLuOvBamG.ViewModels
                         {
                             Console.WriteLine("tapped {0}", picture.Id);
                             var newPage = new ImageDetailPage(picture);
-                            currentPage.Navigation.PushAsync(newPage, true);
+                            Navigation.PushAsync(newPage, true);
                         }
-                }
+                    }
 
                 });
             }
         }
+
+        public ICommand OpenCleanupPage => new Command(async () => {
+            await Navigation.PushAsync(new NavigationPage(new CleanupPage()));
+        });
     }
 }
