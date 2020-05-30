@@ -54,7 +54,7 @@ namespace DLuOvBamG.ViewModels
         }
 
         public ICommand StartScan => new Command(async () => {
-            await Navigation.PushModalAsync(new NavigationPage(new ScanResultPage(scanOptions)));
+            await Navigation.PushAsync(new ScanResultPage(scanOptions));
         });
 
     }

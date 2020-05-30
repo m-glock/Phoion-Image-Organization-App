@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Threading.Tasks;
-
-using Xamarin.Forms;
 
 using DLuOvBamG.Models;
-using DLuOvBamG.Views;
 using System.Collections.Generic;
 
 namespace DLuOvBamG.ViewModels
@@ -21,6 +15,8 @@ namespace DLuOvBamG.ViewModels
 
 		public ScanResultViewModel()
         {
+			Title = "Aufräumergebnisse"; 
+			
 			BlurryGalleryImages = new List<Picture>();
 			DarkGalleryImages = new List<Picture>();
 			SimilarGalleryImages = new List<Picture>();
