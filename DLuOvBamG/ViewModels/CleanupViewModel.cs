@@ -11,8 +11,7 @@ namespace DLuOvBamG.ViewModels
     {
         public INavigation Navigation { get; set; }
         public List<ScanOptionsEnum> scanOptions;
-        public Button ScanButton;
-        public Dictionary<Label, Switch> optionSwitches;
+        public List<Expander> expander { get; set; }
 
         public CleanupViewModel()
         {
@@ -20,18 +19,9 @@ namespace DLuOvBamG.ViewModels
             scanOptions = new List<ScanOptionsEnum>();
         }
 
-        public void UpdateScanOptions(String optionName)
+        public void UpdateScanOptions(ScanOptionsEnum option, Button ScanButton)
         {
-            //TODO: better way of accessing the right Enum?
-            var values = Enum.GetValues(typeof(ScanOptionsEnum));
-            foreach(Enum enumOption in values)
-            {
-                if (enumOption.ToString() == optionName)
-                {
-                    updateScanOptionsList((ScanOptionsEnum)enumOption);
-                    break;
-                }
-            }
+            updateScanOptionsList(option);
             ScanButton.IsEnabled = true;
         }
 
@@ -43,12 +33,16 @@ namespace DLuOvBamG.ViewModels
                 scanOptions.Add(option);  
         }
 
-        public void checkToDisableScanButton()
+        public void checkToDisableScanButton(Button ScanButton, List<Switch> optionSwitches)
         {
             bool optionsChosen = false;
-            foreach (Switch optionSwitch in optionSwitches.Values)
+            foreach (Switch optionSwitch in optionSwitches)
             {
-                if (optionSwitch.IsToggled) optionsChosen = true;
+                if (optionSwitch.IsToggled)
+                {
+                    optionsChosen = true;
+                    break;
+                }
             }
             ScanButton.IsEnabled = optionsChosen;
         }

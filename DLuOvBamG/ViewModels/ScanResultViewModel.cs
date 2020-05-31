@@ -58,10 +58,6 @@ namespace DLuOvBamG.ViewModels
 					return "DarkGalleryImages";
 				case ScanOptionsEnum.similarPics:
 					return "SimilarGalleryImages";
-				case ScanOptionsEnum.duplicatePics:
-					return "DuplicateGalleryImages";
-				case ScanOptionsEnum.longVideos:
-					return "Videos";
 				default:
 					return "";
 			}

@@ -1,6 +1,4 @@
-﻿using System;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+﻿using Xamarin.Forms;
 using DLuOvBamG.Services;
 using DLuOvBamG.Views;
 
@@ -13,6 +11,7 @@ namespace DLuOvBamG
         {
             InitializeComponent();
 
+            Device.SetFlags(new string[] { "Expander_Experimental" });
             DependencyService.Register<MockDataStore>();
             MainPage = new NavigationPage(new ImageGrid());
         }
