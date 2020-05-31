@@ -33,8 +33,6 @@ namespace DLuOvBamG.Views
             optionSwitches.Add(blurryLabel, blurrySwitch);
             optionSwitches.Add(darkLabel, darkSwitch);
             optionSwitches.Add(similarLabel, similarSwitch);
-            optionSwitches.Add(duplicateLabel, duplicateSwitch);
-            optionSwitches.Add(videoLabel, videoSwitch);
         }
 
         private void OptionToggled(object sender, ToggledEventArgs e)
@@ -45,6 +43,7 @@ namespace DLuOvBamG.Views
             {
                 vm.checkToDisableScanButton();
             }
+            
         }
 
         private void OptionLabelTapped(object sender, EventArgs e)
@@ -53,5 +52,6 @@ namespace DLuOvBamG.Views
             Switch optionSwitch = optionSwitches[optionLabel];
             optionSwitch.IsToggled = !optionSwitch.IsToggled;
         }
+
     }
 }
