@@ -40,7 +40,7 @@ namespace DLuOvBamG.Views
         {
             Switch optionToggle = sender as Switch;
             ScanOptionViewGroup viewGroup = GetOptionElementsFromClassID(optionToggle.ClassId);
-            VM.UpdateScanOptions(viewGroup.Option, ScanButton);
+            VM.UpdateScanOptions(viewGroup.Option, ScanButton, viewGroup.OptionSlider.Value);
             if (!optionToggle.IsToggled)
             {
                 VM.checkToDisableScanButton(ScanButton, switchList);
@@ -62,6 +62,15 @@ namespace DLuOvBamG.Views
                 Switch optionSwitch = viewGroup.OptionSwitch;
                 optionSwitch.IsToggled = !optionSwitch.IsToggled;
             }
+        }
+
+        private void ValueChanged(object sender, EventArgs e)
+        {
+            Element optionElement = sender as Element;
+            ScanOptionViewGroup viewGroup = GetOptionElementsFromClassID(optionElement.ClassId);
+            double value = viewGroup.OptionSlider.Value;
+            Console.WriteLine("Value of " + viewGroup.Option.ToString() + " has changed to " + value);
+            VM.updateScanOptionSliderValue(viewGroup.Option, value);
         }
 
         private ScanOptionViewGroup GetOptionElementsFromClassID(String classID)

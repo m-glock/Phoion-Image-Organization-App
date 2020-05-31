@@ -10,7 +10,6 @@ namespace DLuOvBamG.Models
         public Switch OptionSwitch { get; }
         public Expander OptionExpander { get; }
         public Slider OptionSlider { get; }
-
         public ScanOptionsEnum Option { get; }
 
         public ScanOptionViewGroup(ScanOptionsEnum option, Switch optionSwitch, Expander optionExpander, Slider optionSlider)

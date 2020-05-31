@@ -12,13 +12,14 @@ namespace DLuOvBamG.Views
 	{
 		ScanResultViewModel vm;
 
-		public ScanResultPage(List<ScanOptionsEnum> options)
+		public ScanResultPage(Dictionary<ScanOptionsEnum, double> options)
 		{
 			InitializeComponent();
 			vm = BindingContext as ScanResultViewModel;
-			foreach ( ScanOptionsEnum option in options)
+            foreach (KeyValuePair<ScanOptionsEnum, double> pair in options)
 			{
-				addCollectionViewToPage(option);
+				addCollectionViewToPage(pair.Key);
+				Console.WriteLine("Option: " + pair.Key.ToString() + " with value " + pair.Value);
 			}
 		}
 

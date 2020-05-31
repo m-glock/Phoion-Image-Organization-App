@@ -61,7 +61,7 @@
 
             <Frame Margin="0, 0, 0, 20" Padding="5, 5, 5, 5" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="1" 
                BorderColor="Gray" HasShadow="False">
-                <Slider x:Name="similarSlider" ClassId="similarPics"></Slider>
+                <Slider x:Name="similarSlider" ClassId="similarPics" DragCompleted="ValueChanged"></Slider>
             </Frame>
         </Expander>
 
@@ -88,7 +88,7 @@
 
             <Frame Margin="0, 0, 0, 20" Padding="5,5,5,5" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="1" 
                BorderColor="Gray" HasShadow="False">
-                <Slider x:Name="blurrySlider" ></Slider>
+                <Slider x:Name="blurrySlider" ClassId="blurryPics" DragCompleted="ValueChanged"></Slider>
             </Frame>
         </Expander>
 
@@ -115,7 +115,7 @@
 
             <Frame Margin="0, 0, 0, 20" Padding="5,5,5,5" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="1" 
                BorderColor="Gray" HasShadow="False">
-                <Slider x:Name="darkSlider" ></Slider>
+                <Slider x:Name="darkSlider" ClassId="darkPics" DragCompleted="ValueChanged"></Slider>
             </Frame>
         </Expander>
 
