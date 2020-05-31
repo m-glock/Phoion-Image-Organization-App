@@ -24,11 +24,11 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="50" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="50" />
             <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
+            <RowDefinition Height="50" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -46,7 +46,8 @@
                 <TapGestureRecognizer Tapped="OptionLabelTapped" NumberOfTapsRequired="1"></TapGestureRecognizer>
             </Label.GestureRecognizers>
         </Label>
-        <Frame Margin="0, 0, 0, 20" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="1">
+        <Frame Margin="0, 0, 0, 20" Padding="5,5,5,5" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="1" 
+               BorderColor="Gray" HasShadow="False">
             <Slider x:Name="similarSlider" ></Slider>
         </Frame>
 
@@ -57,7 +58,8 @@
                 <TapGestureRecognizer Tapped="OptionLabelTapped" NumberOfTapsRequired="1"></TapGestureRecognizer>
             </Label.GestureRecognizers>
         </Label>
-        <Frame Margin="0, 0, 0, 20" Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="1">
+        <Frame Margin="0, 0, 0, 20" Padding="5,5,5,5" Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="1" 
+               BorderColor="Gray" HasShadow="False">
             <Slider x:Name="blurrySlider" ></Slider>
         </Frame>
 
@@ -68,12 +70,13 @@
                 <TapGestureRecognizer Tapped="OptionLabelTapped" NumberOfTapsRequired="1"></TapGestureRecognizer>
             </Label.GestureRecognizers>
         </Label>
-        <Frame Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="1">
+        <Frame Margin="0, 0, 0, 20" Padding="5,5,5,5" Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="1" 
+               BorderColor="Gray" HasShadow="False">
             <Slider x:Name="darkSlider" ></Slider>
         </Frame>
 
         
-        <Button Margin="0, 40, 0, 0" x:Name="ScanButton" Command="{Binding StartScan}" Text="Scan starten" Grid.Row="7" Grid.Column="1"  Grid.ColumnSpan="2"></Button>
+        <Button Margin="0, 00, 0, 0" x:Name="ScanButton" Command="{Binding StartScan}" Text="Scan starten" Grid.Row="7" Grid.Column="1"  Grid.ColumnSpan="2"></Button>
     </Grid>
     
 </ContentPage>
