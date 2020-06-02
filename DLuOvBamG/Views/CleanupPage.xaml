@@ -50,7 +50,7 @@
                 </FlexLayout>
             </Expander.Header>
 
-            <Frame Margin="10,10,0,0" Padding="5, 5, 5, 5" BorderColor="Gray" HasShadow="False" >
+            <Frame Margin="10,20,0,0" Padding="5, 5, 5, 5" HasShadow="False" >
                 <FlexLayout>
                     <Label Margin="5, 0, 15, 0" Text="Präzision" VerticalTextAlignment="Center"></Label>
                     <Slider x:Name="similarSlider" ClassId="similarPics" DragCompleted="ValueChanged" MaximumTrackColor="gray" WidthRequest="220"></Slider>
@@ -72,7 +72,7 @@
                 </FlexLayout>
             </Expander.Header>
 
-            <Frame Margin="10,10,0,0" Padding="5, 5, 5, 5" BorderColor="Gray" HasShadow="False" >
+            <Frame Margin="10,20,0,0" Padding="5, 5, 5, 5" HasShadow="False" >
                 <FlexLayout>
                     <Label Margin="5, 0, 15, 0" Text="Präzision" VerticalTextAlignment="Center"></Label>
                     <Slider x:Name="blurrySlider" ClassId="blurryPics" DragCompleted="ValueChanged" MaximumTrackColor="gray" WidthRequest="220"></Slider>
@@ -94,7 +94,7 @@
                 </FlexLayout>
             </Expander.Header>
 
-            <Frame Margin="10,10,0,0" Padding="5, 5, 5, 5" BorderColor="Gray" HasShadow="False" >
+            <Frame Margin="10,20,0,0" Padding="5, 5, 5, 5" HasShadow="False" >
                 <FlexLayout>
                     <Label Margin="5, 0, 15, 0" Text="Präzision" VerticalTextAlignment="Center"></Label>
                     <Slider x:Name="darkSlider" ClassId="darkPics" DragCompleted="ValueChanged" MaximumTrackColor="gray" WidthRequest="220"></Slider>

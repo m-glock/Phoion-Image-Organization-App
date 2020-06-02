@@ -3,84 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:DLuOvBamG.ViewModels"
              mc:Ignorable="d"
              x:Class="DLuOvBamG.Views.ScanResultPage"
-             xmlns:vm="clr-namespace:DLuOvBamG.ViewModels"
              Title="{Binding Title}">
 
     <ContentPage.BindingContext>
         <vm:ScanResultViewModel />
     </ContentPage.BindingContext>
 
-    <StackLayout>
-    <Grid Margin="0,0,0,50">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="20"></RowDefinition>
-            <RowDefinition Height="70"></RowDefinition>
-            <RowDefinition Height="20"></RowDefinition>
-            <RowDefinition Height="70"></RowDefinition>
-            <RowDefinition Height="20"></RowDefinition>
-            <RowDefinition Height="70"></RowDefinition>
-            
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="20"></ColumnDefinition>
-            <ColumnDefinition Width="20"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="20"></ColumnDefinition>
-            <ColumnDefinition Width="20"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-
-        <Image Source="https://farm9.staticflickr.com/8625/15806486058_7005d77438.jpg" HeightRequest="50" Aspect="AspectFill" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4"></Image>
-        <Label Text="Verschwommene Bilder >" Grid.Row="1" Grid.Column="3" TextColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="End" FontAttributes="Bold"></Label>
-
-        <Image Source="https://farm5.staticflickr.com/4011/4308181244_5ac3f8239b.jpg" HeightRequest="50" Aspect="AspectFill" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="4"></Image>
-        <Label Text="Dunkle Bilder >" Grid.Row="3" Grid.Column="3" TextColor="White" VerticalTextAlignment="Center" HorizontalTextAlignment="End" FontAttributes="Bold"></Label>
-        
-        <Image Source="https://farm8.staticflickr.com/7423/8729135907_79599de8d8.jpg" HeightRequest="50" Aspect="AspectFill" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="4"></Image>
-        <BoxView BackgroundColor="White" Opacity="0.8" Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="2"></BoxView>
-        <Label Text="Dunkle Bilder >" Grid.Row="5" Grid.Column="3" TextColor="Black" VerticalTextAlignment="Center" HorizontalTextAlignment="End" FontAttributes="Bold"></Label>
-    </Grid>
-
-    <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="20"></RowDefinition>
-                <RowDefinition Height="3"></RowDefinition>
-                <RowDefinition Height="3"></RowDefinition>
-                <RowDefinition Height="80"></RowDefinition>
-                <RowDefinition Height="3"></RowDefinition>
-                <RowDefinition Height="3"></RowDefinition>
-                <RowDefinition Height="auto"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-            </Grid.RowDefinitions>
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="50"></ColumnDefinition>
-                <ColumnDefinition Width="3"></ColumnDefinition>
-                <ColumnDefinition Width="3"></ColumnDefinition>
-                <ColumnDefinition Width="80"></ColumnDefinition>
-                <ColumnDefinition Width="3"></ColumnDefinition>
-                <ColumnDefinition Width="3"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="3"></ColumnDefinition>
-                <ColumnDefinition Width="3"></ColumnDefinition>
-                <ColumnDefinition Width="80"></ColumnDefinition>
-                <ColumnDefinition Width="3"></ColumnDefinition>
-                <ColumnDefinition Width="3"></ColumnDefinition>
-                <ColumnDefinition Width="50"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-
-            <Image Source="https://farm9.staticflickr.com/8625/15806486058_7005d77438.jpg" Aspect="AspectFill" Grid.Row="1" Grid.RowSpan="3" Grid.Column="3" Grid.ColumnSpan="3"></Image>
-            <Image Source="https://farm5.staticflickr.com/4011/4308181244_5ac3f8239b.jpg" Aspect="AspectFill" Grid.Row="2" Grid.RowSpan="3" Grid.Column="2" Grid.ColumnSpan="3"></Image>
-            <Image Source="https://farm8.staticflickr.com/7423/8729135907_79599de8d8.jpg" Aspect="AspectFill" Grid.Row="3" Grid.RowSpan="3" Grid.Column="1" Grid.ColumnSpan="3"></Image>
-            <Label Text="Verschwommene Bilder" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="6"></Label>
-
-            <Image Source="https://farm5.staticflickr.com/4011/4308181244_5ac3f8239b.jpg" Aspect="AspectFill" Grid.Row="1" Grid.RowSpan="3" Grid.Column="9" Grid.ColumnSpan="3"></Image>
-            <Image Source="https://farm8.staticflickr.com/7423/8729135907_79599de8d8.jpg" Aspect="AspectFill" Grid.Row="2" Grid.RowSpan="3" Grid.Column="8" Grid.ColumnSpan="3"></Image>
-            <Image Source="https://farm9.staticflickr.com/8625/15806486058_7005d77438.jpg" Aspect="AspectFill" Grid.Row="3" Grid.RowSpan="3" Grid.Column="7" Grid.ColumnSpan="3"></Image>
-            <Label Text="Dunkle Bilder" Grid.Row="6" Grid.Column="7" Grid.ColumnSpan="5"></Label>
-        </Grid>
+    <StackLayout x:Name="StackLayout" Margin="0,20,0,0">
+        <!-- Inhalt wird dynamisch erzeugt und eigefügt -->
     </StackLayout>
-    
+
 </ContentPage>
