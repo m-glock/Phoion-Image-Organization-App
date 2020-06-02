@@ -11,6 +11,8 @@ namespace DLuOvBamG.Models
     public class Picture
     {
         public string Uri { get; set; }
+
+        public ImageSource ImageSource { get; set; }
         public string Id { get; set; }
 
         public DateTime Date { get; set; }
@@ -19,17 +21,29 @@ namespace DLuOvBamG.Models
         {
             this.Uri = Uri;
             this.Id = Id;
+            this.Date = GetDate(Uri);
+        }
 
+        public Picture(string Uri, string Id,  Stream ImageData)
+        {
+            this.Uri = Uri;
+            this.Id = Id;
+            this.Date = GetDate(Uri);
+            this.ImageSource = ImageSource.FromStream(() => ImageData);
+        }
+
+        private DateTime GetDate(string Uri)
+        {
             try
             {
                 IImageService imageService = DependencyService.Get<IImageService>();
-                this.Date = imageService.GetDateTaken(Uri);
-            } catch (ArgumentException)
+                return imageService.GetDateTaken(Uri);
+            }
+            catch (ArgumentException)
             {
                 // image is probably stock
+                return DateTime.Now;
             }
-
-            
         }
     }
 }

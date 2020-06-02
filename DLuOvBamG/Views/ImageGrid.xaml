@@ -4,7 +4,8 @@
               xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
+             xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView" 
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              x:Class="DLuOvBamG.Views.ImageGrid"
              Title="Application">
     <flv:FlowListView 
@@ -25,7 +26,13 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Image HeightRequest="100" Aspect="AspectFill" Source="{Binding Uri}"/>
+                    <ffimageloading:CachedImage 
+                        Aspect="AspectFill"
+                        WidthRequest="200"
+                        DownsampleToViewSize="True"
+                        Source="{Binding Uri, Mode=OneTime}"
+                    >
+                    </ffimageloading:CachedImage>
                 </Grid>
             </DataTemplate>
         </flv:FlowListView.FlowColumnTemplate>
