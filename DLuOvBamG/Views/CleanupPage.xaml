@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="DLuOvBamG.Views.CleanupPage"
+             xmlns:vm="clr-namespace:DLuOvBamG.ViewModels"
+             Title="{Binding Title}">
+    
+    <ContentPage.BindingContext>
+        <vm:CleanupViewModel />
+    </ContentPage.BindingContext>
+    
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="Primary">#2196F3</Color>
+            <Color x:Key="Accent">#96d1ff</Color>
+            <Color x:Key="LightTextColor">#999999</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="30" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="30" />
+        </Grid.ColumnDefinitions>
+
+        <Label x:Name="ChooseOptions" Text="Wählen Sie eine oder mehrere Optionen um ihre Gallerie zu optimieren." Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"></Label>
+
+        <Switch x:Name="blurrySwitch" ClassId="blurryPics" Toggled="OptionToggled" Grid.Row="2" Grid.Column="1" VerticalOptions="Center" />
+        <Label x:Name="blurryLabel" Grid.Row="2" Grid.Column="2" Text="Unschafe Bilder" VerticalOptions="Center" >
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OptionLabelTapped" NumberOfTapsRequired="1"></TapGestureRecognizer>
+            </Label.GestureRecognizers>
+        </Label>
+
+        <Switch x:Name="darkSwitch" ClassId="darkPics" Toggled="OptionToggled" Grid.Row="3" Grid.Column="1" VerticalOptions="Center" />
+        <Label x:Name="darkLabel" Grid.Row="3" Grid.Column="2" Text="Dunkle Bilder" VerticalOptions="Center">
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OptionLabelTapped" NumberOfTapsRequired="1"></TapGestureRecognizer>
+            </Label.GestureRecognizers>
+        </Label>
+
+        <Switch x:Name="similarSwitch" ClassId="similarPics" Toggled="OptionToggled" Grid.Row="4" Grid.Column="1" VerticalOptions="Center" />
+        <Label x:Name="similarLabel" Grid.Row="4" Grid.Column="2" Text="ähnliche Bilder" VerticalOptions="Center">
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OptionLabelTapped" NumberOfTapsRequired="1"></TapGestureRecognizer>
+            </Label.GestureRecognizers>
+        </Label>
+
+        <Switch x:Name="duplicateSwitch" ClassId="duplicatePics" Toggled="OptionToggled" Grid.Row="5" Grid.Column="1" VerticalOptions="Center" />
+        <Label x:Name="duplicateLabel" Grid.Row="5" Grid.Column="2" Text="Duplikate" VerticalOptions="Center" >
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OptionLabelTapped" NumberOfTapsRequired="1"></TapGestureRecognizer>
+            </Label.GestureRecognizers>
+        </Label>
+
+        <Switch x:Name="videoSwitch" ClassId="longVideos" Toggled="OptionToggled" Grid.Row="6" Grid.Column="1" VerticalOptions="Center" />
+        <Label x:Name="videoLabel" Grid.Row="6" Grid.Column="2" Text="Lange Videos" VerticalOptions="Center" >
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OptionLabelTapped" NumberOfTapsRequired="1"></TapGestureRecognizer>
+            </Label.GestureRecognizers>
+        </Label>
+
+        <Button x:Name="ScanButton" Command="{Binding StartScan}" Text="Scan starten" Grid.Row="7" Grid.Column="1"  Grid.ColumnSpan="2"></Button>
+    </Grid>
+    
+</ContentPage>
