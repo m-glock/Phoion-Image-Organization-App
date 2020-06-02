@@ -11,13 +11,11 @@ namespace DLuOvBamG.ViewModels
     {
         public INavigation Navigation { get; set; }
         public Dictionary<ScanOptionsEnum, double> scanOptions;
-        //public List<ScanOptionsEnum> scanOptions;
         public List<Expander> expander { get; set; }
 
         public CleanupViewModel()
         {
             Title = "Aufräumen";
-            //scanOptions = new List<ScanOptionsEnum>();
             scanOptions = new Dictionary<ScanOptionsEnum, double>();
         }
 
@@ -33,13 +31,8 @@ namespace DLuOvBamG.ViewModels
                 scanOptions.Remove(option);
             else
                 scanOptions.Add(option, sliderValue);
-            /*if (scanOptions.Contains(option))
-                scanOptions.Remove(option);
-            else
-                scanOptions.Add(option);  */
         }
 
-        //TODO: how to not change them all the time
         public void updateScanOptionSliderValue(ScanOptionsEnum option, double value)
         {
             if (scanOptions.ContainsKey(option))
