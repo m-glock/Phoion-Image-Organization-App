@@ -10,39 +10,34 @@ namespace DLuOvBamG.Views
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ScanOptionDisplayPage : ContentPage
 	{
-		ScanOptionResultsViewModel vm;
+		ScanOptionDisplayViewModel VM;
 
-		public ScanOptionDisplayPage(Dictionary<ScanOptionsEnum, double> options)
+		public ScanOptionDisplayPage(ScanOptionsEnum option, double optionValue, List<List<Picture>> pictures)
 		{
 			InitializeComponent();
-			vm = BindingContext as ScanOptionResultsViewModel;
-            foreach (KeyValuePair<ScanOptionsEnum, double> pair in options)
-			{
-				addCollectionViewToPage(pair.Key);
-				Console.WriteLine("Option: " + pair.Key.ToString() + " with value " + pair.Value);
+			VM = BindingContext as ScanOptionDisplayViewModel;
+			VM.Pictures = pictures;
+
+			Title = option.GetTextForDisplay();
+            for (int  i = 0; i < pictures.Count; i++)
+            {
+				addCollectionViewToPage(i);
 			}
 		}
 
-		void ImageSelectionChanged(object sender, SelectionChangedEventArgs e)
-		{
-			Console.WriteLine("selection has changed.");
-			if (vm != null)
-			{
-
-			}
-		}
-
-		public void addCollectionViewToPage(ScanOptionsEnum option)
+		public void addCollectionViewToPage(int groupNumber)
 		{
 			Label label = new Label();
-			label.Text = option.GetTextForDisplay();
+			label.Text = "Gruppe " + groupNumber;
+			label.FontAttributes = FontAttributes.Bold;
 			label.Margin = new Thickness(10, 20, 0, 0);
 			StackLayout.Children.Add(label);
 
 			CollectionView colView = new CollectionView();
 			colView.HeightRequest = 100;
 			colView.ItemsLayout = LinearItemsLayout.Horizontal;
-			colView.SetBinding(ItemsView.ItemsSourceProperty, vm.GetPictureListName(option));
+			//TODO: acces list in VM with list[groupNumber]?
+			//colView.SetBinding(ItemsView.ItemsSourceProperty, VM.GetPictureListName(groupNumber));
 			StackLayout.Children.Add(colView);
 
 			colView.ItemTemplate = new DataTemplate(() =>

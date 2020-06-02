@@ -9,7 +9,7 @@
              Title="{Binding Title}">
 
     <ContentPage.BindingContext>
-        <vm:ScanOptionResultsViewModel />
+        <vm:ScanOptionDisplayViewModel />
     </ContentPage.BindingContext>
 
     <ScrollView>
