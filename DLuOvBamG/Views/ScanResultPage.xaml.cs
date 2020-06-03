@@ -11,7 +11,7 @@ namespace DLuOvBamG.Views
 	public partial class ScanResultPage : ContentPage
 	{
 		ScanResultViewModel vm;
-		
+
 		public ScanResultPage(List<ScanOptionsEnum> options)
 		{
 			InitializeComponent();

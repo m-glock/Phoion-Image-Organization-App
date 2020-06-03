@@ -1,26 +1,38 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
+             xmlns:vm="clr-namespace:DLuOvBamG.ViewModels"
              x:Class="DLuOvBamG.Views.ImageGrid"
              Title="Application">
-    <flv:FlowListView FlowColumnCount="4" SeparatorVisibility="None" HasUnevenRows="false"
-    FlowItemTappedCommand="{Binding ItemTappedCommand}" RowHeight="100" FlowItemsSource="{Binding Items}" >
-        <flv:FlowListView.FlowColumnTemplate>
-            <DataTemplate>
-                <Grid Padding="3">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Image HeightRequest="100" Aspect="AspectFill" Source="{Binding Uri}"/>
-                </Grid>
-            </DataTemplate>
-        </flv:FlowListView.FlowColumnTemplate>
-    </flv:FlowListView>
+    
+    <ContentPage.BindingContext>
+        <vm:ImageGalleryViewModel />
+    </ContentPage.BindingContext>
+
+    <StackLayout>
+        <flv:FlowListView FlowColumnCount="4" SeparatorVisibility="None" HasUnevenRows="false"
+        FlowItemTappedCommand="{Binding ItemTappedCommand}" RowHeight="100" FlowItemsSource="{Binding Items}" >
+            <flv:FlowListView.FlowColumnTemplate>
+                <DataTemplate>
+                    <Grid Padding="3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Image HeightRequest="100" Aspect="AspectFill" Source="{Binding Uri}"/>
+                    </Grid>
+                </DataTemplate>
+            </flv:FlowListView.FlowColumnTemplate>
+        </flv:FlowListView>
+        <!-- TODO: insert and style cleanup button -->
+        <Button Text="Click me!" WidthRequest="50" HeightRequest="50" Command="{Binding OpenCleanupPage}"/>
+    </StackLayout>
+    
+
 </ContentPage>

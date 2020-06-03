@@ -6,7 +6,7 @@
              mc:Ignorable="d"
              x:Class="DLuOvBamG.Views.ScanResultPage"
              xmlns:vm="clr-namespace:DLuOvBamG.ViewModels"
-             Title="Aufräumen Gallerie">
+             Title="{Binding Title}">
 
     <ContentPage.BindingContext>
         <vm:ScanResultViewModel />
