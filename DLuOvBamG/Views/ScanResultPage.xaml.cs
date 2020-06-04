@@ -11,11 +11,15 @@ namespace DLuOvBamG.Views
 	public partial class ScanResultPage : ContentPage
 	{
 		ScanResultViewModel vm;
-		
+
 		public ScanResultPage(List<ScanOptionsEnum> options)
 		{
 			InitializeComponent();
 			vm = BindingContext as ScanResultViewModel;
+			foreach ( ScanOptionsEnum option in options)
+			{
+				addCollectionViewToPage(option);
+			}
 		}
 
 		void ImageSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -23,9 +27,34 @@ namespace DLuOvBamG.Views
 			Console.WriteLine("selection has changed.");
 			if (vm != null)
 			{
-				// TODO: template o.ä. für CollectionView erstellen und für jede ausgewählte Option einfügen
-				// Labeltext und Binding müssen jeweils angepasst werden
+
 			}
+		}
+
+		public void addCollectionViewToPage(ScanOptionsEnum option)
+		{
+			Label label = new Label();
+			label.Text = option.GetTextForDisplay();
+			label.Margin = new Thickness(10, 20, 0, 0);
+			StackLayout.Children.Add(label);
+
+			CollectionView colView = new CollectionView();
+			colView.HeightRequest = 100;
+			colView.ItemsLayout = LinearItemsLayout.Horizontal;
+			colView.SetBinding(ItemsView.ItemsSourceProperty, vm.GetPictureListName(option));
+			StackLayout.Children.Add(colView);
+
+			colView.ItemTemplate = new DataTemplate(() =>
+			{
+				ContentView contentView = new ContentView();
+				contentView.Padding = new Thickness(2);
+
+				Image image = new Image { Aspect = Aspect.AspectFill, WidthRequest = 100 };
+				image.SetBinding(Image.SourceProperty, "Uri");
+
+				contentView.Content = image;
+				return contentView;
+			});
 		}
 	}
 }

@@ -1,29 +1,27 @@
 ﻿using System;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Threading.Tasks;
-
-using Xamarin.Forms;
 
 using DLuOvBamG.Models;
-using DLuOvBamG.Views;
 using System.Collections.Generic;
 
-//TODO: change Image class to Picture class
 namespace DLuOvBamG.ViewModels
 {
     public class ScanResultViewModel : BaseViewModel
     {
-
-		public List<Picture> GalleryImages { get; private set; }
-		public List<Picture> GalleryImages2 { get; private set; }
-		public IList<Picture> SelectedImages { get; set; }
+		public List<Picture> BlurryGalleryImages { get; private set; }
+		public List<Picture> DarkGalleryImages { get; private set; }
+		public List<Picture> SimilarGalleryImages { get; private set; }
+		public List<Picture> DuplicateGalleryImages { get; private set; }
+		public List<Picture> Videos { get; private set; }
 
 		public ScanResultViewModel()
         {
-			GalleryImages = new List<Picture>();
-			GalleryImages2 = new List<Picture>();
-			SelectedImages = new List<Picture>();
+			Title = "Aufräumergebnisse"; 
+			
+			BlurryGalleryImages = new List<Picture>();
+			DarkGalleryImages = new List<Picture>();
+			SimilarGalleryImages = new List<Picture>();
+			DuplicateGalleryImages = new List<Picture>();
+			Videos = new List<Picture>(); ;
 
 			string[] images = {
 				"https://farm9.staticflickr.com/8625/15806486058_7005d77438.jpg",
@@ -38,16 +36,31 @@ namespace DLuOvBamG.ViewModels
 			for (int i = 0; i < images.Length; i++)
 			{
 				Picture picture = new Picture(images[i], i.ToString());
-				GalleryImages.Add(picture);
-				GalleryImages2.Add(picture);
+				BlurryGalleryImages.Add(picture);
+				DarkGalleryImages.Add(picture);
+				SimilarGalleryImages.Add(picture);
+				DuplicateGalleryImages.Add(picture);
+				Videos.Add(picture);
 			}
-
-			Console.WriteLine("Created gallery images.");
 		}
 
-		public void changeSelection(IList<Picture> selected)
+		public String GetPictureListName(ScanOptionsEnum option)
 		{
-			SelectedImages = selected;
+			switch (option)
+			{
+				case ScanOptionsEnum.blurryPics:
+					return "BlurryGalleryImages";
+				case ScanOptionsEnum.darkPics:
+					return "DarkGalleryImages";
+				case ScanOptionsEnum.similarPics:
+					return "SimilarGalleryImages";
+				case ScanOptionsEnum.duplicatePics:
+					return "DuplicateGalleryImages";
+				case ScanOptionsEnum.longVideos:
+					return "Videos";
+				default:
+					return "";
+			}
 		}
 	}
 }

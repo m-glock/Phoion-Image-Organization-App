@@ -18,21 +18,7 @@ namespace DLuOvBamG.ViewModels
     {
         public FlowObservableCollection<Grouping<string, Picture>> GroupedItems { get; set; }
         public List<Picture> Items { get; set; }
-
-        private ContentPage currentPage;
-        public ContentPage CurrentPage
-        {
-            get
-            {
-                return currentPage;
-            }
-
-            set
-            {
-                currentPage = value;
-            }
-
-        }
+        public INavigation Navigation;
 
         [DataContract]
         class ImageList
@@ -43,11 +29,10 @@ namespace DLuOvBamG.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ImageGalleryViewModel(ContentPage page)
+        public ImageGalleryViewModel()
         {
             Items = new List<Picture>();
             GroupedItems = new FlowObservableCollection<Grouping<string, Picture>>();
-            CurrentPage = page;
             LoadImagesFromStorage();
         }
 
@@ -106,12 +91,16 @@ namespace DLuOvBamG.ViewModels
                         {
                             Console.WriteLine("tapped {0}", picture.Id);
                             var newPage = new ImageDetailPage(picture);
-                            currentPage.Navigation.PushAsync(newPage, true);
+                            Navigation.PushAsync(newPage, true);
                         }
-                }
+                    }
 
                 });
             }
         }
+
+        public ICommand OpenCleanupPage => new Command(async () => {
+            await Navigation.PushAsync(new CleanupPage());
+        });
     }
 }
