@@ -11,7 +11,6 @@ using DLuOvBamG.Services;
 using System.IO;
 using System.Linq;
 using DLToolkit.Forms.Controls;
-using FFImageLoading;
 
 namespace DLuOvBamG.ViewModels
 {
@@ -65,7 +64,6 @@ namespace DLuOvBamG.ViewModels
             };
 
             IPathService pathService = DependencyService.Get<IPathService>();
-            FFImageLoading.IImageService imageService = ImageService.Instance;
             string dcimFolder = pathService.DcimFolder;
             dcimFolder += "/Camera";
             ImageFileStorage imageFileStorage = new ImageFileStorage();
@@ -79,14 +77,13 @@ namespace DLuOvBamG.ViewModels
             var pictureList = new List<Picture>();
             for (int i = 0; i < imagePaths.Length ; i++)
             {
-                // Stream imageStream = await imageService.LoadFile(imagePaths[i]).DownSample(width: 200).AsJPGStreamAsync(quality: 80);
                 Picture picture = new Picture(imagePaths[i], i.ToString());
-                // picture.ImageSource = ImageSource.FromStream(() => imageStream);
+                picture.ImageSource = ImageSource.FromFile(imagePaths[i]);
                 pictureList.Add(picture);
             }
 
             var sorted = pictureList
-                .OrderBy(item => item.Date)
+                .OrderByDescending(item => item.Date)
                 .GroupBy(item => item.Date.Date.ToShortDateString())
                 .Select(itemGroup => new Grouping<string, Picture>(itemGroup.Key, itemGroup))
                 .ToList();

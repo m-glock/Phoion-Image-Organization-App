@@ -5,34 +5,31 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView" 
-             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              x:Class="DLuOvBamG.Views.ImageGrid"
              Title="Application">
     <flv:FlowListView 
         FlowColumnCount="4"
         SeparatorVisibility="None"
-        HasUnevenRows="false"
+        HasUnevenRows="true"
         FlowItemTappedCommand="{Binding ItemTappedCommand}"
-        RowHeight="100" 
+        RowHeight="50" 
         IsGroupingEnabled="true"
         FlowGroupDisplayBinding="{Binding Key}" 
-        FlowItemsSource="{Binding GroupedItems}" >
+        FlowItemsSource="{Binding GroupedItems}">
         <flv:FlowListView.FlowColumnTemplate>
             <DataTemplate>
                 <Grid Padding="3">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="100" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <ffimageloading:CachedImage 
+                    <Image 
+                        Source="{Binding ImageSource, Mode=OneTime}"
                         Aspect="AspectFill"
-                        WidthRequest="200"
-                        DownsampleToViewSize="True"
-                        Source="{Binding Uri, Mode=OneTime}"
                     >
-                    </ffimageloading:CachedImage>
+                    </Image>
                 </Grid>
             </DataTemplate>
         </flv:FlowListView.FlowColumnTemplate>

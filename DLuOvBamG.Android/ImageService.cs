@@ -24,43 +24,6 @@ namespace DLuOvBamG.Droid
             dateTaken = r.Replace(dateTaken, "-", 2);
             return DateTime.Parse(dateTaken);
         }
-
-        public byte[] ResizeImage(string filePath, float width, float height, int quality)
-        {
-            if (!File.Exists(filePath))
-            {
-                throw new ArgumentException("file does not exists");
-            }
-
-            byte[] imageData = File.ReadAllBytes(filePath);
-
-            // Load the bitmap
-            Bitmap originalImage = BitmapFactory.DecodeByteArray(imageData, 0, imageData.Length);
-
-            float oldWidth = (float)originalImage.Width;
-            float oldHeight = (float)originalImage.Height;
-            float scaleFactor = 0f;
-
-            if (oldWidth > oldHeight)
-            {
-                scaleFactor = width / oldWidth;
-            }
-            else
-            {
-                scaleFactor = height / oldHeight;
-            }
-
-            float newHeight = oldHeight * scaleFactor;
-            float newWidth = oldWidth * scaleFactor;
-
-            Bitmap resizedImage = Bitmap.CreateScaledBitmap(originalImage, (int)newWidth, (int)newHeight, false);
-
-            using (MemoryStream ms = new MemoryStream())
-            {
-                resizedImage.Compress(Bitmap.CompressFormat.Jpeg, quality, ms);
-                return ms.ToArray();
-            }
-        }
     }
 }
 
