@@ -60,15 +60,12 @@ namespace DLuOvBamG.Views
             };
             
             similarPictures.Add(picture1);
-            similarPictures.Add(picture2);
 
             blurryPictures.Add(picture2);
             blurryPictures.Add(picture3);
-            blurryPictures.Add(picture1);
 
             darkPictures.Add(picture4);
             darkPictures.Add(picture2);
-            darkPictures.Add(picture1);
             darkPictures.Add(picture3);
         }
 
@@ -82,8 +79,8 @@ namespace DLuOvBamG.Views
             {
                 RowDefinitions =
                 {
-                    new RowDefinition { Height = new GridLength(70, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(5, GridUnitType.Star) }
+                    new RowDefinition { Height = new GridLength(90) },
+                    new RowDefinition { Height = GridLength.Auto }
                 },
                 ColumnDefinitions =
                 {
@@ -105,7 +102,6 @@ namespace DLuOvBamG.Views
             grid.Children.Add(bv);
             Grid.SetRow(bv, 0);
             Grid.SetColumn(bv, 1);
-            Grid.SetRowSpan(bv, 2);
             Grid.SetColumnSpan(bv, 3);
 
 
@@ -113,7 +109,6 @@ namespace DLuOvBamG.Views
             grid.Children.Add(imageGrid);
             Grid.SetRow(imageGrid, 0);
             Grid.SetColumn(imageGrid, 1);
-            Grid.SetRowSpan(imageGrid, 2);
             Grid.SetColumnSpan(imageGrid, 1);
 
             Label optionName = new Label
@@ -126,7 +121,6 @@ namespace DLuOvBamG.Views
             grid.Children.Add(optionName);
             Grid.SetRow(optionName, 0);
             Grid.SetColumn(optionName, 2);
-            Grid.SetRowSpan(optionName, 2);
             Grid.SetColumnSpan(optionName, 1);
 
 
@@ -144,8 +138,16 @@ namespace DLuOvBamG.Views
             grid.Children.Add(imageFrame);
             Grid.SetRow(imageFrame, 0);
             Grid.SetColumn(imageFrame, 3);
-            Grid.SetRowSpan(imageFrame, 2);
 
+
+            Label setsAndPics = new Label
+            {
+                //TODO: richtiger Text
+                Text = "3 Sets, 19 Bilder"
+            };
+            grid.Children.Add(setsAndPics);
+            Grid.SetRow(setsAndPics, 1);
+            Grid.SetColumn(setsAndPics, 1);
 
             StackLayout.Children.Add(grid);
         }
@@ -155,7 +157,7 @@ namespace DLuOvBamG.Views
         {
             int[] spaceDistribution;
 
-            //TODO: empty list?
+            //TODO: empty list? Default
             switch (displayImages.Count)
             {
                 case 1:
@@ -166,9 +168,6 @@ namespace DLuOvBamG.Views
                     break;
                 case 3:
                     spaceDistribution = new int[] { 25, 25, 25, 25 };
-                    break;
-                case 4:
-                    spaceDistribution = new int[] { 20, 20, 20, 20, 20 };
                     break;
                 default:
                     spaceDistribution = new int[] { };
