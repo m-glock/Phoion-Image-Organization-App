@@ -13,18 +13,22 @@ namespace DLuOvBamG.Models
         public string Uri { get; set; }
 
         public ImageSource ImageSource { get; set; }
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         public DateTime Date { get; set; }
 
-        public Picture(string Uri, string Id)
+        public Picture()
+        {
+
+        }
+        public Picture(string Uri, int Id)
         {
             this.Uri = Uri;
             this.Id = Id;
             this.Date = GetDate(Uri);
         }
 
-        public Picture(string Uri, string Id,  Stream ImageData)
+        public Picture(string Uri, int Id,  Stream ImageData)
         {
             this.Uri = Uri;
             this.Id = Id;

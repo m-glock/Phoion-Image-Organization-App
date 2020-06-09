@@ -62,7 +62,7 @@ namespace DLuOvBamG.ViewModels
             var pictureList = new List<Picture>();
             for (int i = 0; i < imagePaths.Length ; i++)
             {
-                Picture picture = new Picture(imagePaths[i], i.ToString());
+                Picture picture = new Picture(imagePaths[i], i);
                 picture.ImageSource = ImageSource.FromFile(imagePaths[i]);
                 pictureList.Add(picture);
             }
@@ -90,7 +90,8 @@ namespace DLuOvBamG.ViewModels
                         if (picture.Id == Item.Id)
                         {
                             Console.WriteLine("tapped {0}", picture.Id);
-                            var newPage = new ImageDetailPage(picture);
+                            var newPage = new ImageTagPage(picture);
+                            // var newPage = new ImageDetailPage(picture);
                             Navigation.PushAsync(newPage, true);
                         }
                     }
