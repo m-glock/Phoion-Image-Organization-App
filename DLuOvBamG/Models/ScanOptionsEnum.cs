@@ -24,7 +24,22 @@ namespace DLuOvBamG.Models
                 case ScanOptionsEnum.similarPics:
                     return "Ähnliche Bilder";
                 default:
-                    return "What?!";
+                    return null;
+            }
+        }
+
+        public static String GetNameForGalleryPage(this ScanOptionsEnum s1)
+        {
+            switch (s1)
+            {
+                case ScanOptionsEnum.blurryPics:
+                    return "openBlurryPicsPage";
+                case ScanOptionsEnum.darkPics:
+                    return "openDarkPicsPage";
+                case ScanOptionsEnum.similarPics:
+                    return "openSimilarPicsPage";
+                default:
+                    return null;
             }
         }
     }
