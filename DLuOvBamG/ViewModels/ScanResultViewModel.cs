@@ -34,7 +34,7 @@ namespace DLuOvBamG.ViewModels
             Console.WriteLine("similar chosen");
             //await Navigation.PushAsync(new ScanOptionDisplayPage());
         });
-
+        
         /*public ICommand ShowImages => new Command(async () => {
                 //TODO: get correct Group (Enum), slidervalue and pictureList
                 ScanOptionsEnum option = ScanOptionsEnum.blurryPics;
