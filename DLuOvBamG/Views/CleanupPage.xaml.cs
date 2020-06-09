@@ -13,45 +13,79 @@ namespace DLuOvBamG.Views
     [DesignTimeVisible(false)]
     public partial class CleanupPage : ContentPage
     {
-        private CleanupViewModel vm;
-        private Dictionary<Label, Switch> optionSwitches;
+        private CleanupViewModel VM;
+        private ScanOptionViewGroup Similar;
+        private ScanOptionViewGroup Blurry;
+        private ScanOptionViewGroup Dark;
+        private List<Switch> switchList;
 
         public CleanupPage()
         {
-            InitializeComponent(); 
-            vm = BindingContext as CleanupViewModel;
-            vm.Navigation = Navigation;
-            vm.ScanButton = ScanButton;
-            GetSwitches();
-            vm.optionSwitches = optionSwitches;
+            InitializeComponent();
+            VM = BindingContext as CleanupViewModel;
+            VM.Navigation = Navigation;
+            GetOptionElements();
             ScanButton.IsEnabled = false;
         }
 
-        private void GetSwitches()
+        private void GetOptionElements()
         {
-            optionSwitches = new Dictionary<Label, Switch>();
-            optionSwitches.Add(blurryLabel, blurrySwitch);
-            optionSwitches.Add(darkLabel, darkSwitch);
-            optionSwitches.Add(similarLabel, similarSwitch);
-            optionSwitches.Add(duplicateLabel, duplicateSwitch);
-            optionSwitches.Add(videoLabel, videoSwitch);
+            Similar = new ScanOptionViewGroup(ScanOptionsEnum.similarPics, similarSwitch, similarExpander, similarSlider);
+            Blurry = new ScanOptionViewGroup(ScanOptionsEnum.blurryPics, blurrySwitch, blurryExpander, blurrySlider);
+            Dark = new ScanOptionViewGroup(ScanOptionsEnum.darkPics, darkSwitch, darkExpander, darkSlider);
+            switchList = new List<Switch>() { similarSwitch, blurrySwitch, darkSwitch };
         }
 
         private void OptionToggled(object sender, ToggledEventArgs e)
         {
             Switch optionToggle = sender as Switch;
-            vm.UpdateScanOptions(optionToggle.ClassId);
-            if(!optionToggle.IsToggled)
+            ScanOptionViewGroup viewGroup = GetOptionElementsFromClassID(optionToggle.ClassId);
+            VM.UpdateScanOptions(viewGroup.Option, ScanButton, viewGroup.OptionSlider.Value);
+            if (!optionToggle.IsToggled)
             {
-                vm.checkToDisableScanButton();
+                VM.checkToDisableScanButton(ScanButton, switchList);
+                viewGroup.OptionExpander.IsExpanded = false;
+            }
+            else
+            {
+                viewGroup.OptionExpander.IsExpanded = true;
+            }
+            
+        }
+
+        private void OptionTapped(object sender, EventArgs e)
+        {
+            Element optionElement = sender as Element;
+            ScanOptionViewGroup viewGroup = GetOptionElementsFromClassID(optionElement.ClassId);
+            if (viewGroup != null)
+            {
+                Switch optionSwitch = viewGroup.OptionSwitch;
+                optionSwitch.IsToggled = !optionSwitch.IsToggled;
             }
         }
 
-        private void OptionLabelTapped(object sender, EventArgs e)
+        private void ValueChanged(object sender, EventArgs e)
         {
-            Label optionLabel = sender as Label;
-            Switch optionSwitch = optionSwitches[optionLabel];
-            optionSwitch.IsToggled = !optionSwitch.IsToggled;
+            Element optionElement = sender as Element;
+            ScanOptionViewGroup viewGroup = GetOptionElementsFromClassID(optionElement.ClassId);
+            double value = viewGroup.OptionSlider.Value;
+            Console.WriteLine("Value of " + viewGroup.Option.ToString() + " has changed to " + value);
+            VM.updateScanOptionSliderValue(viewGroup.Option, value);
+        }
+
+        private ScanOptionViewGroup GetOptionElementsFromClassID(String classID)
+        {
+            switch (classID)
+            {
+                case "blurryPics":
+                    return Blurry;
+                case "darkPics":
+                    return Dark;
+                case "similarPics":
+                    return Similar;
+                default:
+                    return null;
+            }
         }
     }
 }

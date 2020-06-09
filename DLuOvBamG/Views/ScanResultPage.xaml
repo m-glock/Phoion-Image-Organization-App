@@ -3,19 +3,112 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:DLuOvBamG.ViewModels"
              mc:Ignorable="d"
              x:Class="DLuOvBamG.Views.ScanResultPage"
-             xmlns:vm="clr-namespace:DLuOvBamG.ViewModels"
              Title="{Binding Title}">
 
     <ContentPage.BindingContext>
         <vm:ScanResultViewModel />
     </ContentPage.BindingContext>
 
-    <ScrollView>
-        <StackLayout x:Name="StackLayout">
-            <!-- Inhalt wird dynamisch eingefuegt, je nachdem welche Optionen ausgewaehlt wurden-->
-        </StackLayout>
-    </ScrollView>
+    <StackLayout x:Name="StackLayout" Margin="0,20,0,0">
+        <!-- Inhalt wird dynamisch erzeugt und eigefügt -->
+        
+        
+        <!-- TODO: zum testen erst einmal dalassen-->
+        <!--<Grid Margin="0,0,0,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="90"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*"></ColumnDefinition>
+                <ColumnDefinition Width="45*"></ColumnDefinition>
+                <ColumnDefinition Width="41*"></ColumnDefinition>
+                <ColumnDefinition Width="4*"></ColumnDefinition>
+                <ColumnDefinition Width="5*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <BoxView BackgroundColor="AntiqueWhite" Opacity="0.8" 
+                   Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"></BoxView>
+
+            <Label Text="Unscharfe Bilder"  Grid.Row="0" Grid.Column="2" VerticalTextAlignment = "Center" HorizontalTextAlignment = "End" FontAttributes = "Bold"></Label>
+
+            <Frame Padding="5,5,5,5" BackgroundColor="AntiqueWhite" Opacity="0.8" Grid.Row="0" Grid.Column="3" HasShadow="false">
+                <Image Source="arrow.png"></Image>
+            </Frame>
+
+
+            <Grid Grid.Row="0" Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="25*"></ColumnDefinition>
+                    <ColumnDefinition Width="25*"></ColumnDefinition>
+                    <ColumnDefinition Width="25*"></ColumnDefinition>
+                    <ColumnDefinition Width="25*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Image Source="https://farm9.staticflickr.com/8625/15806486058_7005d77438.jpg" Aspect="AspectFill"
+                   Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"></Image>
+                <Image Source="https://farm5.staticflickr.com/4011/4308181244_5ac3f8239b.jpg" Aspect="AspectFill"
+                   Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"></Image>
+                <Image Source="https://farm6.staticflickr.com/5117/14045101350_113edbe20b.jpg" Aspect="AspectFill"
+                   Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="2"></Image>
+
+            </Grid>
+
+            <Label Text="3 Sets, 19 Bilder" Grid.Row="1" Grid.Column="1"></Label>
+        </Grid>
+
+        <Grid Margin="0,0,0,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="90"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*"></ColumnDefinition>
+                <ColumnDefinition Width="45*"></ColumnDefinition>
+                <ColumnDefinition Width="41*"></ColumnDefinition>
+                <ColumnDefinition Width="4*"></ColumnDefinition>
+                <ColumnDefinition Width="5*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <BoxView BackgroundColor="AntiqueWhite" Opacity="0.8" 
+                   Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"></BoxView>
+
+            <Label Text="Unscharfe Bilder"  Grid.Row="0" Grid.Column="2" VerticalTextAlignment = "Center" HorizontalTextAlignment = "End" FontAttributes = "Bold"></Label>
+
+            <Frame Padding="5,5,5,5" BackgroundColor="AntiqueWhite" Opacity="0.8" Grid.Row="0" Grid.Column="3" HasShadow="false">
+                <Image Source="arrow.png"></Image>
+            </Frame>
+
+
+            <Grid Grid.Row="0" Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="25*"></ColumnDefinition>
+                    <ColumnDefinition Width="25*"></ColumnDefinition>
+                    <ColumnDefinition Width="25*"></ColumnDefinition>
+                    <ColumnDefinition Width="25*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Image Source="https://farm9.staticflickr.com/8625/15806486058_7005d77438.jpg" Aspect="AspectFill"
+                   Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"></Image>
+                <Image Source="https://farm5.staticflickr.com/4011/4308181244_5ac3f8239b.jpg" Aspect="AspectFill"
+                   Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"></Image>
+                <Image Source="https://farm6.staticflickr.com/5117/14045101350_113edbe20b.jpg" Aspect="AspectFill"
+                   Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="2"></Image>
+
+            </Grid>
+
+            <Label Text="3 Sets, 19 Bilder" Grid.Row="1" Grid.Column="1"></Label>
+        </Grid>-->
+
+    </StackLayout>
 
 </ContentPage>
