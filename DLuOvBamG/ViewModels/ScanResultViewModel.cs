@@ -35,7 +35,7 @@ namespace DLuOvBamG.ViewModels
 
 			for (int i = 0; i < images.Length; i++)
 			{
-				Picture picture = new Picture(images[i], i);
+				Picture picture = new Picture(images[i]);
 				BlurryGalleryImages.Add(picture);
 				DarkGalleryImages.Add(picture);
 				SimilarGalleryImages.Add(picture);

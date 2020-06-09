@@ -62,7 +62,7 @@ namespace DLuOvBamG.ViewModels
             var pictureList = new List<Picture>();
             for (int i = 0; i < imagePaths.Length ; i++)
             {
-                Picture picture = new Picture(imagePaths[i], i);
+                Picture picture = new Picture(imagePaths[i]);
                 picture.ImageSource = ImageSource.FromFile(imagePaths[i]);
                 pictureList.Add(picture);
             }
