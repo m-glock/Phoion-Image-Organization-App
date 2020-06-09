@@ -35,11 +35,7 @@ namespace DLuOvBamG.ViewModels
 
 			for (int i = 0; i < images.Length; i++)
 			{
-				Picture picture = new Picture
-				{
-					Id = i.ToString(),
-					Uri = images[i]
-				};
+				Picture picture = new Picture(images[i], i.ToString());
 				BlurryGalleryImages.Add(picture);
 				DarkGalleryImages.Add(picture);
 				SimilarGalleryImages.Add(picture);
