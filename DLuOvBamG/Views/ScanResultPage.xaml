@@ -14,6 +14,55 @@
 
     <StackLayout x:Name="StackLayout" Margin="0,20,0,0">
         <!-- Inhalt wird dynamisch erzeugt und eigefügt -->
+
+        <!--<Grid Margin="0,0,0,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="70*"></RowDefinition>
+                <RowDefinition Height="5*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*"></ColumnDefinition>
+                <ColumnDefinition Width="45*"></ColumnDefinition>
+                <ColumnDefinition Width="41*"></ColumnDefinition>
+                <ColumnDefinition Width="4*"></ColumnDefinition>
+                <ColumnDefinition Width="5*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <BoxView BackgroundColor="AntiqueWhite" Opacity="0.8" 
+                   Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="3"></BoxView>
+
+            <Label Text="Unscharfe Bilder"  Grid.Row="0" Grid.RowSpan="2" Grid.Column="2"></Label>
+
+            <Frame Padding="5,5,5,5" BackgroundColor="AntiqueWhite" Opacity="0.8" Grid.Row="0" Grid.RowSpan="2" Grid.Column="3" HasShadow="false">
+                <Image Source="arrow.png"></Image>
+            </Frame>
+            
+            
+            <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20*"></ColumnDefinition>
+                    <ColumnDefinition Width="20*"></ColumnDefinition>
+                    <ColumnDefinition Width="20*"></ColumnDefinition>
+                    <ColumnDefinition Width="20*"></ColumnDefinition>
+                    <ColumnDefinition Width="20*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Image Source="https://farm5.staticflickr.com/4011/4308181244_5ac3f8239b.jpg" Aspect="AspectFill"
+                   Grid.Row="0" Grid.RowSpan="2" Grid.Column="3" Grid.ColumnSpan="2"></Image>
+                <Image Source="https://farm9.staticflickr.com/8625/15806486058_7005d77438.jpg" Aspect="AspectFill"
+                   Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Grid.ColumnSpan="2"></Image>
+                <Image Source="https://farm6.staticflickr.com/5117/14045101350_113edbe20b.jpg" Aspect="AspectFill"
+                   Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="2"></Image>
+                <Image Source="https://farm8.staticflickr.com/7423/8729135907_79599de8d8.jpg" Aspect="AspectFill"
+                   Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2"></Image>
+
+            </Grid>
+
+            
+        </Grid>-->
     </StackLayout>
 
 </ContentPage>

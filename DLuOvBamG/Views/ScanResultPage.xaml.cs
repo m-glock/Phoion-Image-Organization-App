@@ -10,65 +10,216 @@ namespace DLuOvBamG.Views
 	public partial class ScanResultPage : ContentPage
 	{
 		private ScanResultViewModel VM;
+        private List<Picture> similarPictures;
+        private List<Picture> blurryPictures;
+        private List<Picture> darkPictures;
 
-		public ScanResultPage(Dictionary<ScanOptionsEnum, double> options)
+        public ScanResultPage(Dictionary<ScanOptionsEnum, double> options)
 		{
 			Title = "Scanergebnisse";
 			InitializeComponent();
 			VM = BindingContext as ScanResultViewModel;
 			VM.Navigation = Navigation;
 			VM.Options = options;
+            FillPictureLists();
 
             foreach(ScanOptionsEnum option in options.Keys)
             {
-				showImageGroups(option);
+                ShowImageGroups(option);
             }
         }
 
-		private void showImageGroups(ScanOptionsEnum option)
+        private void FillPictureLists()
         {
-            //TODO: how to find correct rows and columns if needed?
-            //TODO: give them correct ClassID or correct binding method to know which one has been clicked -> enum
+            similarPictures = new List<Picture>();
+            blurryPictures = new List<Picture>();
+            darkPictures = new List<Picture>();
+
+            Picture picture1 = new Picture
+            {
+                Id = "1",
+                Uri = "https://farm5.staticflickr.com/4011/4308181244_5ac3f8239b.jpg"
+            };
+            
+            Picture picture2 = new Picture
+            {
+                Id = "2",
+                Uri = "https://farm9.staticflickr.com/8351/8299022203_de0cb894b0.jpg"
+            };
+            
+            Picture picture3 = new Picture
+            {
+                Id = "3",
+                Uri = "https://farm6.staticflickr.com/5117/14045101350_113edbe20b.jpg"
+            };
+            
+            Picture picture4 = new Picture
+            {
+                Id = "4",
+                Uri = "https://farm8.staticflickr.com/7423/8729135907_79599de8d8.jpg"
+            };
+            
+            similarPictures.Add(picture1);
+            similarPictures.Add(picture2);
+
+            blurryPictures.Add(picture2);
+            blurryPictures.Add(picture3);
+            blurryPictures.Add(picture1);
+
+            darkPictures.Add(picture4);
+            darkPictures.Add(picture2);
+            darkPictures.Add(picture1);
+            darkPictures.Add(picture3);
+        }
+
+        private void ShowImageGroups(ScanOptionsEnum option)
+        {
+            List<Picture> displayImages = GetListOfDisplayImages(option);
+            if (displayImages == null) { /*TODO: handle*/ }
+            
+           
             Grid grid = new Grid
             {
                 RowDefinitions =
                 {
-                    new RowDefinition { Height = new GridLength(70) },
-                    new RowDefinition { Height = new GridLength(5) }
+                    new RowDefinition { Height = new GridLength(70, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(5, GridUnitType.Star) }
                 },
                 ColumnDefinitions =
                 {
                     new ColumnDefinition{ Width = new GridLength(5, GridUnitType.Star)},
                     new ColumnDefinition{ Width = new GridLength(45, GridUnitType.Star)},
-                    new ColumnDefinition{ Width = new GridLength(42, GridUnitType.Star)},
-                    new ColumnDefinition{ Width = new GridLength(3, GridUnitType.Star)},
+                    new ColumnDefinition{ Width = new GridLength(41, GridUnitType.Star)},
+                    new ColumnDefinition{ Width = new GridLength(4, GridUnitType.Star)},
                     new ColumnDefinition{ Width = new GridLength(5, GridUnitType.Star)},
                 }
             };
             grid.Margin = new Thickness(0, 0, 0, 20);
 
-            grid.Children.Add(new Image
-            {
-                Source = "https://farm9.staticflickr.com/8625/15806486058_7005d77438.jpg",
-                Aspect = Aspect.AspectFill
-            }, 1, 4, 0, 2) ;
 
-            grid.Children.Add(new BoxView
+            BoxView bv = new BoxView
             {
-                BackgroundColor = Color.White,
+                BackgroundColor = Color.AntiqueWhite,
                 Opacity = 0.8
-            }, 2, 4, 0, 2);
+            };
+            grid.Children.Add(bv);
+            Grid.SetRow(bv, 0);
+            Grid.SetColumn(bv, 1);
+            Grid.SetRowSpan(bv, 2);
+            Grid.SetColumnSpan(bv, 3);
 
-            grid.Children.Add(new Label
+
+            Grid imageGrid = CreateImageGrid(displayImages);
+            grid.Children.Add(imageGrid);
+            Grid.SetRow(imageGrid, 0);
+            Grid.SetColumn(imageGrid, 1);
+            Grid.SetRowSpan(imageGrid, 2);
+            Grid.SetColumnSpan(imageGrid, 1);
+
+            Label optionName = new Label
             {
                 Text = option.GetTextForDisplay(),
                 VerticalTextAlignment = TextAlignment.Center,
                 HorizontalTextAlignment = TextAlignment.End,
                 FontAttributes = FontAttributes.Bold
-            }, 2, 3, 0, 2) ;
+            };
+            grid.Children.Add(optionName);
+            Grid.SetRow(optionName, 0);
+            Grid.SetColumn(optionName, 2);
+            Grid.SetRowSpan(optionName, 2);
+            Grid.SetColumnSpan(optionName, 1);
+
+
+            Frame imageFrame = new Frame
+            {
+                Padding = new Thickness(5, 5, 5, 5),
+                BackgroundColor = Color.AntiqueWhite,
+                Opacity = 0.8,
+                HasShadow = false
+            };
+
+            Image arrow = new Image { Source = "arrow.png"};
+            imageFrame.Content = arrow;
+
+            grid.Children.Add(imageFrame);
+            Grid.SetRow(imageFrame, 0);
+            Grid.SetColumn(imageFrame, 3);
+            Grid.SetRowSpan(imageFrame, 2);
 
 
             StackLayout.Children.Add(grid);
+        }
+
+
+        private Grid CreateImageGrid(List<Picture> displayImages)
+        {
+            int[] spaceDistribution;
+
+            //TODO: empty list?
+            switch (displayImages.Count)
+            {
+                case 1:
+                    spaceDistribution = new int[] { 100 };
+                    break;
+                case 2:
+                    spaceDistribution = new int[] { 34, 33, 33 };
+                    break;
+                case 3:
+                    spaceDistribution = new int[] { 25, 25, 25, 25 };
+                    break;
+                case 4:
+                    spaceDistribution = new int[] { 20, 20, 20, 20, 20 };
+                    break;
+                default:
+                    spaceDistribution = new int[] { };
+                    break;
+            }
+
+            Grid grid = new Grid
+            {
+                RowDefinitions = { new RowDefinition { Height = GridLength.Star }}
+            };
+
+            foreach (int dist in spaceDistribution)
+            {
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(dist, GridUnitType.Star) });
+            }
+            
+            for (int columnNumber = displayImages.Count - 1; columnNumber >= 0; --columnNumber)
+            {
+                Image image = new Image
+                {
+                    Source = displayImages[columnNumber].Uri,
+                    Aspect = Aspect.AspectFill
+                };
+                grid.Children.Add(image);
+                Grid.SetRow(image, 0);
+                Grid.SetColumn(image, columnNumber);
+                Grid.SetRowSpan(image, 3);
+                Grid.SetColumnSpan(image, 2);
+
+            }
+
+            return grid;
+        }
+
+        private List<Picture> GetListOfDisplayImages(ScanOptionsEnum option)
+        {
+            List<Picture> displayImages = null;
+            switch (option)
+            {
+                case ScanOptionsEnum.blurryPics:
+                    displayImages = blurryPictures;
+                    break;
+                case ScanOptionsEnum.darkPics:
+                    displayImages = darkPictures;
+                    break;
+                case ScanOptionsEnum.similarPics:
+                    displayImages = similarPictures;
+                    break;
+            }
+
+            return displayImages;
         }
 	}
 }
