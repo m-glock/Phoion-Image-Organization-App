@@ -1,7 +1,8 @@
 ﻿using DLuOvBamG.Models;
-using DLuOvBamG.Views;
+using DLuOvBamG.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -14,7 +15,13 @@ namespace DLuOvBamG.ViewModels
 
         public ScanResultViewModel()
         {
+             
+        }
 
+        //TODO: do in tensorflow service
+        public void FillPictureListsTF()
+        {
+            App.tf.FillPictureLists(Options.Keys.ToList());//TODO async
         }
 
         public ICommand openBlurryPicsPage => new Command(async () =>

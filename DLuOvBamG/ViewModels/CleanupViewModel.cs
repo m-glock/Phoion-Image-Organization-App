@@ -54,7 +54,6 @@ namespace DLuOvBamG.ViewModels
         }
 
         public ICommand StartScan => new Command(async () => {
-            //TODO: get Images
             await Navigation.PushAsync(new ScanResultPage(scanOptions));
         });
 

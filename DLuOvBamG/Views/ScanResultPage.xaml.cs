@@ -10,9 +10,6 @@ namespace DLuOvBamG.Views
 	public partial class ScanResultPage : ContentPage
 	{
 		private ScanResultViewModel VM;
-        private List<Picture> similarPictures;
-        private List<Picture> blurryPictures;
-        private List<Picture> darkPictures;
 
         public ScanResultPage(Dictionary<ScanOptionsEnum, double> options)
 		{
@@ -21,7 +18,8 @@ namespace DLuOvBamG.Views
 			VM = BindingContext as ScanResultViewModel;
 			VM.Navigation = Navigation;
 			VM.Options = options;
-            FillPictureLists();
+            VM.FillPictureListsTF();
+
 
             foreach(ScanOptionsEnum option in options.Keys)
             {
@@ -29,49 +27,9 @@ namespace DLuOvBamG.Views
             }
         }
 
-        private void FillPictureLists()
-        {
-            similarPictures = new List<Picture>();
-            blurryPictures = new List<Picture>();
-            darkPictures = new List<Picture>();
-
-            Picture picture1 = new Picture
-            {
-                Id = "1",
-                Uri = "https://farm5.staticflickr.com/4011/4308181244_5ac3f8239b.jpg"
-            };
-            
-            Picture picture2 = new Picture
-            {
-                Id = "2",
-                Uri = "https://farm9.staticflickr.com/8351/8299022203_de0cb894b0.jpg"
-            };
-            
-            Picture picture3 = new Picture
-            {
-                Id = "3",
-                Uri = "https://farm6.staticflickr.com/5117/14045101350_113edbe20b.jpg"
-            };
-            
-            Picture picture4 = new Picture
-            {
-                Id = "4",
-                Uri = "https://farm8.staticflickr.com/7423/8729135907_79599de8d8.jpg"
-            };
-            
-            similarPictures.Add(picture1);
-
-            blurryPictures.Add(picture2);
-            blurryPictures.Add(picture3);
-
-            darkPictures.Add(picture4);
-            darkPictures.Add(picture2);
-            darkPictures.Add(picture3);
-        }
-
         private void ShowImageGroups(ScanOptionsEnum option)
         {
-            List<Picture> displayImages = GetListOfDisplayImages(option);
+            List<Picture> displayImages = App.tf.GetImagesForDisplay(option);
             if (displayImages == null) { /*TODO: handle*/ }
             
            
@@ -203,25 +161,6 @@ namespace DLuOvBamG.Views
             }
 
             return grid;
-        }
-
-        private List<Picture> GetListOfDisplayImages(ScanOptionsEnum option)
-        {
-            List<Picture> displayImages = null;
-            switch (option)
-            {
-                case ScanOptionsEnum.blurryPics:
-                    displayImages = blurryPictures;
-                    break;
-                case ScanOptionsEnum.darkPics:
-                    displayImages = darkPictures;
-                    break;
-                case ScanOptionsEnum.similarPics:
-                    displayImages = similarPictures;
-                    break;
-            }
-
-            return displayImages;
         }
 	}
 }
