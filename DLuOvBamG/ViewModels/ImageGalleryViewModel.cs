@@ -7,27 +7,18 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using System.Runtime.Serialization;
 using DLuOvBamG.Views;
+using DLuOvBamG.Services;
+using System.IO;
+using System.Linq;
+using DLToolkit.Forms.Controls;
 
 namespace DLuOvBamG.ViewModels
 {
     public class ImageGalleryViewModel : INotifyPropertyChanged
     {
-        public ObservableCollection<Picture> Items { get; set; }
-
-        private ContentPage currentPage;
-        public ContentPage CurrentPage
-        {
-            get
-            {
-                return currentPage;
-            }
-
-            set
-            {
-                currentPage = value;
-            }
-
-        }
+        public FlowObservableCollection<Grouping<string, Picture>> GroupedItems { get; set; }
+        public List<Picture> Items { get; set; }
+        public INavigation Navigation;
 
         [DataContract]
         class ImageList
@@ -38,12 +29,16 @@ namespace DLuOvBamG.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ImageGalleryViewModel(ContentPage page)
+        public ImageGalleryViewModel()
         {
-            Items = new ObservableCollection<Picture>() { };
-            CurrentPage = page;
+            Items = new List<Picture>();
+            GroupedItems = new FlowObservableCollection<Grouping<string, Picture>>();
+            LoadImagesFromStorage();
+        }
 
-            string[] images = {
+        async void LoadImagesFromStorage()
+        {
+            string[] stockImages = {
                 "https://farm9.staticflickr.com/8625/15806486058_7005d77438.jpg",
                 "https://farm5.staticflickr.com/4011/4308181244_5ac3f8239b.jpg",
                 "https://farm8.staticflickr.com/7423/8729135907_79599de8d8.jpg",
@@ -75,16 +70,33 @@ namespace DLuOvBamG.ViewModels
 
             };
 
-            for (int i = 0; i < images.Length; i++)
+            IPathService pathService = DependencyService.Get<IPathService>();
+            string dcimFolder = pathService.DcimFolder;
+            dcimFolder += "/Camera";
+            ImageFileStorage imageFileStorage = new ImageFileStorage();
+            string[] imagePaths = await imageFileStorage.GetFilesFromDirectory(dcimFolder);
+
+            if(imagePaths.Length == 0)
             {
-                Picture picture = new Picture
-                {
-                    Id = i.ToString(),
-                    Uri = images[i]
-                };
-                Items.Add(picture);
+                imagePaths = stockImages;
             }
-            
+
+            var pictureList = new List<Picture>();
+            for (int i = 0; i < imagePaths.Length ; i++)
+            {
+                Picture picture = new Picture(imagePaths[i], i.ToString());
+                picture.ImageSource = ImageSource.FromFile(imagePaths[i]);
+                pictureList.Add(picture);
+            }
+
+            var sorted = pictureList
+                .OrderByDescending(item => item.Date)
+                .GroupBy(item => item.Date.Date.ToShortDateString())
+                .Select(itemGroup => new Grouping<string, Picture>(itemGroup.Key, itemGroup))
+                .ToList();
+
+            Items = pictureList;
+            GroupedItems = new FlowObservableCollection<Grouping<string, Picture>>(sorted);
         }
 
         public ICommand ItemTappedCommand
@@ -101,12 +113,16 @@ namespace DLuOvBamG.ViewModels
                         {
                             Console.WriteLine("tapped {0}", picture.Id);
                             var newPage = new ImageDetailPage(picture);
-                            currentPage.Navigation.PushAsync(newPage, true);
+                            Navigation.PushAsync(newPage, true);
                         }
-                }
+                    }
 
                 });
             }
         }
+
+        public ICommand OpenCleanupPage => new Command(async () => {
+            await Navigation.PushAsync(new CleanupPage());
+        });
     }
 }

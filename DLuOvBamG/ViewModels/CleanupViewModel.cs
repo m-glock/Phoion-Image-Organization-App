@@ -10,51 +10,52 @@ namespace DLuOvBamG.ViewModels
     public class CleanupViewModel : BaseViewModel
     {
         public INavigation Navigation { get; set; }
-        public List<ScanOptionsEnum> scanOptions;
-        public Button ScanButton;
-        public Dictionary<Label, Switch> optionSwitches;
+        public Dictionary<ScanOptionsEnum, double> scanOptions;
+        public List<Expander> expander { get; set; }
 
         public CleanupViewModel()
         {
-            Title = "Test";
-            scanOptions = new List<ScanOptionsEnum>();
+            Title = "Aufräumen";
+            scanOptions = new Dictionary<ScanOptionsEnum, double>();
         }
 
-        public void UpdateScanOptions(String optionName)
+        public void UpdateScanOptions(ScanOptionsEnum option, Button scanButton, double sliderValue)
         {
-            //TODO: better way of accessing the right Enum?
-            var values = Enum.GetValues(typeof(ScanOptionsEnum));
-            foreach(Enum enumOption in values)
+            updateScanOptionsList(option, sliderValue);
+            scanButton.IsEnabled = true;
+        }
+
+        private void updateScanOptionsList(ScanOptionsEnum option, double sliderValue)
+        {
+            if (scanOptions.ContainsKey(option))
+                scanOptions.Remove(option);
+            else
+                scanOptions.Add(option, sliderValue);
+        }
+
+        public void updateScanOptionSliderValue(ScanOptionsEnum option, double value)
+        {
+            if (scanOptions.ContainsKey(option))
+                scanOptions[option] = value;
+        }
+
+        public void checkToDisableScanButton(Button scanButton, List<Switch> optionSwitches)
+        {
+            bool optionsChosen = false;
+            foreach (Switch optionSwitch in optionSwitches)
             {
-                if (enumOption.ToString() == optionName)
+                if (optionSwitch.IsToggled)
                 {
-                    updateScanOptionsList((ScanOptionsEnum)enumOption);
+                    optionsChosen = true;
                     break;
                 }
             }
-            ScanButton.IsEnabled = true;
-        }
-
-        private void updateScanOptionsList(ScanOptionsEnum option)
-        {
-            if (scanOptions.Contains(option))
-                scanOptions.Remove(option);
-            else
-                scanOptions.Add(option);  
-        }
-
-        public void checkToDisableScanButton()
-        {
-            bool optionsChosen = false;
-            foreach (Switch optionSwitch in optionSwitches.Values)
-            {
-                if (optionSwitch.IsToggled) optionsChosen = true;
-            }
-            ScanButton.IsEnabled = optionsChosen;
+            scanButton.IsEnabled = optionsChosen;
         }
 
         public ICommand StartScan => new Command(async () => {
-            await Navigation.PushModalAsync(new NavigationPage(new ScanResultPage(scanOptions)));
+            //TODO: get Images
+            await Navigation.PushAsync(new ScanResultPage(scanOptions));
         });
 
     }
