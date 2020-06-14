@@ -22,15 +22,11 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="50" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="50" />
-            <RowDefinition Height="40" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="30" />
@@ -39,44 +35,75 @@
             <ColumnDefinition Width="30" />
         </Grid.ColumnDefinitions>
 
-        <Label x:Name="ChooseOptions" Text="Wählen Sie eine oder mehrere Optionen um ihre Gallerie zu optimieren." Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"></Label>
+        <Label Padding="0, 40, 0, 40" x:Name="ChooseOptions" Text="Wählen Sie eine oder mehrere Optionen um ihre Gallerie zu optimieren." Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"></Label>
 
-        <Switch x:Name="blurrySwitch" ClassId="blurryPics" Toggled="OptionToggled" Grid.Row="2" Grid.Column="1" VerticalOptions="Center" />
-        <Label x:Name="blurryLabel" Grid.Row="2" Grid.Column="2" Text="Unschafe Bilder" VerticalOptions="Center" >
-            <Label.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OptionLabelTapped" NumberOfTapsRequired="1"></TapGestureRecognizer>
-            </Label.GestureRecognizers>
-        </Label>
 
-        <Switch x:Name="darkSwitch" ClassId="darkPics" Toggled="OptionToggled" Grid.Row="3" Grid.Column="1" VerticalOptions="Center" />
-        <Label x:Name="darkLabel" Grid.Row="3" Grid.Column="2" Text="Dunkle Bilder" VerticalOptions="Center">
-            <Label.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OptionLabelTapped" NumberOfTapsRequired="1"></TapGestureRecognizer>
-            </Label.GestureRecognizers>
-        </Label>
+        <Expander Margin="0,0,0,30" Tapped="OptionTapped" ClassId="similarPics" x:Name="similarExpander" Grid.Row="1" Grid.Column="1">
+            <Expander.Header>
+                <FlexLayout>
+                    <Switch x:Name="similarSwitch" ClassId="similarPics" Toggled="OptionToggled" Grid.Row="0" Grid.Column="0" />
+                    <Label Margin="15,0,0,0" x:Name="similarLabel" ClassId="similarPics" Grid.Row="0" Grid.Column="2" Text="Ähnliche Bilder" VerticalTextAlignment="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OptionTapped" NumberOfTapsRequired="1"></TapGestureRecognizer>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </FlexLayout>
+            </Expander.Header>
 
-        <Switch x:Name="similarSwitch" ClassId="similarPics" Toggled="OptionToggled" Grid.Row="4" Grid.Column="1" VerticalOptions="Center" />
-        <Label x:Name="similarLabel" Grid.Row="4" Grid.Column="2" Text="ähnliche Bilder" VerticalOptions="Center">
-            <Label.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OptionLabelTapped" NumberOfTapsRequired="1"></TapGestureRecognizer>
-            </Label.GestureRecognizers>
-        </Label>
+            <Frame Margin="10,20,0,0" Padding="5, 5, 5, 5" HasShadow="False" >
+                <FlexLayout>
+                    <Label Margin="5, 0, 15, 0" Text="Präzision" VerticalTextAlignment="Center"></Label>
+                    <Slider x:Name="similarSlider" ClassId="similarPics" DragCompleted="ValueChanged" MaximumTrackColor="gray" WidthRequest="220"></Slider>
+                </FlexLayout>
+            </Frame>
 
-        <Switch x:Name="duplicateSwitch" ClassId="duplicatePics" Toggled="OptionToggled" Grid.Row="5" Grid.Column="1" VerticalOptions="Center" />
-        <Label x:Name="duplicateLabel" Grid.Row="5" Grid.Column="2" Text="Duplikate" VerticalOptions="Center" >
-            <Label.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OptionLabelTapped" NumberOfTapsRequired="1"></TapGestureRecognizer>
-            </Label.GestureRecognizers>
-        </Label>
+        </Expander>
 
-        <Switch x:Name="videoSwitch" ClassId="longVideos" Toggled="OptionToggled" Grid.Row="6" Grid.Column="1" VerticalOptions="Center" />
-        <Label x:Name="videoLabel" Grid.Row="6" Grid.Column="2" Text="Lange Videos" VerticalOptions="Center" >
-            <Label.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OptionLabelTapped" NumberOfTapsRequired="1"></TapGestureRecognizer>
-            </Label.GestureRecognizers>
-        </Label>
 
-        <Button x:Name="ScanButton" Command="{Binding StartScan}" Text="Scan starten" Grid.Row="7" Grid.Column="1"  Grid.ColumnSpan="2"></Button>
+        <Expander Margin="0,0,0,30" Tapped="OptionTapped" ClassId="blurryPics" x:Name="blurryExpander" Grid.Row="2" Grid.Column="1">
+            <Expander.Header>
+                <FlexLayout>
+                    <Switch x:Name="blurrySwitch" ClassId="blurryPics" Toggled="OptionToggled" Grid.Row="0" Grid.Column="0" />
+                    <Label Margin="15,0,0,0" x:Name="blurryLabel" ClassId="blurryPics" Grid.Row="0" Grid.Column="2" Text="Unscharfe Bilder" VerticalTextAlignment="Center" >
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OptionTapped" NumberOfTapsRequired="1"></TapGestureRecognizer>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </FlexLayout>
+            </Expander.Header>
+
+            <Frame Margin="10,20,0,0" Padding="5, 5, 5, 5" HasShadow="False" >
+                <FlexLayout>
+                    <Label Margin="5, 0, 15, 0" Text="Präzision" VerticalTextAlignment="Center"></Label>
+                    <Slider x:Name="blurrySlider" ClassId="blurryPics" DragCompleted="ValueChanged" MaximumTrackColor="gray" WidthRequest="220"></Slider>
+                </FlexLayout>
+            </Frame>
+        </Expander>
+        
+
+        <Expander Margin="0,0,0,30" Tapped="OptionTapped" ClassId="darkPics" x:Name="darkExpander" Grid.Row="3" Grid.Column="1">
+            <Expander.Header>
+                <FlexLayout>
+
+                    <Switch x:Name="darkSwitch" ClassId="darkPics" Toggled="OptionToggled" Grid.Row="0" Grid.Column="0"/>
+                    <Label Margin="15,0,0,0" x:Name="darkLabel" ClassId="darkPics" Grid.Row="0" Grid.Column="2" Text="Dunkle Bilder" VerticalTextAlignment="Center" >
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OptionTapped" NumberOfTapsRequired="1"></TapGestureRecognizer>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </FlexLayout>
+            </Expander.Header>
+
+            <Frame Margin="10,20,0,0" Padding="5, 5, 5, 5" HasShadow="False" >
+                <FlexLayout>
+                    <Label Margin="5, 0, 15, 0" Text="Präzision" VerticalTextAlignment="Center"></Label>
+                    <Slider x:Name="darkSlider" ClassId="darkPics" DragCompleted="ValueChanged" MaximumTrackColor="gray" WidthRequest="220"></Slider>
+                </FlexLayout>
+            </Frame>
+        </Expander>
+
+
+        <Button Margin="0, 00, 0, 0" x:Name="ScanButton" Command="{Binding StartScan}" Text="Scan starten" Grid.Row="4" Grid.Column="1"  Grid.ColumnSpan="2"></Button>
     </Grid>
     
 </ContentPage>

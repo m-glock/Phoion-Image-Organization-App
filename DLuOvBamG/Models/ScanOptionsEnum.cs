@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DLuOvBamG.Views;
+using System;
 
 namespace DLuOvBamG.Models
 {
@@ -6,9 +7,7 @@ namespace DLuOvBamG.Models
 	{
 		blurryPics, 
 		darkPics, 
-		similarPics,
-		duplicatePics,
-		longVideos
+		similarPics
 	}
 
     static class ScanOptionsMethods
@@ -24,12 +23,23 @@ namespace DLuOvBamG.Models
                     return "Dunkle Bilder";
                 case ScanOptionsEnum.similarPics:
                     return "Ähnliche Bilder";
-                case ScanOptionsEnum.duplicatePics:
-                    return "Duplikate";
-                case ScanOptionsEnum.longVideos:
-                    return "Lange Videos";
                 default:
-                    return "What?!";
+                    return null;
+            }
+        }
+
+        public static String GetNameForGalleryPage(this ScanOptionsEnum s1)
+        {
+            switch (s1)
+            {
+                case ScanOptionsEnum.blurryPics:
+                    return "openBlurryPicsPage";
+                case ScanOptionsEnum.darkPics:
+                    return "openDarkPicsPage";
+                case ScanOptionsEnum.similarPics:
+                    return "openSimilarPicsPage";
+                default:
+                    return null;
             }
         }
     }

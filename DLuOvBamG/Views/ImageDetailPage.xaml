@@ -2,9 +2,55 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ctrl="clr-namespace:DLuOvBamG.Services.XamarinTest.Zoom.Controls"
              mc:Ignorable="d"
              x:Class="DLuOvBamG.Views.ImageDetailPage"
              Title="Application">
-    <Image HeightRequest="100" Aspect="AspectFill" Source="{Binding Image.Uri}"/>
+
+
+
+    <Grid ColumnSpacing="0">
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50" />
+            <!--<RowDefinition Height="50"/>-->
+        </Grid.RowDefinitions>
+         <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <ctrl:PinchAndPanContainer Grid.Row="0" Grid.ColumnSpan="4">
+             <ctrl:PinchAndPanContainer.Content>
+                <Image HeightRequest="100" Aspect="AspectFill" Source="{Binding Image.Uri}"/>
+             </ctrl:PinchAndPanContainer.Content>
+        </ctrl:PinchAndPanContainer>
+        <Grid  BackgroundColor="White" Grid.Row="1" Grid.Column="0">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding MenuTapped}"  CommandParameter="categories"/>
+            </Grid.GestureRecognizers>
+            <Image Source="categories_64px.png" WidthRequest="32" HeightRequest="32"  VerticalOptions="Center" HorizontalOptions="Center"></Image>
+        </Grid>
+        <Grid  BackgroundColor="White" Grid.Row="1" Grid.Column="1">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding MenuTapped}" CommandParameter="info" />
+            </Grid.GestureRecognizers>
+            <Image Source="Info_64px.png" WidthRequest="32" HeightRequest="32"  VerticalOptions="Center" HorizontalOptions="Center"></Image>
+        </Grid>
+        <Grid  BackgroundColor="White" Grid.Row="1" Grid.Column="2">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding MenuTapped}" CommandParameter="delete" />
+            </Grid.GestureRecognizers>
+            <Image Source="delete_64px.png"  WidthRequest="32" HeightRequest="32" VerticalOptions="Center" HorizontalOptions="Center"></Image>
+        </Grid>
+        <Grid  BackgroundColor="White" Grid.Row="1" Grid.Column="3">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding MenuTapped}" CommandParameter="similar" />
+            </Grid.GestureRecognizers>
+            <Image Source="similar_pictures_64px.png" WidthRequest="32" HeightRequest="32" VerticalOptions="Center" HorizontalOptions="Center"></Image>
+        </Grid>
+        <!--<Label x:Name="debugTestString" BackgroundColor="White" Text="{Binding debugString}"  Grid.Row="2" Grid.ColumnSpan="4"/>-->
+    </Grid>    
 </ContentPage>
