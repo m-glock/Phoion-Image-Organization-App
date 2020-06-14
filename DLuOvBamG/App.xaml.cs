@@ -14,6 +14,11 @@ namespace DLuOvBamG
             Device.SetFlags(new string[] { "Expander_Experimental" });
             DependencyService.Register<MockDataStore>();
             MainPage = new NavigationPage(new ImageGrid());
+            
+            IClassifier classifier = DependencyService.Get<IClassifier>();
+            // Debug
+            classifier.test();
+            
         }
 
         protected override void OnStart()
