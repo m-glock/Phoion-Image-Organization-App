@@ -10,7 +10,7 @@ namespace DLuOvBamG
     {
         event EventHandler<ClassificationEventArgs> ClassificationCompleted;
 
-        Task Classify(byte[] bytes);
+        void Classify(byte[] bytes);
     }
 
     public class ClassificationEventArgs : EventArgs
