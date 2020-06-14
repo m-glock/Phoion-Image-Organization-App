@@ -6,7 +6,7 @@ namespace DLuOvBamG
 {
     public partial class App : Application
     {
-
+        static IClassifier classifier;
         public App()
         {
             InitializeComponent();
@@ -15,10 +15,18 @@ namespace DLuOvBamG
             DependencyService.Register<MockDataStore>();
             MainPage = new NavigationPage(new ImageGrid());
             
-            IClassifier classifier = DependencyService.Get<IClassifier>();
+            classifier = DependencyService.Get<IClassifier>();
             // Debug
             classifier.test();
             
+        }
+
+        public static IClassifier Classifier
+        {
+            get
+            {
+                return classifier;
+            }
         }
 
         protected override void OnStart()

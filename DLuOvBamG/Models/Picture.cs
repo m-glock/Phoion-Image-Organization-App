@@ -1,6 +1,6 @@
 ﻿using DLuOvBamG.Services;
 using System;
-
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -17,6 +17,8 @@ namespace DLuOvBamG.Models
 
         public DateTime Date { get; set; }
 
+        public List<CategoryTag> CategoryTags { get; set; }
+
         public Picture()
         {
 
@@ -26,14 +28,7 @@ namespace DLuOvBamG.Models
             this.Uri = Uri;
             this.Id = Id;
             this.Date = GetDate(Uri);
-        }
-
-        public Picture(string Uri, int Id,  Stream ImageData)
-        {
-            this.Uri = Uri;
-            this.Id = Id;
-            this.Date = GetDate(Uri);
-            this.ImageSource = ImageSource.FromStream(() => ImageData);
+            this.CategoryTags = new List<CategoryTag>();
         }
 
         private DateTime GetDate(string Uri)
