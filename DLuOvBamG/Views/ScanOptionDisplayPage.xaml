@@ -14,6 +14,7 @@
 
     <ScrollView>
         <StackLayout x:Name="StackLayout">
+            <Slider x:Name="slider" MaximumTrackColor="gray" WidthRequest="220"></Slider>
             <!-- Inhalt wird dynamisch eingefuegt, je nachdem welche Optionen ausgewaehlt wurden-->
         </StackLayout>
     </ScrollView>

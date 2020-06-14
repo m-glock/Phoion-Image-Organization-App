@@ -1,5 +1,6 @@
 ﻿using DLuOvBamG.Models;
 using DLuOvBamG.Services;
+using DLuOvBamG.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,19 +28,28 @@ namespace DLuOvBamG.ViewModels
         public ICommand openBlurryPicsPage => new Command(async () =>
         {
             Console.WriteLine("blurry chosen");
-            //await Navigation.PushAsync(new ScanOptionDisplayPage());
+            ScanOptionsEnum option = ScanOptionsEnum.blurryPics;
+            double value = Options[option];
+            List<List<Picture>> pictures = App.tf.GetAllPicturesForOption(option);
+            await Navigation.PushAsync(new ScanOptionDisplayPage(value, option, pictures));
         });
 
         public ICommand openDarkPicsPage => new Command(async () =>
         {
             Console.WriteLine("dark chosen");
-            //await Navigation.PushAsync(new ScanOptionDisplayPage());
+            ScanOptionsEnum option = ScanOptionsEnum.darkPics;
+            double value = Options[option];
+            List<List<Picture>> pictures = App.tf.GetAllPicturesForOption(option);
+            await Navigation.PushAsync(new ScanOptionDisplayPage(value, option, pictures));
         });
 
         public ICommand openSimilarPicsPage => new Command(async () =>
         {
             Console.WriteLine("similar chosen");
-            //await Navigation.PushAsync(new ScanOptionDisplayPage());
+            ScanOptionsEnum option = ScanOptionsEnum.similarPics;
+            double value = Options[option];
+            List<List<Picture>> pictures = App.tf.GetAllPicturesForOption(option);
+            await Navigation.PushAsync(new ScanOptionDisplayPage(value, option, pictures));
         });
         
         /*public ICommand ShowImages => new Command(async () => {

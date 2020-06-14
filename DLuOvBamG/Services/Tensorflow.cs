@@ -1,25 +1,19 @@
 ﻿using DLuOvBamG.Models;
+using System;
 using System.Collections.Generic;
 
 namespace DLuOvBamG.Services
 {
     public class Tensorflow
     {
-        private Dictionary<ScanOptionsEnum, List<Picture>> Pictures;
+        private Dictionary<ScanOptionsEnum, List<List<Picture>>> Pictures;
 
         public Tensorflow() {
-            Pictures = new Dictionary<ScanOptionsEnum, List<Picture>>();
+            Pictures = new Dictionary<ScanOptionsEnum, List<List<Picture>>>();
         }
 
-        public void FillPictureLists(List<ScanOptionsEnum> options)
+        public void FillPictureLists(List<ScanOptionsEnum> chosenOptions)
         {
-            //Listen für alle ScanOptions
-            foreach (ScanOptionsEnum option in options)
-            {
-                Pictures.Add(option, new List<Picture>());
-            }
-
-
             //Listen mit Bildern füllen
             string[] stockImages = {
                 "https://farm9.staticflickr.com/8625/15806486058_7005d77438.jpg",
@@ -31,26 +25,66 @@ namespace DLuOvBamG.Services
                 "https://farm9.staticflickr.com/8351/8299022203_de0cb894b0.jpg",
             };
 
+            //alle Bilder in Liste speichern
+            Picture[] picList = new Picture[stockImages.Length];
             for (int i = 0; i < stockImages.Length; i++)
             {
-                Picture pic = new Picture(stockImages[i], i.ToString());
-                foreach (ScanOptionsEnum option in options)
+                picList[i] = new Picture(stockImages[i], i.ToString());
+            }
+
+            //zufällige Gruppen aus Bildern bilden
+            Random r = new Random();
+            foreach (ScanOptionsEnum option in chosenOptions)
+            {
+                List<List<Picture>>  pictures = new List<List<Picture>>();
+
+                for (int i = 0; i < 2; i++) 
                 {
-                    Pictures[option].Add(pic);
+                    List<Picture> pictureGroup = new List<Picture>();
+                    int randomPicLength = r.Next(0, 5);
+                    for (int j = 0; j < randomPicLength; j++)
+                    {
+                        int randomIndex = r.Next(0, picList.Length);
+                        pictureGroup.Add(picList[randomIndex]);
+                    }
+                    pictures.Add(pictureGroup);
                 }
+                Pictures.Add(option, pictures);
             }
         }
 
-        public List<Picture> GetImagesForDisplay(ScanOptionsEnum option)
+        public Picture[] GetImagesForDisplay(ScanOptionsEnum option)
         {
-            List<Picture> displayImages = Pictures[option];
+            List<List<Picture>> picturesList = Pictures[option];
+            if (picturesList[0] == null) return null;
 
-            if (displayImages.Count > 3)
-            {
-                displayImages.RemoveRange(3, displayImages.Count - 3);
-            }
+            Picture[] displayImages = new Picture[3];
+            int picsToCopy = picturesList[0].Count > 2 ? 3 : picturesList[0].Count;
+            picturesList[0].CopyTo(0, displayImages, 0, picsToCopy);
 
             return displayImages;
+        }
+
+        public List<List<Picture>> GetAllPicturesForOption(ScanOptionsEnum option)
+        {
+            return Pictures[option];
+        }
+
+        public int GetAmountOfSetsForOption(ScanOptionsEnum option)
+        {
+            return Pictures[option].Count;
+        }
+
+        public int GetAmountOfPicturesForOption(ScanOptionsEnum option)
+        {
+            List<List<Picture>> pictures = Pictures[option];
+            int count = 0;
+            foreach (List<Picture> list in pictures)
+            {
+                count += list.Count;
+            }
+
+            return count;
         }
     }
 }

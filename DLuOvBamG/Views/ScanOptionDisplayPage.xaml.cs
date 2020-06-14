@@ -12,20 +12,22 @@ namespace DLuOvBamG.Views
 	{
 		ScanOptionDisplayViewModel VM;
 
-		public ScanOptionDisplayPage(ScanOptionsEnum option, double optionValue, List<List<Picture>> pictures)
+		public ScanOptionDisplayPage(double optionValue, ScanOptionsEnum option, List<List<Picture>> pictures)
 		{
 			InitializeComponent();
 			VM = BindingContext as ScanOptionDisplayViewModel;
 			VM.Pictures = pictures;
+			slider.Value = optionValue;
 
 			Title = option.GetTextForDisplay();
-            for (int  i = 0; i < pictures.Count; i++)
+
+            for (int i = 0; i < pictures.Count; i++)
             {
-				addCollectionViewToPage(i);
-			}
+				AddCollectionViewToPage(i);
+            }
 		}
 
-		public void addCollectionViewToPage(int groupNumber)
+		public void AddCollectionViewToPage(int groupNumber)
 		{
 			Label label = new Label();
 			label.Text = "Gruppe " + groupNumber;
@@ -36,8 +38,8 @@ namespace DLuOvBamG.Views
 			CollectionView colView = new CollectionView();
 			colView.HeightRequest = 100;
 			colView.ItemsLayout = LinearItemsLayout.Horizontal;
-			//TODO: acces list in VM with list[groupNumber]?
-			//colView.SetBinding(ItemsView.ItemsSourceProperty, VM.GetPictureListName(groupNumber));
+			//TODO: access list in VM with list[groupNumber]?
+			colView.SetBinding(ItemsView.ItemsSourceProperty, VM.GetPictureListName(groupNumber).ToString());
 			StackLayout.Children.Add(colView);
 
 			colView.ItemTemplate = new DataTemplate(() =>

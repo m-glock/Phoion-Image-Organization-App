@@ -1,6 +1,7 @@
 ﻿using DLuOvBamG.Models;
 using DLuOvBamG.ViewModels;
 using System.Collections.Generic;
+using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -29,7 +30,7 @@ namespace DLuOvBamG.Views
 
         private void ShowImageGroups(ScanOptionsEnum option)
         {
-            List<Picture> displayImages = App.tf.GetImagesForDisplay(option);
+            Picture[] displayImages = App.tf.GetImagesForDisplay(option);
             if (displayImages == null) { /*TODO: handle*/ }
             
            
@@ -66,7 +67,7 @@ namespace DLuOvBamG.Views
             Grid.SetColumnSpan(bv, 3);
 
 
-            Grid imageGrid = CreateImageGrid(displayImages);
+            Grid imageGrid = CreateImageGrid(displayImages.ToList());
             grid.Children.Add(imageGrid);
             Grid.SetRow(imageGrid, 0);
             Grid.SetColumn(imageGrid, 1);
@@ -101,10 +102,13 @@ namespace DLuOvBamG.Views
             Grid.SetColumn(imageFrame, 3);
 
 
+            int setAmount = App.tf.GetAmountOfSetsForOption(option);
+            int pictureAmount = App.tf.GetAmountOfPicturesForOption(option);
             Label setsAndPics = new Label
             {
                 //TODO: richtiger Text
-                Text = "3 Sets, 19 Bilder"
+                
+                Text = setAmount + " Sets, " + pictureAmount + " Bilder"
             };
             grid.Children.Add(setsAndPics);
             Grid.SetRow(setsAndPics, 1);
@@ -119,7 +123,7 @@ namespace DLuOvBamG.Views
             int[] spaceDistribution;
 
             //TODO: empty list? Default
-            switch (displayImages.Count)
+            switch (displayImages.Count) //hat drei elemente, aber die sind leer
             {
                 case 1:
                     spaceDistribution = new int[] { 100 };
