@@ -24,18 +24,22 @@ namespace DLuOvBamG.Services
             InitializeAsync().SafeFireAndForget(false);
         }
 
-        // check if table to save Pictures already exists, else create one
+        // check if tables already exists, else create them
         async Task InitializeAsync()
         {
             if (!initialized)
             {
+                // create tables if needed
                 if (!Database.TableMappings.Any(m => m.MappedType.Name == typeof(Picture).Name))
                 {
                     await Database.CreateTablesAsync(CreateFlags.None, typeof(Picture)).ConfigureAwait(false);
+                    await Database.CreateTablesAsync(CreateFlags.None, typeof(CategoryTag)).ConfigureAwait(false);
+                    await Database.CreateTablesAsync(CreateFlags.None, typeof(PictureTags)).ConfigureAwait(false);
                     initialized = true;
                 }
             }
         }
+
 
         public Task<List<Picture>> GetPicturesAsync()
         {

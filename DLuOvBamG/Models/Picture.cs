@@ -4,8 +4,6 @@ using SQLiteNetExtensions.Attributes;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
 using Xamarin.Forms;
 
 namespace DLuOvBamG.Models
@@ -39,6 +37,7 @@ namespace DLuOvBamG.Models
             this.Id = Id;
             this.Date = GetDate(Uri);
             this.ImageSource = ImageSource.FromStream(() => ImageData);
+            this.CategoryTags = new List<CategoryTag>();
         }
 
         private DateTime GetDate(string Uri)
