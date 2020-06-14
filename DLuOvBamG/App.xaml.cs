@@ -15,6 +15,10 @@ namespace DLuOvBamG
 
             DependencyService.Register<MockDataStore>();
             MainPage = new MainPage();
+
+            // Debug
+            IClassifier classifier = DependencyService.Get<IClassifier>();
+            classifier.test();
         }
 
         protected override void OnStart()

@@ -17,14 +17,17 @@ using Java.IO;
 using Java.Nio;
 using Java.Nio.Channels;
 using Org.Tensorflow.Lite;
+using Xamarin.Forms;
 
+[assembly: Dependency(typeof(DLuOvBamG.Droid.TensorflowClassifier))]
 namespace DLuOvBamG.Droid
 {
     public class TensorflowClassifier : IClassifier
     {
         Interpreter interpreter;
         List<string> labels;
-        byte[] imageBytes;
+        byte[] cat;
+        byte[] fish;
 
         public event EventHandler<ClassificationEventArgs> ClassificationCompleted;
 
@@ -32,8 +35,10 @@ namespace DLuOvBamG.Droid
         {
             interpreter = new Interpreter(GetByteBuffer("mobilenet_v1_1.0_224.tflite"));
             labels = LoadLabelList();
-            imageBytes = GetImageBytes();
-            Classify(imageBytes);
+            cat = GetImageBytes("catdog.jpg");
+            fish = GetImageBytes("Katri.jpg");
+            Classify(cat);
+            Classify(fish);
         }
 
         private ByteBuffer GetByteBuffer(string path)
@@ -54,9 +59,9 @@ namespace DLuOvBamG.Droid
             return labels;
         }
 
-        private byte[] GetImageBytes()
+        private byte[] GetImageBytes(string path)
         {
-            AssetFileDescriptor assetDescriptor = Android.App.Application.Context.Assets.OpenFd("catdog.jpg");
+            AssetFileDescriptor assetDescriptor = Android.App.Application.Context.Assets.OpenFd(path);
             Stream stream = assetDescriptor.CreateInputStream();
             byte[] fileBytes = ReadStream(stream);
 

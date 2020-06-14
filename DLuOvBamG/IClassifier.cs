@@ -11,6 +11,8 @@ namespace DLuOvBamG
         event EventHandler<ClassificationEventArgs> ClassificationCompleted;
 
         void Classify(byte[] bytes);
+
+        void test();
     }
 
     public class ClassificationEventArgs : EventArgs
