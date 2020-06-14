@@ -10,8 +10,9 @@ namespace DLuOvBamG
     {
         event EventHandler<ClassificationEventArgs> ClassificationCompleted;
 
-        void Classify(byte[] bytes);
+        List<ModelClassification> Classify(byte[] bytes);
 
+        // Debug, to remove
         void test();
     }
 

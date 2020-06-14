@@ -16,8 +16,9 @@ namespace DLuOvBamG
             DependencyService.Register<MockDataStore>();
             MainPage = new MainPage();
 
-            // Debug
+            
             IClassifier classifier = DependencyService.Get<IClassifier>();
+            // Debug
             classifier.test();
         }
 
