@@ -35,8 +35,9 @@
             </flv:FlowListView>
         </ScrollView>
 
-        <Frame Padding="15,15,15,15" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds=".95,.95,70,70" CornerRadius="50">
-            <ImageButton Source="broom_icon.png" BackgroundColor="White"
+        <Frame Padding="15,15,15,15" BackgroundColor="Ivory" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds=".95,.95,70,70" CornerRadius="50">
+            <!-- From https://icons8.com/icons/set/broom-->
+            <ImageButton Source="broom_icon.png" BackgroundColor="Ivory"
                      Command="{Binding OpenCleanupPage}" />
         </Frame>
 
