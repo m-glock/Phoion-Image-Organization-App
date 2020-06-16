@@ -1,33 +1,42 @@
 ﻿using DLuOvBamG.Services;
+using SQLite;
+using SQLiteNetExtensions.Attributes;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
 using Xamarin.Forms;
 
 namespace DLuOvBamG.Models
 {
     public class Picture
     {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
         public string Uri { get; set; }
 
         public ImageSource ImageSource { get; set; }
-        public int Id { get; set; }
-
+        
         public DateTime Date { get; set; }
 
+        [ManyToMany(typeof(PictureTags))]
         public List<CategoryTag> CategoryTags { get; set; }
-
+        
         public Picture()
         {
 
         }
-        public Picture(string Uri, int Id)
+        public Picture(string Uri)
+        {
+            this.Uri = Uri;
+            this.Date = GetDate(Uri);
+        }
+
+        public Picture(string Uri, Stream ImageData)
         {
             this.Uri = Uri;
             this.Id = Id;
             this.Date = GetDate(Uri);
+            this.ImageSource = ImageSource.FromStream(() => ImageData);
             this.CategoryTags = new List<CategoryTag>();
         }
 

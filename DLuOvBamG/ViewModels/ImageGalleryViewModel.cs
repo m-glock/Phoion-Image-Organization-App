@@ -20,13 +20,6 @@ namespace DLuOvBamG.ViewModels
         public List<Picture> Items { get; set; }
         public INavigation Navigation;
 
-        [DataContract]
-        class ImageList
-        {
-            [DataMember(Name = "photos")]
-            public List<string> Photos = null;
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ImageGalleryViewModel()
@@ -62,7 +55,7 @@ namespace DLuOvBamG.ViewModels
             var pictureList = new List<Picture>();
             for (int i = 0; i < imagePaths.Length ; i++)
             {
-                Picture picture = new Picture(imagePaths[i], i);
+                Picture picture = new Picture(imagePaths[i]);
                 picture.ImageSource = ImageSource.FromFile(imagePaths[i]);
                 pictureList.Add(picture);
             }

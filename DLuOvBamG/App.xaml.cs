@@ -6,6 +6,7 @@ namespace DLuOvBamG
 {
     public partial class App : Application
     {
+        static ImageOrganizationDatabase database;
         static IClassifier classifier;
         public App()
         {
@@ -26,6 +27,18 @@ namespace DLuOvBamG
             get
             {
                 return classifier;
+            }
+        }
+
+        public static ImageOrganizationDatabase Database
+        {
+            get
+            {
+                if (database == null)
+                {
+                    database = new ImageOrganizationDatabase();
+                }
+                return database;
             }
         }
 
