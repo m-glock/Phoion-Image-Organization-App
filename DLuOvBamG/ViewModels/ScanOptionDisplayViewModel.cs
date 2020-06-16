@@ -3,6 +3,7 @@
 using DLuOvBamG.Models;
 using System.Collections.Generic;
 using DLuOvBamG.Services;
+using System.Text.RegularExpressions;
 
 namespace DLuOvBamG.ViewModels
 {
@@ -16,13 +17,9 @@ namespace DLuOvBamG.ViewModels
 
 		}
 
-		public void getImagesFromTensorflow()
-        {
-
-		}
-
-		public List<Picture> GetPictureListName(int groupID)
+		public List<Picture> GetPictureListForGroup(int groupID)
 		{
+			if (groupID > Pictures.Count) return null;
 			return Pictures[groupID];
 		}
 	}

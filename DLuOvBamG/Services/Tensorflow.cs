@@ -41,7 +41,7 @@ namespace DLuOvBamG.Services
                 for (int i = 0; i < 2; i++) 
                 {
                     List<Picture> pictureGroup = new List<Picture>();
-                    int randomPicLength = r.Next(0, 5);
+                    int randomPicLength = r.Next(1, 5);
                     for (int j = 0; j < randomPicLength; j++)
                     {
                         int randomIndex = r.Next(0, picList.Length);
@@ -58,9 +58,9 @@ namespace DLuOvBamG.Services
             List<List<Picture>> picturesList = Pictures[option];
             if (picturesList[0] == null) return null;
 
-            Picture[] displayImages = new Picture[3];
-            int picsToCopy = picturesList[0].Count > 2 ? 3 : picturesList[0].Count;
-            picturesList[0].CopyTo(0, displayImages, 0, picsToCopy);
+            int picAmount = picturesList[0].Count > 2 ? 3 : picturesList[0].Count;
+            Picture[] displayImages = new Picture[picAmount];
+            picturesList[0].CopyTo(0, displayImages, 0, picAmount);
 
             return displayImages;
         }

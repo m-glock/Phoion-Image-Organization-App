@@ -12,17 +12,17 @@ namespace DLuOvBamG.Views
 	{
 		private ScanResultViewModel VM;
 
-        public ScanResultPage(Dictionary<ScanOptionsEnum, double> options)
+        public ScanResultPage(Dictionary<ScanOptionsEnum, double> optionValues)
 		{
 			Title = "Scanergebnisse";
 			InitializeComponent();
 			VM = BindingContext as ScanResultViewModel;
 			VM.Navigation = Navigation;
-			VM.Options = options;
+			VM.OptionValues = optionValues;
             VM.FillPictureListsTF();
 
 
-            foreach(ScanOptionsEnum option in options.Keys)
+            foreach(ScanOptionsEnum option in optionValues.Keys)
             {
                 ShowImageGroups(option);
             }
@@ -106,8 +106,6 @@ namespace DLuOvBamG.Views
             int pictureAmount = App.tf.GetAmountOfPicturesForOption(option);
             Label setsAndPics = new Label
             {
-                //TODO: richtiger Text
-                
                 Text = setAmount + " Sets, " + pictureAmount + " Bilder"
             };
             grid.Children.Add(setsAndPics);
@@ -123,7 +121,7 @@ namespace DLuOvBamG.Views
             int[] spaceDistribution;
 
             //TODO: empty list? Default
-            switch (displayImages.Count) //hat drei elemente, aber die sind leer
+            switch (displayImages.Count)
             {
                 case 1:
                     spaceDistribution = new int[] { 100 };

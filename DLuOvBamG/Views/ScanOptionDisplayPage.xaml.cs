@@ -12,10 +12,11 @@ namespace DLuOvBamG.Views
 	{
 		ScanOptionDisplayViewModel VM;
 
-		public ScanOptionDisplayPage(double optionValue, ScanOptionsEnum option, List<List<Picture>> pictures)
+		public ScanOptionDisplayPage(double optionValue, ScanOptionsEnum option)
 		{
 			InitializeComponent();
 			VM = BindingContext as ScanOptionDisplayViewModel;
+			List<List<Picture>> pictures = App.tf.GetAllPicturesForOption(option);
 			VM.Pictures = pictures;
 			slider.Value = optionValue;
 
@@ -30,7 +31,7 @@ namespace DLuOvBamG.Views
 		public void AddCollectionViewToPage(int groupNumber)
 		{
 			Label label = new Label();
-			label.Text = "Gruppe " + groupNumber;
+			label.Text = "Set " + (groupNumber + 1);
 			label.FontAttributes = FontAttributes.Bold;
 			label.Margin = new Thickness(10, 20, 0, 0);
 			StackLayout.Children.Add(label);
@@ -38,10 +39,8 @@ namespace DLuOvBamG.Views
 			CollectionView colView = new CollectionView();
 			colView.HeightRequest = 100;
 			colView.ItemsLayout = LinearItemsLayout.Horizontal;
-			//TODO: access list in VM with list[groupNumber]?
-			colView.SetBinding(ItemsView.ItemsSourceProperty, VM.GetPictureListName(groupNumber).ToString());
-			StackLayout.Children.Add(colView);
-
+			colView.ItemsSource = VM.GetPictureListForGroup(groupNumber);
+			
 			colView.ItemTemplate = new DataTemplate(() =>
 			{
 				ContentView contentView = new ContentView();
@@ -53,6 +52,8 @@ namespace DLuOvBamG.Views
 				contentView.Content = image;
 				return contentView;
 			});
+
+			StackLayout.Children.Add(colView);
 		}
 	}
 }
