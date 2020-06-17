@@ -8,12 +8,14 @@ using Xamarin.Forms;
 
 namespace DLuOvBamG.Models
 {
+    [Table("Pictures")]
     public class Picture
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
         public string Uri { get; set; }
 
+        [Ignore]
         public ImageSource ImageSource { get; set; }
         
         public DateTime Date { get; set; }
@@ -25,18 +27,11 @@ namespace DLuOvBamG.Models
         {
 
         }
+
         public Picture(string Uri)
         {
             this.Uri = Uri;
             this.Date = GetDate(Uri);
-        }
-
-        public Picture(string Uri, Stream ImageData)
-        {
-            this.Uri = Uri;
-            this.Id = Id;
-            this.Date = GetDate(Uri);
-            this.ImageSource = ImageSource.FromStream(() => ImageData);
             this.CategoryTags = new List<CategoryTag>();
         }
 

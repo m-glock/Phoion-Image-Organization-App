@@ -16,9 +16,9 @@ namespace DLuOvBamG
             DependencyService.Register<MockDataStore>();
             MainPage = new NavigationPage(new ImageGrid());
             
-            classifier = DependencyService.Get<IClassifier>();
+            
             // Debug
-            classifier.test();
+            // classifier.test();
             
         }
 
@@ -26,6 +26,10 @@ namespace DLuOvBamG
         {
             get
             {
+                if(classifier == null)
+                {
+                    classifier = DependencyService.Get<IClassifier>();
+                }
                 return classifier;
             }
         }

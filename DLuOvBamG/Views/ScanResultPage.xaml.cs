@@ -35,13 +35,13 @@ namespace DLuOvBamG.Views
             blurryPictures = new List<Picture>();
             darkPictures = new List<Picture>();
 
-            Picture picture1 = new Picture("https://farm5.staticflickr.com/4011/4308181244_5ac3f8239b.jpg", 1);
+            Picture picture1 = new Picture("https://farm5.staticflickr.com/4011/4308181244_5ac3f8239b.jpg");
             
-            Picture picture2 = new Picture("https://farm9.staticflickr.com/8351/8299022203_de0cb894b0.jpg", 2);
+            Picture picture2 = new Picture("https://farm9.staticflickr.com/8351/8299022203_de0cb894b0.jpg");
             
-            Picture picture3 = new Picture("https://farm6.staticflickr.com/5117/14045101350_113edbe20b.jpg", 3);
+            Picture picture3 = new Picture("https://farm6.staticflickr.com/5117/14045101350_113edbe20b.jpg");
             
-            Picture picture4 = new Picture("https://farm8.staticflickr.com/7423/8729135907_79599de8d8.jpg", 4);
+            Picture picture4 = new Picture("https://farm8.staticflickr.com/7423/8729135907_79599de8d8.jpg");
             
             similarPictures.Add(picture1);
 

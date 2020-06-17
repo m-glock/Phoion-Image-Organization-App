@@ -1,10 +1,13 @@
-﻿using SQLiteNetExtensions.Attributes;
+﻿using SQLite;
+using SQLiteNetExtensions.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace DLuOvBamG.Models
 {
+    [Table("PictureTags")]
+
     public class PictureTags
     {
         [ForeignKey(typeof(Picture))]

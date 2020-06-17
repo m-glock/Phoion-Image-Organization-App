@@ -6,6 +6,7 @@ using System.Text;
 
 namespace DLuOvBamG.Models
 {
+    [Table("CategoryTags")]
     public class CategoryTag
     {
         [PrimaryKey, AutoIncrement]

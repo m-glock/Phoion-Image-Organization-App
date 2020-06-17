@@ -36,8 +36,7 @@
         </ScrollView>
 
         <Frame Padding="15,15,15,15" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds=".95,.95,70,70" CornerRadius="50">
-            <ImageButton Source="broom_icon.png" BackgroundColor="White"
-                     Command="{Binding OpenCleanupPage}" />
+            <Button BackgroundColor="White" Command="{Binding OpenCleanupPage}" />
         </Frame>
 
     </AbsoluteLayout>
