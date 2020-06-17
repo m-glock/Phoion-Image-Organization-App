@@ -2,19 +2,65 @@
 using DLuOvBamG.Views;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace DLuOvBamG.ViewModels
 {
-    public class CleanupViewModel : BaseViewModel
+    public class CleanupViewModel : BaseViewModel, INotifyPropertyChanged
     {
         public INavigation Navigation { get; set; }
         public Dictionary<ScanOptionsEnum, double> ScanOptions;
-        public List<Expander> expander { get; set; }
-        public string SimilarPrecision { get; }
-        public string DarkPrecision { get; }
-        public string BlurryPrecision { get; }
+        public double similarPrecision;
+        public double darkPrecision;
+        public double blurryPrecision;
+        public event PropertyChangedEventHandler PropertyChanged;
+        public double SimilarPrecision
+        {
+            set
+            {
+                if (similarPrecision != value)
+                {
+                    similarPrecision = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SimilarPrecision"));
+                }
+            }
+            get
+            {
+                return similarPrecision;
+            }
+        }
+        public double DarkPrecision
+        {
+            set
+            {
+                if (darkPrecision != value)
+                {
+                    darkPrecision = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("DarkPrecision"));
+                }
+            }
+            get
+            {
+                return darkPrecision;
+            }
+        }
+        public double BlurryPrecision
+        {
+            set
+            {
+                if (blurryPrecision != value)
+                {
+                    blurryPrecision = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("BlurryPrecision"));
+                }
+            }
+            get
+            {
+                return blurryPrecision;
+            }
+        }
 
 
         public CleanupViewModel()
@@ -40,12 +86,23 @@ namespace DLuOvBamG.ViewModels
         public void SetScanOptionSliderInitialValue(ScanOptionsEnum option, Slider slider)
         {
             int presicionValue = option.GetDefaultPresicionValue();
-            ScanOptions[option] = presicionValue;
             slider.Value = presicionValue;
         }
 
         public void UpdateScanOptionSliderValue(ScanOptionsEnum option, double value)
         {
+            switch (option)
+            {
+                case ScanOptionsEnum.blurryPics:
+                    BlurryPrecision = value;
+                    break;
+                case ScanOptionsEnum.similarPics:
+                    SimilarPrecision = value;
+                    break;
+                case ScanOptionsEnum.darkPics:
+                    DarkPrecision = value;
+                    break;
+            }
             if (ScanOptions.ContainsKey(option))
                 ScanOptions[option] = value;
         }
