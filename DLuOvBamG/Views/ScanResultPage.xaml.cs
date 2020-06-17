@@ -1,6 +1,7 @@
 ﻿using DLuOvBamG.Models;
 using DLuOvBamG.ViewModels;
 using System.Collections.Generic;
+using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -10,52 +11,26 @@ namespace DLuOvBamG.Views
 	public partial class ScanResultPage : ContentPage
 	{
 		private ScanResultViewModel VM;
-        private List<Picture> similarPictures;
-        private List<Picture> blurryPictures;
-        private List<Picture> darkPictures;
 
-        public ScanResultPage(Dictionary<ScanOptionsEnum, double> options)
+        public ScanResultPage(Dictionary<ScanOptionsEnum, double> optionValues)
 		{
 			Title = "Scanergebnisse";
 			InitializeComponent();
 			VM = BindingContext as ScanResultViewModel;
 			VM.Navigation = Navigation;
-			VM.Options = options;
-            FillPictureLists();
+			VM.OptionValues = optionValues;
+            VM.FillPictureListsTF();
 
-            foreach(ScanOptionsEnum option in options.Keys)
+
+            foreach(ScanOptionsEnum option in optionValues.Keys)
             {
                 ShowImageGroups(option);
             }
         }
 
-        private void FillPictureLists()
-        {
-            similarPictures = new List<Picture>();
-            blurryPictures = new List<Picture>();
-            darkPictures = new List<Picture>();
-
-            Picture picture1 = new Picture("https://farm5.staticflickr.com/4011/4308181244_5ac3f8239b.jpg", "1");
-            
-            Picture picture2 = new Picture("https://farm9.staticflickr.com/8351/8299022203_de0cb894b0.jpg", "2");
-            
-            Picture picture3 = new Picture("https://farm6.staticflickr.com/5117/14045101350_113edbe20b.jpg", "3");
-            
-            Picture picture4 = new Picture("https://farm8.staticflickr.com/7423/8729135907_79599de8d8.jpg", "4");
-            
-            similarPictures.Add(picture1);
-
-            blurryPictures.Add(picture2);
-            blurryPictures.Add(picture3);
-
-            darkPictures.Add(picture4);
-            darkPictures.Add(picture2);
-            darkPictures.Add(picture3);
-        }
-
         private void ShowImageGroups(ScanOptionsEnum option)
         {
-            List<Picture> displayImages = GetListOfDisplayImages(option);
+            Picture[] displayImages = App.tf.GetImagesForDisplay(option);
             if (displayImages == null) { /*TODO: handle*/ }
             
            
@@ -92,7 +67,7 @@ namespace DLuOvBamG.Views
             Grid.SetColumnSpan(bv, 3);
 
 
-            Grid imageGrid = CreateImageGrid(displayImages);
+            Grid imageGrid = CreateImageGrid(displayImages.ToList());
             grid.Children.Add(imageGrid);
             Grid.SetRow(imageGrid, 0);
             Grid.SetColumn(imageGrid, 1);
@@ -127,10 +102,11 @@ namespace DLuOvBamG.Views
             Grid.SetColumn(imageFrame, 3);
 
 
+            int setAmount = App.tf.GetAmountOfSetsForOption(option);
+            int pictureAmount = App.tf.GetAmountOfPicturesForOption(option);
             Label setsAndPics = new Label
             {
-                //TODO: richtiger Text
-                Text = "3 Sets, 19 Bilder"
+                Text = setAmount + " Sets, " + pictureAmount + " Bilder"
             };
             grid.Children.Add(setsAndPics);
             Grid.SetRow(setsAndPics, 1);
@@ -173,39 +149,27 @@ namespace DLuOvBamG.Views
             
             for (int columnNumber = displayImages.Count - 1; columnNumber >= 0; --columnNumber)
             {
+                Frame frame = new Frame();
+                frame.Padding = new Thickness(2);
+
                 Image image = new Image
                 {
                     Source = displayImages[columnNumber].Uri,
                     Aspect = Aspect.AspectFill
                 };
-                grid.Children.Add(image);
-                Grid.SetRow(image, 0);
-                Grid.SetColumn(image, columnNumber);
-                Grid.SetRowSpan(image, 3);
-                Grid.SetColumnSpan(image, 2);
+
+                frame.Content = image;
+
+
+                grid.Children.Add(frame);
+                Grid.SetRow(frame, 0);
+                Grid.SetColumn(frame, columnNumber);
+                Grid.SetRowSpan(frame, 3);
+                Grid.SetColumnSpan(frame, 2);
 
             }
 
             return grid;
-        }
-
-        private List<Picture> GetListOfDisplayImages(ScanOptionsEnum option)
-        {
-            List<Picture> displayImages = null;
-            switch (option)
-            {
-                case ScanOptionsEnum.blurryPics:
-                    displayImages = blurryPictures;
-                    break;
-                case ScanOptionsEnum.darkPics:
-                    displayImages = darkPictures;
-                    break;
-                case ScanOptionsEnum.similarPics:
-                    displayImages = similarPictures;
-                    break;
-            }
-
-            return displayImages;
         }
 	}
 }

@@ -6,10 +6,11 @@ namespace DLuOvBamG
 {
     public partial class App : Application
     {
-
+        public static Tensorflow tf;
         public App()
         {
             InitializeComponent();
+            tf = new Tensorflow();
 
             Device.SetFlags(new string[] { "Expander_Experimental" });
             DependencyService.Register<MockDataStore>();
