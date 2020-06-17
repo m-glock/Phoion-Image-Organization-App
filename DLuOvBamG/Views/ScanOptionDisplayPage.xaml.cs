@@ -55,5 +55,12 @@ namespace DLuOvBamG.Views
 
 			StackLayout.Children.Add(colView);
 		}
+
+		private void ValueChanged(object sender, ValueChangedEventArgs e)
+		{
+			Slider optionElement = sender as Slider;
+			VM.Precision = e.NewValue;
+			//TODO: Change Content of page while Slider is moved or when movement is finished?
+		}
 	}
 }

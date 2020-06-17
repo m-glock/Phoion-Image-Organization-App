@@ -14,10 +14,16 @@
 
     <ScrollView>
         <StackLayout x:Name="StackLayout">
-            <StackLayout Margin="20, 30, 20, 20" >
-                <Label Text="Präzision" FontAttributes="Bold"></Label>
-                <Slider x:Name="slider" MaximumTrackColor="gray" WidthRequest="220"></Slider>
-            </StackLayout>
+            <Grid Margin="20, 30, 20, 20" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"></ColumnDefinition>
+                    <ColumnDefinition Width="auto"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label Margin="5, 0, 3, 0" Text="Präzision:" FontAttributes="Bold" Grid.Column="0"></Label>
+                <Label Margin="0, 0, 15, 0" Text="{Binding Precision}" Grid.Column="1"></Label>
+                <Slider x:Name="slider" MaximumTrackColor="gray" WidthRequest="220" Minimum="0" Maximum="10" ValueChanged="ValueChanged" Grid.Column="2"></Slider>
+            </Grid>
             <!-- Inhalt wird dynamisch eingefuegt, je nachdem welche Optionen ausgewaehlt wurden-->
         </StackLayout>
     </ScrollView>
