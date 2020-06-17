@@ -149,16 +149,23 @@ namespace DLuOvBamG.Views
             
             for (int columnNumber = displayImages.Count - 1; columnNumber >= 0; --columnNumber)
             {
+                Frame frame = new Frame();
+                frame.Padding = new Thickness(2);
+
                 Image image = new Image
                 {
                     Source = displayImages[columnNumber].Uri,
                     Aspect = Aspect.AspectFill
                 };
-                grid.Children.Add(image);
-                Grid.SetRow(image, 0);
-                Grid.SetColumn(image, columnNumber);
-                Grid.SetRowSpan(image, 3);
-                Grid.SetColumnSpan(image, 2);
+
+                frame.Content = image;
+
+
+                grid.Children.Add(frame);
+                Grid.SetRow(frame, 0);
+                Grid.SetColumn(frame, columnNumber);
+                Grid.SetRowSpan(frame, 3);
+                Grid.SetColumnSpan(frame, 2);
 
             }
 

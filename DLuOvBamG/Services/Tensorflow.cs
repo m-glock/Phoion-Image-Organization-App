@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace DLuOvBamG.Services
 {
+    //TODO: merge with existing TF Service
     public class Tensorflow
     {
         private Dictionary<ScanOptionsEnum, List<List<Picture>>> Pictures;
@@ -37,8 +38,8 @@ namespace DLuOvBamG.Services
             foreach (ScanOptionsEnum option in chosenOptions)
             {
                 List<List<Picture>>  pictures = new List<List<Picture>>();
-
-                for (int i = 0; i < 2; i++) 
+                int randomSetNr = r.Next(1, 4);
+                for (int i = 0; i < randomSetNr; i++) 
                 {
                     List<Picture> pictureGroup = new List<Picture>();
                     int randomPicLength = r.Next(1, 5);
