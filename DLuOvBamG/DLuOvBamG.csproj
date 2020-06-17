@@ -37,6 +37,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="TensorflowBinding">
+      <HintPath>..\TensorflowBinding.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Views\ImageDetailPage.xaml.cs">
       <DependentUpon>ImageDetailPage.xaml</DependentUpon>
     </Compile>
