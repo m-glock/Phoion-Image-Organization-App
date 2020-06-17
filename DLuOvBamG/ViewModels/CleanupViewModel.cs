@@ -10,36 +10,47 @@ namespace DLuOvBamG.ViewModels
     public class CleanupViewModel : BaseViewModel
     {
         public INavigation Navigation { get; set; }
-        public Dictionary<ScanOptionsEnum, double> scanOptions;
+        public Dictionary<ScanOptionsEnum, double> ScanOptions;
         public List<Expander> expander { get; set; }
+        public string SimilarPrecision { get; }
+        public string DarkPrecision { get; }
+        public string BlurryPrecision { get; }
+
 
         public CleanupViewModel()
         {
             Title = "Aufräumen";
-            scanOptions = new Dictionary<ScanOptionsEnum, double>();
+            ScanOptions = new Dictionary<ScanOptionsEnum, double>();
         }
 
         public void UpdateScanOptions(ScanOptionsEnum option, Button scanButton, double sliderValue)
         {
-            updateScanOptionsList(option, sliderValue);
+            UpdateScanOptionsList(option, sliderValue);
             scanButton.IsEnabled = true;
         }
 
-        private void updateScanOptionsList(ScanOptionsEnum option, double sliderValue)
+        private void UpdateScanOptionsList(ScanOptionsEnum option, double sliderValue)
         {
-            if (scanOptions.ContainsKey(option))
-                scanOptions.Remove(option);
+            if (ScanOptions.ContainsKey(option))
+                ScanOptions.Remove(option);
             else
-                scanOptions.Add(option, sliderValue);
+                ScanOptions.Add(option, sliderValue);
         }
 
-        public void updateScanOptionSliderValue(ScanOptionsEnum option, double value)
+        public void SetScanOptionSliderInitialValue(ScanOptionsEnum option, Slider slider)
         {
-            if (scanOptions.ContainsKey(option))
-                scanOptions[option] = value;
+            int presicionValue = option.GetDefaultPresicionValue();
+            ScanOptions[option] = presicionValue;
+            slider.Value = presicionValue;
         }
 
-        public void checkToDisableScanButton(Button scanButton, List<Switch> optionSwitches)
+        public void UpdateScanOptionSliderValue(ScanOptionsEnum option, double value)
+        {
+            if (ScanOptions.ContainsKey(option))
+                ScanOptions[option] = value;
+        }
+
+        public void CheckToDisableScanButton(Button scanButton, List<Switch> optionSwitches)
         {
             bool optionsChosen = false;
             foreach (Switch optionSwitch in optionSwitches)
@@ -54,7 +65,7 @@ namespace DLuOvBamG.ViewModels
         }
 
         public ICommand StartScan => new Command(async () => {
-            await Navigation.PushAsync(new ScanResultPage(scanOptions));
+            await Navigation.PushAsync(new ScanResultPage(ScanOptions));
         });
 
     }

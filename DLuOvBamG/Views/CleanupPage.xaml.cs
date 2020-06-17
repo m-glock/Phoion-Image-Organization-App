@@ -14,10 +14,8 @@ namespace DLuOvBamG.Views
     public partial class CleanupPage : ContentPage
     {
         private CleanupViewModel VM;
-        private ScanOptionViewGroup Similar;
-        private ScanOptionViewGroup Blurry;
-        private ScanOptionViewGroup Dark;
-        private List<Switch> switchList;
+        private Dictionary<string, ScanOptionViewGroup> ViewGroups;
+        private List<Switch> SwitchList;
 
         public CleanupPage()
         {
@@ -25,15 +23,20 @@ namespace DLuOvBamG.Views
             VM = BindingContext as CleanupViewModel;
             VM.Navigation = Navigation;
             GetOptionElements();
+            foreach (ScanOptionViewGroup viewGroup in ViewGroups.Values)
+            {
+                VM.SetScanOptionSliderInitialValue(viewGroup.Option, viewGroup.OptionSlider);
+            }
             ScanButton.IsEnabled = false;
         }
 
         private void GetOptionElements()
         {
-            Similar = new ScanOptionViewGroup(ScanOptionsEnum.similarPics, similarSwitch, similarExpander, similarSlider);
-            Blurry = new ScanOptionViewGroup(ScanOptionsEnum.blurryPics, blurrySwitch, blurryExpander, blurrySlider);
-            Dark = new ScanOptionViewGroup(ScanOptionsEnum.darkPics, darkSwitch, darkExpander, darkSlider);
-            switchList = new List<Switch>() { similarSwitch, blurrySwitch, darkSwitch };
+            ViewGroups = new Dictionary<string, ScanOptionViewGroup>();
+            ViewGroups.Add("similarPics", new ScanOptionViewGroup(ScanOptionsEnum.similarPics, similarSwitch, similarExpander, similarSlider));
+            ViewGroups.Add("blurryPics", new ScanOptionViewGroup(ScanOptionsEnum.blurryPics, blurrySwitch, blurryExpander, blurrySlider));
+            ViewGroups.Add("darkPics", new ScanOptionViewGroup(ScanOptionsEnum.darkPics, darkSwitch, darkExpander, darkSlider));
+            SwitchList = new List<Switch>() { similarSwitch, blurrySwitch, darkSwitch };
         }
 
         private void OptionToggled(object sender, ToggledEventArgs e)
@@ -43,7 +46,7 @@ namespace DLuOvBamG.Views
             VM.UpdateScanOptions(viewGroup.Option, ScanButton, viewGroup.OptionSlider.Value);
             if (!optionToggle.IsToggled)
             {
-                VM.checkToDisableScanButton(ScanButton, switchList);
+                VM.CheckToDisableScanButton(ScanButton, SwitchList);
                 viewGroup.OptionExpander.IsExpanded = false;
             }
             else
@@ -70,7 +73,7 @@ namespace DLuOvBamG.Views
             ScanOptionViewGroup viewGroup = GetOptionElementsFromClassID(optionElement.ClassId);
             double value = viewGroup.OptionSlider.Value;
             Console.WriteLine("Value of " + viewGroup.Option.ToString() + " has changed to " + value);
-            VM.updateScanOptionSliderValue(viewGroup.Option, value);
+            VM.UpdateScanOptionSliderValue(viewGroup.Option, value);
         }
 
         private ScanOptionViewGroup GetOptionElementsFromClassID(String classID)
@@ -78,11 +81,11 @@ namespace DLuOvBamG.Views
             switch (classID)
             {
                 case "blurryPics":
-                    return Blurry;
+                    return ViewGroups["blurryPics"];
                 case "darkPics":
-                    return Dark;
+                    return ViewGroups["darkPics"];
                 case "similarPics":
-                    return Similar;
+                    return ViewGroups["similarPics"];
                 default:
                     return null;
             }
