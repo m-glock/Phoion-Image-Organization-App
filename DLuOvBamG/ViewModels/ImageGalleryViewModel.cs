@@ -18,31 +18,59 @@ namespace DLuOvBamG.ViewModels
     public class ImageGalleryViewModel : INotifyPropertyChanged
     {
         static string CAMERA_PATH = "/Camera";
-        public FlowObservableCollection<Grouping<string, Picture>> GroupedItems { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        FlowObservableCollection<Grouping<string, Picture>> groupedItems;
+
+        public FlowObservableCollection<Grouping<string, Picture>> GroupedItems
+        {
+            set
+            {
+
+                groupedItems = value;
+
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("GroupedItems"));
+                }
+            }
+            
+            get
+            {
+                return groupedItems;
+            }
+        }
+
         public List<Picture> Items { get; set; }
         public INavigation Navigation;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        
         public ImageGalleryViewModel()
         {
             Items = new List<Picture>();
             GroupedItems = new FlowObservableCollection<Grouping<string, Picture>>();
-            GetPictures();
         }
 
 
-        async void GetPictures()
+        public async void GetPictures()
         {
             // try to get pictures from db, if this fails load them and put them in db
             List<Picture> pictures = await LoadImagesFromDB();
+            Console.WriteLine("dbImages count {0}", pictures.Count);
 
-            if (pictures.Count == 0)
+            if(pictures.Count == 0)
             {
-                pictures = await LoadImagesFromStorage();
-                SavePicturesInDB(pictures);
+                var storageImages = await LoadImagesFromStorage();
+                var saved = await SavePicturesInDB(storageImages);
+                Console.WriteLine("dbImages count {0}", pictures.Count);
+                if (saved)
+                {
+                    GetPictures();
+                }
             }
-
             Items = pictures;
+            pictures = SetImageSources(pictures);
             GroupPicturesByDate(pictures);
         }
 
@@ -58,20 +86,24 @@ namespace DLuOvBamG.ViewModels
             for (int i = 0; i < imagePaths.Length ; i++)
             {
                 Picture picture = new Picture(imagePaths[i]);
-                picture.ImageSource = ImageSource.FromFile(imagePaths[i]);
-                picture.Id = i;
                 pictureList.Add(picture);
             }
             return pictureList;
         }
 
-        async Task<List<Picture>> LoadImagesFromDB()
+        Task<List<Picture>> LoadImagesFromDB()
         {
             ImageOrganizationDatabase db = App.Database;
-            List<Picture> pictures = new List<Picture>();
-            // This breaks the display of images, dont know why
-            // List<Picture> pictures = await db.GetPicturesAsync();
-            return pictures;
+            return db.GetPicturesAsync();
+        }
+
+        List<Picture> SetImageSources(List<Picture> pictures)
+        {
+            return pictures.Select(picture =>
+            {
+                picture.ImageSource = ImageSource.FromFile(picture.Uri);
+                return picture;
+            }).ToList();
         }
 
         void GroupPicturesByDate(List<Picture> pictures)
@@ -84,13 +116,16 @@ namespace DLuOvBamG.ViewModels
             GroupedItems =  new FlowObservableCollection<Grouping<string, Picture>>(sorted);
         }
 
-        async void SavePicturesInDB(List<Picture> pictures)
+        async Task<bool> SavePicturesInDB(List<Picture> pictures)
         {
             if(pictures.Count > 0)
             {
                 ImageOrganizationDatabase db = App.Database;
-
+                var tasks = pictures.Select(picture => db.SavePictureAsync(picture));
+                await Task.WhenAll(tasks);
+                return true;
             }
+            return false;
         }
 
         public ICommand ItemTappedCommand

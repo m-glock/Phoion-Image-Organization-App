@@ -60,6 +60,7 @@ namespace DLuOvBamG.Services
             }
             else
             {
+                Console.WriteLine("insert picture {0}", picture.Uri);
                 return Database.InsertAsync(picture);
             }
         }
