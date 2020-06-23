@@ -16,15 +16,15 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            
-            <CarouselView x:Name="ImageCarouselView" ItemsSource="{Binding PictureList}" PeekAreaInsets="150" Grid.Row="0">
+
+            <CarouselView x:Name="ImageCarouselView" ItemsSource="{Binding PictureList}" CurrentItemChanged="OnCurrentItemChanged" PeekAreaInsets="150" Grid.Row="0">
                 <CarouselView.ItemTemplate>
                     <DataTemplate>
                         <Image Source="{Binding Uri}"></Image>
                     </DataTemplate>
                 </CarouselView.ItemTemplate>
             </CarouselView>
-            <Image x:Name="CurrentPicture" Source="{Binding currentPictureUri}" Grid.Row="1"></Image>
+            <Image x:Name="CurrentPicture" Source="{Binding CurrentPictureUri}" Grid.Row="1"></Image>
             <Image Source="delete_64px.png" Grid.Row="2"></Image>
         </Grid>
     </ContentPage.Content>

@@ -12,11 +12,11 @@ namespace DLuOvBamG.ViewModels
 		public ScanOptionsEnum Option;
 		public List<List<Picture>> Pictures;
 		public double precision;
-		public event PropertyChangedEventHandler PropertyChanged;
 		public INavigation Navigation;
-		public Xamarin.Forms.Image SelectedImage;
+		public Image SelectedImage;
+		public event PropertyChangedEventHandler PropertyChanged;
 
-        public double Precision
+		public double Precision
         {
             set
             {

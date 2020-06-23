@@ -24,11 +24,18 @@ namespace DLuOvBamG.Views
             
             //TODO: remove comparing picture from list
             Picture comparingPicture = mainPic;
-            VM.comparingPictureUri = comparingPicture.Uri;
-            VM.currentPictureUri = pictures[0].Uri;
+            VM.ComparingPictureUri = comparingPicture.Uri;
+            VM.CurrentPictureUri = pictures[0].Uri;
 
             BindingContext = VM;
             InitializeComponent();
+        }
+
+        public void OnCurrentItemChanged(object sender, CurrentItemChangedEventArgs e)
+        {
+            string before = VM.CurrentPictureUri;
+            Picture currentPicture = (Picture)e.CurrentItem;
+            VM.CurrentPictureUri = currentPicture.Uri;
         }
     }
 }
