@@ -1,0 +1,3 @@
+0 sharp
+1 defocused
+2 motion
