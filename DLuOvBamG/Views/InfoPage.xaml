@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="DLuOvBamG.Views.InfoPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                 </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="50" />
+                    <!--<RowDefinition Height="50"/>-->
+                </Grid.RowDefinitions>
+                <Grid  BackgroundColor="White" Grid.Row="1" Grid.Column="0">
+                    <Label Text="Name:" VerticalOptions ="Center" HorizontalOptions="End"></Label>
+                </Grid>
+                <Grid  BackgroundColor="White" Grid.Row="1" Grid.Column="1">
+                    <Label Text="{Binding infoName}"></Label>
+                </Grid>
+                <Grid  BackgroundColor="White" Grid.Row="2" Grid.Column="0">
+                    <Label Text="Location: " VerticalOptions ="Center" HorizontalOptions="End"></Label>
+                </Grid>
+                <Grid  BackgroundColor="White" Grid.Row="2" Grid.Column="1">
+                    <Label Text="{Binding infoLocation}"></Label>
+                </Grid>
+                <Grid  BackgroundColor="White" Grid.Row="3" Grid.Column="0">
+                    <Label Text="Date: " VerticalOptions ="Center" HorizontalOptions="End"></Label>
+                </Grid>
+                <Grid  BackgroundColor="White" Grid.Row="3" Grid.Column="1">
+                    <Label Text="{Binding infoDate}"></Label>
+                </Grid>
+                <Grid  BackgroundColor="White" Grid.Row="4" Grid.Column="0">
+                    <Label Text="Tags:  " VerticalOptions ="Center" HorizontalOptions="End"></Label>
+                </Grid>
+                <Grid  BackgroundColor="White" Grid.Row="4" Grid.Column="1">
+                    <Label Text="{Binding infoTags}"></Label>
+                </Grid>
+            </Grid>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
