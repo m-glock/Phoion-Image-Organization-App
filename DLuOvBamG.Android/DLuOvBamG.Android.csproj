@@ -77,7 +77,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ImageService.cs" />
-    <Compile Include="JavaHelper.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="PathService.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
@@ -177,6 +176,7 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\stockImages\dark2.jpg" />
+    <AndroidResource Include="Resources\drawable\broom_icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

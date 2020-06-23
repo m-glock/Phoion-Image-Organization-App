@@ -37,7 +37,7 @@ namespace DLuOvBamG
 
                     if (red + green + blue < 30)
                         darkPixels++;
-                    if (red + green + blue > 730)
+                    if (red + green + blue > 600)
                         brightPixels++;
 
                 }

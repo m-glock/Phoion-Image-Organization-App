@@ -2,44 +2,112 @@
 using DLuOvBamG.Views;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace DLuOvBamG.ViewModels
 {
-    public class CleanupViewModel : BaseViewModel
+    public class CleanupViewModel : BaseViewModel, INotifyPropertyChanged
     {
         public INavigation Navigation { get; set; }
-        public Dictionary<ScanOptionsEnum, double> scanOptions;
-        public List<Expander> expander { get; set; }
+        public Dictionary<ScanOptionsEnum, double> ScanOptions;
+        public double similarPrecision;
+        public double darkPrecision;
+        public double blurryPrecision;
+        public event PropertyChangedEventHandler PropertyChanged;
+        public double SimilarPrecision
+        {
+            set
+            {
+                if (similarPrecision != value)
+                {
+                    similarPrecision = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SimilarPrecision"));
+                }
+            }
+            get
+            {
+                return similarPrecision;
+            }
+        }
+        public double DarkPrecision
+        {
+            set
+            {
+                if (darkPrecision != value)
+                {
+                    darkPrecision = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("DarkPrecision"));
+                }
+            }
+            get
+            {
+                return darkPrecision;
+            }
+        }
+        public double BlurryPrecision
+        {
+            set
+            {
+                if (blurryPrecision != value)
+                {
+                    blurryPrecision = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("BlurryPrecision"));
+                }
+            }
+            get
+            {
+                return blurryPrecision;
+            }
+        }
+
 
         public CleanupViewModel()
         {
             Title = "Aufräumen";
-            scanOptions = new Dictionary<ScanOptionsEnum, double>();
+            ScanOptions = new Dictionary<ScanOptionsEnum, double>();
         }
 
         public void UpdateScanOptions(ScanOptionsEnum option, Button scanButton, double sliderValue)
         {
-            updateScanOptionsList(option, sliderValue);
+            UpdateScanOptionsList(option, sliderValue);
             scanButton.IsEnabled = true;
         }
 
-        private void updateScanOptionsList(ScanOptionsEnum option, double sliderValue)
+        private void UpdateScanOptionsList(ScanOptionsEnum option, double sliderValue)
         {
-            if (scanOptions.ContainsKey(option))
-                scanOptions.Remove(option);
+            if (ScanOptions.ContainsKey(option))
+                ScanOptions.Remove(option);
             else
-                scanOptions.Add(option, sliderValue);
+                ScanOptions.Add(option, sliderValue);
         }
 
-        public void updateScanOptionSliderValue(ScanOptionsEnum option, double value)
+        public void SetScanOptionSliderInitialValue(ScanOptionsEnum option, Slider slider)
         {
-            if (scanOptions.ContainsKey(option))
-                scanOptions[option] = value;
+            int presicionValue = option.GetDefaultPresicionValue();
+            slider.Value = presicionValue;
         }
 
-        public void checkToDisableScanButton(Button scanButton, List<Switch> optionSwitches)
+        public void UpdateScanOptionSliderValue(ScanOptionsEnum option, double value)
+        {
+            switch (option)
+            {
+                case ScanOptionsEnum.blurryPics:
+                    BlurryPrecision = value;
+                    break;
+                case ScanOptionsEnum.similarPics:
+                    SimilarPrecision = value;
+                    break;
+                case ScanOptionsEnum.darkPics:
+                    DarkPrecision = value;
+                    break;
+            }
+            if (ScanOptions.ContainsKey(option))
+                ScanOptions[option] = value;
+        }
+
+        public void CheckToDisableScanButton(Button scanButton, List<Switch> optionSwitches)
         {
             bool optionsChosen = false;
             foreach (Switch optionSwitch in optionSwitches)
@@ -54,8 +122,7 @@ namespace DLuOvBamG.ViewModels
         }
 
         public ICommand StartScan => new Command(async () => {
-            //TODO: get Images
-            await Navigation.PushAsync(new ScanResultPage(scanOptions));
+            await Navigation.PushAsync(new ScanResultPage(ScanOptions));
         });
 
     }

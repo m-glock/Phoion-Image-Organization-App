@@ -8,9 +8,11 @@ namespace DLuOvBamG
     {
         public static IClassifier classifier;
 
+        public static Tensorflow tf;
         public App()
         {
             InitializeComponent();
+            tf = new Tensorflow();
 
             Device.SetFlags(new string[] { "Expander_Experimental" });
             DependencyService.Register<MockDataStore>();

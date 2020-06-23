@@ -141,7 +141,7 @@ namespace DLuOvBamG.Droid
             float[] brightness = new BrightnessClassifier().Classify(bytes);
             if (brightness[0] > 0.7f)
                 System.Console.WriteLine("darkness quotient " + brightness[0]);
-            if (brightness[1] > 0.7f)
+            if (brightness[1] > 0.2f)
                 System.Console.WriteLine("brightness quotient " + brightness[1]);
 
             int[] shape = tensor.Shape();

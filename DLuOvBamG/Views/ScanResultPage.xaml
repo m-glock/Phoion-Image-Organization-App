@@ -52,11 +52,17 @@
                 </Grid.ColumnDefinitions>
 
                 <Image Source="https://farm9.staticflickr.com/8625/15806486058_7005d77438.jpg" Aspect="AspectFill"
-                   Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"></Image>
+                       Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"></Image>
+                <BoxView Color="White" Opacity="0.4"
+                         Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"></BoxView>
+
                 <Image Source="https://farm5.staticflickr.com/4011/4308181244_5ac3f8239b.jpg" Aspect="AspectFill"
-                   Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"></Image>
+                       Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"></Image>
+                <BoxView Color="White" Opacity="0.2"
+                         Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"></BoxView>
+
                 <Image Source="https://farm6.staticflickr.com/5117/14045101350_113edbe20b.jpg" Aspect="AspectFill"
-                   Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="2"></Image>
+                       Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="2"></Image>
 
             </Grid>
 
@@ -97,12 +103,16 @@
                     <ColumnDefinition Width="25*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
 
-                <Image Source="https://farm9.staticflickr.com/8625/15806486058_7005d77438.jpg" Aspect="AspectFill"
-                   Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"></Image>
-                <Image Source="https://farm5.staticflickr.com/4011/4308181244_5ac3f8239b.jpg" Aspect="AspectFill"
-                   Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"></Image>
-                <Image Source="https://farm6.staticflickr.com/5117/14045101350_113edbe20b.jpg" Aspect="AspectFill"
-                   Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="2"></Image>
+                <Frame Padding="2" HasShadow="true" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2">
+                    <Image Source="https://farm9.staticflickr.com/8625/15806486058_7005d77438.jpg" Aspect="AspectFill"></Image>
+                </Frame>
+
+                <Frame Padding="2" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2">
+                    <Image Source="https://farm5.staticflickr.com/4011/4308181244_5ac3f8239b.jpg" Aspect="AspectFill"></Image>
+                </Frame>
+                <Frame Padding="2" Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="2">
+                    <Image Source="https://farm6.staticflickr.com/5117/14045101350_113edbe20b.jpg" Aspect="AspectFill"></Image>
+                </Frame>
 
             </Grid>
 
