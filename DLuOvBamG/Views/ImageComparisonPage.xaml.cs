@@ -16,13 +16,19 @@ namespace DLuOvBamG.Views
     {
         private ImageComparisonViewModel VM;
 
-        public ImageComparisonPage(List<Picture> similarPictures)
+        //TODO: what if list only has one picture?
+        public ImageComparisonPage(List<Picture> pictures, Picture mainPic)
         {
             VM = new ImageComparisonViewModel();
-            VM.SimilarPictures = similarPictures;
+            VM.PictureList = pictures;
+            
+            //TODO: remove comparing picture from list
+            Picture comparingPicture = mainPic;
+            VM.comparingPictureUri = comparingPicture.Uri;
+            VM.currentPictureUri = pictures[0].Uri;
+
             BindingContext = VM;
             InitializeComponent();
-            //VM.CurrentPicture = (Picture)ImageCarouselView.CurrentItem;
         }
     }
 }

@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="clr-namespace:DLuOvBamG.ViewModels"
              mc:Ignorable="d"
              x:Class="DLuOvBamG.Views.ImageComparisonPage">
 
@@ -18,14 +17,14 @@
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
             
-            <CarouselView x:Name="ImageCarouselView" ItemsSource="{Binding SimilarPictures}" PeekAreaInsets="150" Grid.Row="0">
+            <CarouselView x:Name="ImageCarouselView" ItemsSource="{Binding PictureList}" PeekAreaInsets="150" Grid.Row="0">
                 <CarouselView.ItemTemplate>
                     <DataTemplate>
                         <Image Source="{Binding Uri}"></Image>
                     </DataTemplate>
                 </CarouselView.ItemTemplate>
             </CarouselView>
-            <Image x:Name="MainImage" Source="https://farm5.staticflickr.com/4011/4308181244_5ac3f8239b.jpg" Grid.Row="1"></Image>
+            <Image x:Name="CurrentPicture" Source="{Binding currentPictureUri}" Grid.Row="1"></Image>
             <Image Source="delete_64px.png" Grid.Row="2"></Image>
         </Grid>
     </ContentPage.Content>

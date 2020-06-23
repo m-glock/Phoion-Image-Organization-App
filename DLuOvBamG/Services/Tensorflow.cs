@@ -1,6 +1,7 @@
 ﻿using DLuOvBamG.Models;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace DLuOvBamG.Services
 {
@@ -66,9 +67,14 @@ namespace DLuOvBamG.Services
             return displayImages;
         }
 
-        public List<List<Picture>> GetAllPicturesForOption(ScanOptionsEnum option)
+        public List<List<Picture>> GetPicturesForOption(ScanOptionsEnum option)
         {
             return Pictures[option];
+        }
+
+        public List<Picture> GetPicturesForOption(ScanOptionsEnum option, int groupID)
+        {
+            return Pictures[option][groupID];
         }
 
         public int GetAmountOfSetsForOption(ScanOptionsEnum option)

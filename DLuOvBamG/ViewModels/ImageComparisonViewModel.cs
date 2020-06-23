@@ -1,16 +1,12 @@
 ﻿using DLuOvBamG.Models;
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
-using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace DLuOvBamG.ViewModels
 {
     class ImageComparisonViewModel
     {
-        public List<Picture> SimilarPictures { get; set; }
+        public List<Picture> PictureList { get; set; }
         /*public Picture CurrentPicture
         {
             get
@@ -22,8 +18,8 @@ namespace DLuOvBamG.ViewModels
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CurrentPicture"));
             } 
         } */ //Propertychanged
-        public Picture CurrentPicture { get; set; }
-        public Picture OriginalPicture { get; set; }
+        public string currentPictureUri { get; set; }
+        public string comparingPictureUri { get; set; }
         public CarouselView CarouselView { get; set; }
         public List<Picture> PicsToDelete { get; set; }
 
