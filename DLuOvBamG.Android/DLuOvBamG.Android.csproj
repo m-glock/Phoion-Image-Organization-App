@@ -56,6 +56,9 @@
     <Reference Include="System.Numerics.Vectors" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
+    <Reference Include="TensorflowBinding">
+      <HintPath>..\TensorflowBinding.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="glidex.forms">
@@ -75,8 +78,10 @@
     <Compile Include="PathService.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TensorflowClassifier.cs" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidAsset Include="Assets\mobilenet_v1_1.0_224.tflite" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />
@@ -107,6 +112,34 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <AndroidAsset Include="Assets\mobilenet_v1_1.0_224.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\stockImages\catdog.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\stockImages\Katri.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\stockImages\squirrel.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\stockImages\stuhl.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\stockImages\2011-05-22 13.00.54.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\stockImages\2013-05-27 08.07.36.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\stockImages\20140528_115535.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\stockImages\20150406_182259.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\stockImages\kawaiione.jpg" />
     <AndroidResource Include="Resources\drawable\categories_64px.png" />
   </ItemGroup>
   <ItemGroup>
