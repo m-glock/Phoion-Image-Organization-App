@@ -29,11 +29,12 @@ namespace DLuOvBamG.Views
 
             BindingContext = VM;
             InitializeComponent();
+
+            VM.CarouselView = ImageCarouselView;
         }
 
         public void OnCurrentItemChanged(object sender, CurrentItemChangedEventArgs e)
         {
-            string before = VM.CurrentPictureUri;
             Picture currentPicture = (Picture)e.CurrentItem;
             VM.CurrentPictureUri = currentPicture.Uri;
         }

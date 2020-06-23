@@ -24,7 +24,14 @@
                     </DataTemplate>
                 </CarouselView.ItemTemplate>
             </CarouselView>
-            <Image x:Name="CurrentPicture" Source="{Binding CurrentPictureUri}" Grid.Row="1"></Image>
+            
+            <Image x:Name="CurrentPicture" Source="{Binding CurrentPictureUri}" Grid.Row="1">
+                <Image.GestureRecognizers>
+                    <SwipeGestureRecognizer Direction="Left" Command="{Binding SwipeLeft}"/>
+                    <SwipeGestureRecognizer Direction="Right" Command="{Binding SwipeRight}"/>
+                    <SwipeGestureRecognizer Direction="Down" Command="{Binding SwipeDown}"/>
+                </Image.GestureRecognizers>
+            </Image>
             <Image Source="delete_64px.png" Grid.Row="2"></Image>
         </Grid>
     </ContentPage.Content>

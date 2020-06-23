@@ -1,6 +1,8 @@
 ﻿using DLuOvBamG.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace DLuOvBamG.ViewModels
@@ -50,27 +52,25 @@ namespace DLuOvBamG.ViewModels
 
         public ImageComparisonViewModel()
         {
-
+            PicsToDelete = new List<Picture>();
         }
 
-        /*public ICommand CvCurrentItemChanged()
+        public ICommand SwipeLeft => new Command( () =>
         {
+            CarouselView.Position = CarouselView.Position + 1;
+        });
 
-        }*/
-
-        public void OnSwipeLeft()
+        public ICommand SwipeRight => new Command( () =>
         {
-            //TODO: carousel position -1
-        }
+            CarouselView.Position = CarouselView.Position - 1;
+        });
 
-        public void OnSwipeRight()
+        public ICommand SwipeDown => new Command( () =>
         {
-            //TODO: carousel position +1
-        }
-
-        public void OnSwipeDown()
-        {
-            //TODO: mark picture for deletion
-        }
+            // Handle the swipe
+            Picture picToDelete = PictureList.Find(pic => pic.Uri == CurrentPictureUri);
+            PicsToDelete.Add(picToDelete);
+            Console.WriteLine("Down swipe");
+        });
     }
 }
