@@ -18,6 +18,9 @@ namespace DLuOvBamG.ViewModels
     public class ImageGalleryViewModel : INotifyPropertyChanged
     {
         static string CAMERA_PATH = "/Camera";
+        IImageService imageService = DependencyService.Get<IImageService>();
+        IClassifier classifier = App.Classifier;
+        ImageOrganizationDatabase db = App.Database;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -35,7 +38,7 @@ namespace DLuOvBamG.ViewModels
                     PropertyChanged(this, new PropertyChangedEventArgs("GroupedItems"));
                 }
             }
-            
+
             get
             {
                 return groupedItems;
@@ -45,7 +48,7 @@ namespace DLuOvBamG.ViewModels
         public List<Picture> Items { get; set; }
         public INavigation Navigation;
 
-        
+
         public ImageGalleryViewModel()
         {
             Items = new List<Picture>();
@@ -57,16 +60,16 @@ namespace DLuOvBamG.ViewModels
         {
             // try to get pictures from db, if this fails load them and put them in db
             List<Picture> pictures = await LoadImagesFromDB();
-            Console.WriteLine("dbImages count {0}", pictures.Count);
 
-            if(pictures.Count == 0)
+            if (pictures.Count == 0)
             {
                 var storageImages = await LoadImagesFromStorage();
                 var saved = await SavePicturesInDB(storageImages);
-                Console.WriteLine("dbImages count {0}", pictures.Count);
                 if (saved)
                 {
-                    GetPictures();
+                    pictures = await LoadImagesFromDB();
+                    pictures = pictures.GetRange(0, 10);
+                    var classified = await ClassifyAllPictures(pictures);
                 }
             }
             Items = pictures;
@@ -83,7 +86,7 @@ namespace DLuOvBamG.ViewModels
             string[] imagePaths = await imageFileStorage.GetFilesFromDirectory(dcimFolder);
 
             var pictureList = new List<Picture>();
-            for (int i = 0; i < imagePaths.Length ; i++)
+            for (int i = 0; i < imagePaths.Length; i++)
             {
                 Picture picture = new Picture(imagePaths[i]);
                 pictureList.Add(picture);
@@ -93,7 +96,6 @@ namespace DLuOvBamG.ViewModels
 
         Task<List<Picture>> LoadImagesFromDB()
         {
-            ImageOrganizationDatabase db = App.Database;
             return db.GetPicturesAsync();
         }
 
@@ -101,7 +103,9 @@ namespace DLuOvBamG.ViewModels
         {
             return pictures.Select(picture =>
             {
+                // if file exists
                 picture.ImageSource = ImageSource.FromFile(picture.Uri);
+                // else delete image from db
                 return picture;
             }).ToList();
         }
@@ -113,19 +117,66 @@ namespace DLuOvBamG.ViewModels
                 .GroupBy(item => item.Date.Date.ToShortDateString())
                 .Select(itemGroup => new Grouping<string, Picture>(itemGroup.Key, itemGroup))
                 .ToList();
-            GroupedItems =  new FlowObservableCollection<Grouping<string, Picture>>(sorted);
+            GroupedItems = new FlowObservableCollection<Grouping<string, Picture>>(sorted);
         }
 
         async Task<bool> SavePicturesInDB(List<Picture> pictures)
         {
-            if(pictures.Count > 0)
+            if (pictures.Count > 0)
             {
-                ImageOrganizationDatabase db = App.Database;
                 var tasks = pictures.Select(picture => db.SavePictureAsync(picture));
                 await Task.WhenAll(tasks);
                 return true;
             }
             return false;
+        }
+
+        async Task<bool> ClassifyAllPictures(List<Picture> pictures)
+        {
+            if (pictures.Count > 0)
+            {
+                var classifyTasks = pictures.Select(picture => ClassifyPicture(picture));
+                await Task.WhenAll(classifyTasks);
+                return true;
+            }
+            return false;
+        }
+
+        async Task ClassifyPicture(Picture picture)
+        {
+            Console.WriteLine("[DEBUG]: STARTING picture classification {0}", picture.Uri);
+            // get classifications above 10% and put them in a list
+            List<CategoryTag> categoryTags = new List<CategoryTag>();
+            if(picture.CategoryTags is null)
+            {
+                picture.CategoryTags = new List<CategoryTag>();
+            }
+            byte[] fileBytes = imageService.GetFileBytes(picture.Uri);
+
+            // get classifications from classifier
+            List<ModelClassification> modelClassifications = classifier.Classify(fileBytes);
+            // filter classifications, to get only above 10% probability
+            List<ModelClassification> topClassifications = modelClassifications.Where(classification => classification.Probability > 0.1f).ToList();
+
+            // map strings to CategoryTag objects
+            topClassifications.ForEach(classification =>
+            {
+                CategoryTag categoryTag = new CategoryTag
+                {
+                    Name = classification.TagName
+                };
+                categoryTags.Add(categoryTag);
+            });
+
+            // find or insert all category tag objects
+            categoryTags.ForEach(categoryTag => categoryTag.FindOrInsert());
+            // add the categoryTags, now with id, to the picture and update it
+            categoryTags.ForEach(categoryTag => {
+                Console.WriteLine("[DEBUG]: categoryTag {0}-{2} for picture {1}", categoryTag.Name, picture.Uri, categoryTag.Id);
+                picture.CategoryTags.Add(categoryTag); 
+            });
+            db.SavePictureAsync(picture);
+            Console.WriteLine("[DEBUG]: FINISH picture classification {0}", picture.Uri);
         }
 
         public ICommand ItemTappedCommand
@@ -141,7 +192,7 @@ namespace DLuOvBamG.ViewModels
                         if (picture.Id == Item.Id)
                         {
                             Console.WriteLine("tapped {0}", picture.Id);
-                            var newPage = new ImageTagPage(picture);
+                            var newPage = new ImageTagPage(picture.Id);
                             // var newPage = new ImageDetailPage(picture);
                             Navigation.PushAsync(newPage, true);
                         }
@@ -151,7 +202,8 @@ namespace DLuOvBamG.ViewModels
             }
         }
 
-        public ICommand OpenCleanupPage => new Command(async () => {
+        public ICommand OpenCleanupPage => new Command(async () =>
+        {
             await Navigation.PushAsync(new CleanupPage());
         });
     }

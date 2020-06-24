@@ -1,8 +1,10 @@
-﻿using SQLite;
+﻿using DLuOvBamG.Services;
+using SQLite;
 using SQLiteNetExtensions.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DLuOvBamG.Models
 {
@@ -15,5 +17,22 @@ namespace DLuOvBamG.Models
 
         [ManyToMany(typeof(PictureTags))]
         public List<Picture> Pictures { get; set; }
+
+        public int FindOrInsert()
+        {
+            ImageOrganizationDatabase db = App.Database;
+            CategoryTag dbObject = db.GetCategoryTagByName(Name);
+
+            if (dbObject is null)
+            {
+                int id = db.SaveCategoryTag(this);
+                Console.WriteLine("[DEBUG]: INSERTED CategoryTag {0} with id {1}", Name, id);
+                Id = id;
+            } else
+            {
+                Id = dbObject.Id;
+            }
+            return Id;
+        }
     }
 }

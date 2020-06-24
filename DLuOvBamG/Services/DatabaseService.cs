@@ -1,5 +1,6 @@
 ﻿using DLuOvBamG.Models;
 using SQLite;
+using SQLiteNetExtensionsAsync.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,8 @@ namespace DLuOvBamG.Services
         {
             return new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
         });
+
+        static SQLiteConnection SynchronousDB = new SQLiteConnection(Constants.DatabasePath);
 
         static SQLiteAsyncConnection Database => lazyInitializer.Value;
         static bool initialized = false;
@@ -47,20 +50,19 @@ namespace DLuOvBamG.Services
         }
 
 
-        public Task<Picture> GetPicutreAsync(int id)
+        public Task<Picture> GetPictureAsync(int id)
         {
-            return Database.Table<Picture>().Where(i => i.Id == id).FirstOrDefaultAsync();
+            return Database.GetWithChildrenAsync<Picture>(id);
         }
 
-        public Task<int> SavePictureAsync(Picture picture)
+        public Task SavePictureAsync(Picture picture)
         {
             if (picture.Id != 0)
             {
-                return Database.UpdateAsync(picture);
+                return Database.UpdateWithChildrenAsync(picture);
             }
             else
             {
-                Console.WriteLine("insert picture {0}", picture.Uri);
                 return Database.InsertAsync(picture);
             }
         }
@@ -68,6 +70,39 @@ namespace DLuOvBamG.Services
         public Task<int> DeletePictureAsync(Picture picture)
         {
             return Database.DeleteAsync(picture);
+        }
+
+        public Task<List<CategoryTag>> GetCategoryTagsAsync()
+        {
+            return Database.Table<CategoryTag>().ToListAsync();
+        }
+
+
+        public Task<CategoryTag> GetCategoryTagAsync(int id)
+        {
+            return Database.Table<CategoryTag>().Where(i => i.Id == id).FirstOrDefaultAsync();
+        }
+
+        public CategoryTag GetCategoryTagByName(string name)
+        {
+            return SynchronousDB.Table<CategoryTag>().Where(i => i.Name == name).FirstOrDefault();
+        }
+
+        public int SaveCategoryTag(CategoryTag categoryTag)
+        {
+            if (categoryTag.Id != 0)
+            {
+                return SynchronousDB.Update(categoryTag);
+            }
+            else
+            {
+                return SynchronousDB.Insert(categoryTag);
+            }
+        }
+
+        public Task<int> DeleteCategoryTagAsync(CategoryTag categoryTag)
+        {
+            return Database.DeleteAsync(categoryTag);
         }
     }
 }

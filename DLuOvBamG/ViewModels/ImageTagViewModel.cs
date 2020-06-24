@@ -3,6 +3,7 @@ using DLuOvBamG.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows.Input;
@@ -10,36 +11,43 @@ using Xamarin.Forms;
 
 namespace DLuOvBamG.ViewModels
 {
-    class ImageTagViewModel
+    class ImageTagViewModel : INotifyPropertyChanged
     {
-        public Picture image;
-        public ObservableCollection<CategoryTag> Tags { get; set; }
-        
-        public ImageTagViewModel(Picture image)
+        public Picture Picture;
+        public ObservableCollection<CategoryTag> tags { get; set; }
+
+        public ObservableCollection<CategoryTag> Tags
         {
-            this.image = image;
-            this.Tags = GetCategoryTags(image);
+            set
+            {
+
+                tags = value;
+
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("Tags"));
+                }
+            }
+
+            get
+            {
+                return tags;
+            }
         }
 
-        private ObservableCollection<CategoryTag> GetCategoryTags(Picture image)
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public ImageTagViewModel(int pictureId)
         {
-            IImageService imageService = DependencyService.Get<IImageService>();
-            IClassifier classifier = App.Classifier;
-            ObservableCollection<CategoryTag> categoryTags = new ObservableCollection<CategoryTag>();
-            byte[] fileBytes = imageService.GetFileBytes(image.Uri);
+            GetCategoryTags(pictureId);
+        }
 
-            List<ModelClassification> modelClassifications = classifier.Classify(fileBytes);
-            List<ModelClassification> topClassifications = modelClassifications.Where(classification => classification.Probability > 0.1f).ToList();
-            topClassifications.ForEach(classification =>
-            {
-                CategoryTag categoryTag = new CategoryTag
-                {
-                    Name = classification.TagName + ' ' + classification.Probability
-                };
-                categoryTags.Add(categoryTag);
-            });
-
-            return categoryTags;
+        async void GetCategoryTags(int pictureId)
+        {
+            ImageOrganizationDatabase db = App.Database;
+            Picture dbPicture = await db.GetPictureAsync(pictureId);
+            Tags = new ObservableCollection<CategoryTag>(dbPicture.CategoryTags);
+            Picture = dbPicture;
         }
 
         public ICommand DeleteButtonClicked
