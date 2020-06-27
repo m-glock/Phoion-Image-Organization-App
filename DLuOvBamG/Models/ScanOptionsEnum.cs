@@ -34,11 +34,11 @@ namespace DLuOvBamG.Models
             switch (s1)
             {
                 case ScanOptionsEnum.blurryPics:
-                    return 4;
+                    return 7;
                 case ScanOptionsEnum.darkPics:
-                    return 9;
+                    return 7;
                 case ScanOptionsEnum.similarPics:
-                    return 1;
+                    return 7;
                 default:
                     return 0;
             }

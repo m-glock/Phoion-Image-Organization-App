@@ -8,17 +8,18 @@ namespace DLuOvBamG
 {
     public interface IClassifier
     {
+        public int ThresholdBlurry { get; set; }
+        public int ThresholdSimilar { get; set; }
 
         event EventHandler<ClassificationEventArgs> ClassificationCompleted;
 
-        List<ModelClassification> Classify(byte[] bytes);
+        List<ModelClassification> ClassifySimilar(byte[] bytes);
+        List<ModelClassification> ClassifyBlurry(byte[] bytes);
 
         byte[] GetImageBytes(string path);
 
         void ChangeModel(ScanOptionsEnum type);
 
-        // Debug, to remove
-        void test();
     }
 
     public class ClassificationEventArgs : EventArgs

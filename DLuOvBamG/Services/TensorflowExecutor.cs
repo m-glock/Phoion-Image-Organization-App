@@ -1,6 +1,7 @@
 ﻿using DLuOvBamG.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace DLuOvBamG.Services
@@ -8,57 +9,106 @@ namespace DLuOvBamG.Services
     //TODO: merge with existing TF Service
     public class TensorflowExecutor
     {
-        private Dictionary<ScanOptionsEnum, List<Picture>> Pictures;
-        private IClassifier Classifier;
+        private Dictionary<ScanOptionsEnum, List<List<Picture>>> pictures;
+        private IClassifier classifier;
+        private BrightnessClassifier brightnessClassifier;
 
-        public TensorflowExecutor() {
-            Pictures = new Dictionary<ScanOptionsEnum, List<Picture>>();
-            Classifier = DependencyService.Get<IClassifier>();
+        private Dictionary<ScanOptionsEnum, double> oldOptions;
+
+        public TensorflowExecutor()
+        {
+            pictures = new Dictionary<ScanOptionsEnum, List<List<Picture>>>();
+            classifier = DependencyService.Get<IClassifier>();
+            classifier.ThresholdBlurry = ScanOptionsEnum.blurryPics.GetDefaultPresicionValue() * 10;
+            classifier.ThresholdSimilar = ScanOptionsEnum.similarPics.GetDefaultPresicionValue() * 10;
+            brightnessClassifier = new BrightnessClassifier();
+            oldOptions = new Dictionary<ScanOptionsEnum, double>();
             // Debug
-            Classifier.test();
+            //classifier.test();
         }
 
-        public void FillPictureLists(List<ScanOptionsEnum> chosenOptions)
+        public void FillPictureLists(Dictionary<ScanOptionsEnum, double> options)
         {
+
             // TODO make it asynchronous
             List<Picture> pictureList = DatabaseImageRetriever.GetImagesFromDatabase().Result;
+            List<List<Picture>> outsideList = new List<List<Picture>>();
 
-            foreach (ScanOptionsEnum option in chosenOptions)
+
+            // TODO make it possible to start a new search with a new threshold, makes problmes with the dark pics
+            foreach (ScanOptionsEnum option in options.Keys.ToList())
             {
-                if(option == ScanOptionsEnum.darkPics)
+                if (pictures.ContainsKey(option) && oldOptions[option].Equals(options[option]))
+                    continue;
+                else
                 {
-                    // TODO
+                    if (pictures.ContainsKey(option))
+                        pictures[option] = new List<List<Picture>>();
                 }
-                else if(option == ScanOptionsEnum.blurryPics)
-                {
-                    Classifier.ChangeModel(option);
 
+                if (option == ScanOptionsEnum.darkPics)
+                {
+
+                    List<Picture> darkPictures = new List<Picture>();
+                    List<Picture> brightPictures = new List<Picture>();
+
+                    foreach (var picture in pictureList)
+                    {
+                        byte[] byteArray = classifier.GetImageBytes(picture.Uri);
+                        bool[] result = brightnessClassifier.Classify(byteArray);
+                        if (result[0])
+                        {
+                            darkPictures.Add(picture);
+                        }
+                        if (result[1])
+                        {
+                            brightPictures.Add(picture);
+                        }
+                    }
+
+                    outsideList.Add(darkPictures);
+                    outsideList.Add(brightPictures);
+
+
+                }
+                else if (option == ScanOptionsEnum.blurryPics)
+                {
+                    classifier.ChangeModel(option);
+                    classifier.ThresholdBlurry = (int)options[option] * 10;
                     List<Picture> blurryPics = new List<Picture>();
                     foreach (var picture in pictureList)
                     {
-                        byte[] byteArray = Classifier.GetImageBytes(picture.Uri);
-                        List<ModelClassification> modelClassificaton = Classifier.Classify(byteArray);
-                        if (modelClassificaton[0].TagName == "Blurry")
+                        byte[] byteArray = classifier.GetImageBytes(picture.Uri);
+                        List<ModelClassification> modelClassificaton = classifier.ClassifyBlurry(byteArray);
+                        if (modelClassificaton.Count > 0 && modelClassificaton[0].TagName == "Blurry")
                         {
                             blurryPics.Add(picture);
                         }
                     }
-                    Pictures.Add(option, blurryPics);
 
+                    outsideList.Add(blurryPics);
                 }
                 else
                 {
-
+                    // TODO similar pics
                 }
+
+                pictures[option] = outsideList;
+
+                oldOptions[option] = options[option];
                 
+
+
             }
 
-            
+
+
+
         }
 
         public Picture[] GetImagesForDisplay(ScanOptionsEnum option)
         {
-            List<List<Picture>> picturesList = Pictures[option];
+            List<List<Picture>> picturesList = pictures[option];
             if (picturesList[0] == null) return null;
 
             int picAmount = picturesList[0].Count > 2 ? 3 : picturesList[0].Count;
@@ -70,19 +120,19 @@ namespace DLuOvBamG.Services
 
         public List<List<Picture>> GetAllPicturesForOption(ScanOptionsEnum option)
         {
-            return Pictures[option];
+            return pictures[option];
         }
 
         public int GetAmountOfSetsForOption(ScanOptionsEnum option)
         {
-            return Pictures[option].Count;
+            return pictures[option].Count;
         }
 
         public int GetAmountOfPicturesForOption(ScanOptionsEnum option)
         {
-            List<List<Picture>> pictures = Pictures[option];
+            List<List<Picture>> localPics = pictures[option];
             int count = 0;
-            foreach (List<Picture> list in pictures)
+            foreach (List<Picture> list in localPics)
             {
                 count += list.Count;
             }

@@ -21,7 +21,7 @@ namespace DLuOvBamG.ViewModels
 
         public void FillPictureListsTF()
         {
-            App.tf.FillPictureLists(OptionValues.Keys.ToList());//TODO async
+            App.tf.FillPictureLists(OptionValues);//TODO async
         }
 
         public ICommand openBlurryPicsPage => new Command(async () =>

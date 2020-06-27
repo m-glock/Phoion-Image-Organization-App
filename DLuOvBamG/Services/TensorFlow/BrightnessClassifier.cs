@@ -1,18 +1,21 @@
 ﻿using Android.Graphics;
-using Java.Nio;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using DLuOvBamG.Models;
 
 namespace DLuOvBamG
 {
     public class BrightnessClassifier
     {
 
+        public float Threshold = ScanOptionsEnum.darkPics.GetDefaultPresicionValue() * 10;
+
+        private int thresholdDark = 30;
+        private int thresholdBright = 600;
+
         private int width = 128; 
         private int height = 128;
 
-        public float[] Classify(byte[] bytes)
+
+        public bool[] Classify(byte[] bytes)
         {
 
             Bitmap bitmap = BitmapFactory.DecodeByteArray(bytes, 0, bytes.Length);
@@ -35,18 +38,18 @@ namespace DLuOvBamG
                     int green = (val >> 8) & 0x000000FF;
                     int blue = (val) & 0x000000FF;
 
-                    if (red + green + blue < 30)
+                    if (red + green + blue < thresholdDark)
                         darkPixels++;
-                    if (red + green + blue > 600)
+                    if (red + green + blue > thresholdBright)
                         brightPixels++;
 
                 }
             }
 
-            float darkQuotient = (float)darkPixels / (float)(width * height);
-            float brightQuotient = (float)brightPixels / (float)(width * height);
+            bool tooDark = (float)darkPixels / (width * height) * 100 > Threshold;
+            bool tooBright = (float)brightPixels / (width * height) * 100 > Threshold;
 
-            return new float[] { darkQuotient, brightQuotient }; 
+            return new bool[] { tooDark, tooBright }; 
 
         }
 
