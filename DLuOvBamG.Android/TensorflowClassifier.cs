@@ -11,26 +11,42 @@ using Java.Nio.Channels;
 using Org.Tensorflow.Lite;
 using Xamarin.Forms;
 using System.Collections;
+using static DLuOvBamG.IClassifier;
 
 [assembly: Dependency(typeof(DLuOvBamG.Droid.TensorflowClassifier))]
 namespace DLuOvBamG.Droid
 {
+
     public class TensorflowClassifier : IClassifier
     {
-        private readonly Interpreter interpreter;
-        private readonly List<string> labels;
 
-        private string[] modelFiles = { "modelBlur.tflite", "mobilenet_v2_1.0_224.tflite", "converted_model.tflite" };
+        private Interpreter interpreter;
+        private List<string> labels;
+
+        private string[] modelFiles = { "modelBlur.tflite", "converted_model.tflite" };
         private string[] labelFiles = { "labelsBlur.txt", "labelsSqueezenet.txt" };
 
-        private float AcceptableResultPercentage = 20;
+        public float AcceptableResultPercentage = 70;
 
         public event EventHandler<ClassificationEventArgs> ClassificationCompleted;
 
-        public TensorflowClassifier()
+
+        public void ChangeModel(ScanOptionsEnum type)
         {
-            interpreter = new Interpreter(GetByteBuffer(modelFiles[2]));
-            labels = LoadLabelList(labelFiles[1]);
+            int finalType = -1;
+            switch (type)
+            {
+                case ScanOptionsEnum.similarPics:
+                    finalType = 1;
+                    break;
+                case ScanOptionsEnum.blurryPics:
+                    finalType = 0;
+                    break;
+                default:
+                    break;
+            }
+            interpreter = new Interpreter(GetByteBuffer(modelFiles[finalType]));
+            labels = LoadLabelList(labelFiles[finalType]);
         }
 
         // For tflite file
@@ -75,7 +91,7 @@ namespace DLuOvBamG.Droid
             }
         }
 
-        private byte[] GetImageBytes(string path)
+        public byte[] GetImageBytes(string path)
         {
             AssetFileDescriptor assetDescriptor = Android.App.Application.Context.Assets.OpenFd("stockImages/" + path);
             Stream stream = assetDescriptor.CreateInputStream();

@@ -8,9 +8,14 @@ namespace DLuOvBamG
 {
     public interface IClassifier
     {
+
         event EventHandler<ClassificationEventArgs> ClassificationCompleted;
 
         List<ModelClassification> Classify(byte[] bytes);
+
+        byte[] GetImageBytes(string path);
+
+        void ChangeModel(ScanOptionsEnum type);
 
         // Debug, to remove
         void test();

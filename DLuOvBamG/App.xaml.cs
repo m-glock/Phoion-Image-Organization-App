@@ -6,22 +6,16 @@ namespace DLuOvBamG
 {
     public partial class App : Application
     {
-        public static IClassifier classifier;
 
-        public static Tensorflow tf;
+        public static TensorflowExecutor tf;
         public App()
         {
             InitializeComponent();
-            tf = new Tensorflow();
+            tf = new TensorflowExecutor();
 
             Device.SetFlags(new string[] { "Expander_Experimental" });
             DependencyService.Register<MockDataStore>();
             MainPage = new NavigationPage(new ImageGrid());
-            
-            classifier = DependencyService.Get<IClassifier>();
-            // Debug
-            classifier.test();
-            
         }
 
         protected override void OnStart()
