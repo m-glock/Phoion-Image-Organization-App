@@ -72,5 +72,10 @@ namespace DLuOvBamG.ViewModels
             PicsToDelete.Add(picToDelete);
             Console.WriteLine("Down swipe");
         });
+
+        public ICommand Command => new Command(() =>
+        {
+            Console.WriteLine("Bla");
+        });
     }
 }
