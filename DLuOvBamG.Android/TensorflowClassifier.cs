@@ -12,6 +12,7 @@ using Org.Tensorflow.Lite;
 using Xamarin.Forms;
 using System.Collections;
 using static DLuOvBamG.IClassifier;
+using Android.Support.Annotation;
 
 [assembly: Dependency(typeof(DLuOvBamG.Droid.TensorflowClassifier))]
 namespace DLuOvBamG.Droid
@@ -19,15 +20,17 @@ namespace DLuOvBamG.Droid
 
     public class TensorflowClassifier : IClassifier
     {
+        // TODO remove debug
+        private bool testing = true;
 
         private Interpreter interpreter;
         private List<string> labels;
 
-        private string[] modelFiles = { "modelBlur.tflite", "converted_model.tflite" };
+        private string[] modelFiles = { "modelBlur.tflite", "converted_modelTroelf.tflite" };
         private string[] labelFiles = { "labelsBlur.txt", "labelsSqueezenet.txt" };
 
         private int thresholdBlurry;
-        private int thresholdSimilar;
+        private int thresholdSimilar = 10;
 
         int IClassifier.ThresholdBlurry { get => thresholdBlurry; set => thresholdBlurry = value; }
         int IClassifier.ThresholdSimilar { get => thresholdSimilar; set => thresholdSimilar = value; }
@@ -74,26 +77,27 @@ namespace DLuOvBamG.Droid
 
         #region testing 
 
-        //public void test()
-        //{
-        //    string[] listAssets = Android.App.Application.Context.Assets.List("stockImages");
-        //    foreach (var entry in listAssets)
-        //    {
-        //        System.Console.WriteLine("reading image " + entry);
-        //        byte[] image = GetImageBytes(entry);
-        //        var sortedList = Classify(image);
+        public void test()
+        {
+            ChangeModel(ScanOptionsEnum.similarPics);
+            string[] listAssets = Android.App.Application.Context.Assets.List("stockImages");
+            foreach (var entry in listAssets)
+            {
+                System.Console.WriteLine("reading image " + entry);
+                byte[] image = GetImageBytes(entry);
+                var sortedList = ClassifySimilar(image);
 
-        //        if (sortedList.Count > 0)
-        //        {
-        //            ModelClassification top = sortedList.First();
-        //            System.Console.WriteLine(top.TagName + " " + Math.Round(top.Probability * 100, 2) + "% ultra result for " + entry);
-        //        }
-        //        foreach (ModelClassification item in sortedList)
-        //        {
-        //            System.Console.WriteLine(item.TagName + " " + Math.Round(item.Probability * 100, 2) + "% result for " + entry);
-        //        }
-        //    }
-        //}
+                if (sortedList.Count > 0)
+                {
+                    ModelClassification top = sortedList.First();
+                    System.Console.WriteLine(top.TagName + " " + Math.Round(top.Probability * 100, 2) + "% ultra result for " + entry);
+                }
+                foreach (ModelClassification item in sortedList)
+                {
+                    System.Console.WriteLine(item.TagName + " " + Math.Round(item.Probability * 100, 2) + "% result for " + entry);
+                }
+            }
+        }
 
 
 
@@ -101,9 +105,19 @@ namespace DLuOvBamG.Droid
 
         public byte[] GetImageBytes(string path)
         {
-            //AssetFileDescriptor assetDescriptor = Android.App.Application.Context.Assets.OpenFd("stockImages/" + path);
+            Stream stream;
+            if (testing)
+            {
+                AssetFileDescriptor assetDescriptor = Android.App.Application.Context.Assets.OpenFd("stockImages/" + path);
+                stream = assetDescriptor.CreateInputStream();
+            }
+            else
+            {
+                stream = System.IO.File.OpenRead(path);
+            }
+            
 
-            Stream stream = System.IO.File.OpenRead(path);
+            
             byte[] fileBytes = ReadStream(stream);
 
             return fileBytes;
@@ -159,12 +173,7 @@ namespace DLuOvBamG.Droid
 
             // TODO get second output as veature vector
             //Tensor outputTensor = interpreter.GetOutputTensor(1);
-            //System.Console.WriteLine("tensor output " + outputTensor.NumDimensions());
-            //bool[] brightness = new BrightnessClassifier().Classify(bytes);
-            //if (brightness[0])
-            //    System.Console.WriteLine("darkness quotient " + brightness[0]);
-            //if (brightness[1])
-            //    System.Console.WriteLine("brightness quotient " + brightness[1]);
+
 
             int[] shape = tensor.Shape();
             int width = shape[1];
@@ -179,7 +188,7 @@ namespace DLuOvBamG.Droid
             float[][][][] outputVectors = new float[1][][][];
             outputVectors[0] = new float[1][][];
             outputVectors[0][0] = new float[1][];
-            outputVectors[0][0][0] = new float[512];
+            outputVectors[0][0][0] = new float[1280];
             var outputVectorsConverted = Java.Lang.Object.FromArray(outputVectors);
 
             Dictionary<Java.Lang.Integer, Java.Lang.Object> outputs = new Dictionary<Java.Lang.Integer, Java.Lang.Object>
@@ -205,7 +214,7 @@ namespace DLuOvBamG.Droid
             }
 
             double n2 = 0;
-            for (int i = 0; i < 512; i++)
+            for (int i = 0; i < 1280; i++)
             {
                 n2 += Math.Pow(featureVectorResult[0][0][0][i], 2);
                 

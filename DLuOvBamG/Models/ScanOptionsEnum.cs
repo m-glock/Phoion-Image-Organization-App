@@ -38,7 +38,7 @@ namespace DLuOvBamG.Models
                 case ScanOptionsEnum.darkPics:
                     return 7;
                 case ScanOptionsEnum.similarPics:
-                    return 7;
+                    return 3;
                 default:
                     return 0;
             }

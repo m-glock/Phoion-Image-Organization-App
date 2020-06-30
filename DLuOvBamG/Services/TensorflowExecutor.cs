@@ -23,7 +23,7 @@ namespace DLuOvBamG.Services
             brightnessClassifier = new BrightnessClassifier();
             oldOptions = new Dictionary<ScanOptionsEnum, double>();
             // Debug
-            //classifier.test();
+            classifier.test();
         }
 
         public void FillPictureLists(Dictionary<ScanOptionsEnum, double> options)
