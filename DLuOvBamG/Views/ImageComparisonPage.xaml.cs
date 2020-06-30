@@ -1,6 +1,7 @@
 ﻿using DLuOvBamG.Models;
 using DLuOvBamG.Services.Gestures;
 using DLuOvBamG.ViewModels;
+using System;
 using System.Collections.Generic;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -38,10 +39,11 @@ namespace DLuOvBamG.Views
         public void ImageTouched(object sender, TouchActionEventArgs args)
         {
             Image currentPicture = sender as Image;
-
+            
             switch (args.Type)
             {
                 case TouchActionType.Moved:
+                    Console.WriteLine("moved");
                     VM.OnSwiped(args);
                     break;
                 case TouchActionType.Pressed:
@@ -49,7 +51,9 @@ namespace DLuOvBamG.Views
                     VM.OnPressedAsync(currentPicture);
                     break;
                 case TouchActionType.Released:
-                    //Console.WriteLine("tap stopped");
+                //case TouchActionType.Cancelled:
+                case TouchActionType.Exited:
+                    Console.WriteLine("tap stopped");
                     VM.OnReleasedAsync(currentPicture);
                     break;
                 default:

@@ -17,7 +17,7 @@ namespace DLuOvBamG.ViewModels
         public CarouselView CarouselView { get; set; }
         public List<Picture> PicsToDelete { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
-        private double fistPoint = -1;
+        private double firstPoint = -1;
         private int pointerCounter;
         private bool stop;
 
@@ -68,30 +68,32 @@ namespace DLuOvBamG.ViewModels
 
         public async Task OnReleasedAsync(Image currentPicture)
         {
-            await Task.Delay(1000); 
+            await Task.Delay(500); 
             currentPicture.Source = CurrentPictureUri;
             stop = true;
         }
 
-        public void OnSwiped(TouchActionEventArgs args)
+        public async void OnSwiped(TouchActionEventArgs args)
         {
             pointerCounter++;
             Console.WriteLine(pointerCounter);
-            if (fistPoint == -1)
-                fistPoint = args.Location.X;
+            if (firstPoint == -1)
+                firstPoint = args.Location.X;
 
-            if (pointerCounter >= 10)
+            if (pointerCounter >= 7)
             {
-                double diff = fistPoint - args.Location.X;
+                double diff = firstPoint - args.Location.X;
                 double devicewidth = DeviceDisplay.MainDisplayInfo.Width;
-                bool enoughDiff = diff > devicewidth / 5;
-
+                //Console.WriteLine(devicewidth + "device width");
+                bool enoughDiff = Math.Abs(diff) > 30;
+                Console.WriteLine(diff + " diff");
                 if (enoughDiff) 
                 {
                     if (diff > 0) SwipeRight();
                     else SwipeLeft();
+                    await Task.Delay(1000);
                 }
-                fistPoint = -1;
+                firstPoint = -1;
                 pointerCounter = 0;
             }
         }
@@ -103,16 +105,18 @@ namespace DLuOvBamG.ViewModels
                 currentPicture.Source = ComparingPictureUri;
         }
 
-        private void SwipeLeft()
+        private void SwipeRight()
         {
+            Console.WriteLine("swipe left " + CarouselView.Position);
             if (CarouselView.Position < PictureList.Count - 1)
             {
                 CarouselView.Position = CarouselView.Position + 1;
             }
         }
 
-        private void SwipeRight()
+        private void SwipeLeft()
         {
+            Console.WriteLine("swipe right " + CarouselView.Position);
             if (CarouselView.Position > 0)
             {
                 CarouselView.Position = CarouselView.Position - 1;
