@@ -12,7 +12,7 @@ namespace DLuOvBamG
             InitializeComponent();
             tf = new Tensorflow();
 
-            Device.SetFlags(new string[] { "Expander_Experimental" });
+            Device.SetFlags(new string[] { "Expander_Experimental", "SwipeView_Experimental" });
             DependencyService.Register<MockDataStore>();
             MainPage = new NavigationPage(new ImageGrid());
             

@@ -57,11 +57,13 @@ namespace DLuOvBamG.ViewModels
 
         public ICommand SwipeLeft => new Command( () =>
         {
+            Console.WriteLine("left swipe");
             CarouselView.Position = CarouselView.Position + 1;
         });
 
         public ICommand SwipeRight => new Command( () =>
         {
+            Console.WriteLine("right swipe");
             CarouselView.Position = CarouselView.Position - 1;
         });
 
@@ -71,11 +73,6 @@ namespace DLuOvBamG.ViewModels
             Picture picToDelete = PictureList.Find(pic => pic.Uri == CurrentPictureUri);
             PicsToDelete.Add(picToDelete);
             Console.WriteLine("Down swipe");
-        });
-
-        public ICommand Command => new Command(() =>
-        {
-            Console.WriteLine("Bla");
         });
     }
 }
