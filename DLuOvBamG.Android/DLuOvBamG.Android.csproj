@@ -70,6 +70,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssetsService.cs" />
     <Compile Include="ImageService.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="PathService.cs" />

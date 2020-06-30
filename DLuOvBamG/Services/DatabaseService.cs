@@ -85,7 +85,7 @@ namespace DLuOvBamG.Services
 
         public CategoryTag GetCategoryTagByName(string name)
         {
-            return SynchronousDB.Table<CategoryTag>().Where(i => i.Name == name).FirstOrDefault();
+            return SynchronousDB.Table<CategoryTag>().Where(i => i.Name.Equals(name)).FirstOrDefault();
         }
 
         public int SaveCategoryTag(CategoryTag categoryTag)
@@ -97,6 +97,18 @@ namespace DLuOvBamG.Services
             else
             {
                 return SynchronousDB.Insert(categoryTag);
+            }
+        }
+
+        public Task<int> SaveCategoryTagAsync(CategoryTag categoryTag)
+        {
+            if (categoryTag.Id != 0)
+            {
+                return Database.UpdateAsync(categoryTag);
+            }
+            else
+            {
+                return Database.InsertAsync(categoryTag);
             }
         }
 

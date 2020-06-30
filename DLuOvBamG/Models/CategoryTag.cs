@@ -26,7 +26,6 @@ namespace DLuOvBamG.Models
             if (dbObject is null)
             {
                 int id = db.SaveCategoryTag(this);
-                Console.WriteLine("[DEBUG]: INSERTED CategoryTag {0} with id {1}", Name, id);
                 Id = id;
             } else
             {

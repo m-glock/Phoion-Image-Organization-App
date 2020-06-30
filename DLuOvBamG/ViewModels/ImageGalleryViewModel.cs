@@ -68,7 +68,7 @@ namespace DLuOvBamG.ViewModels
                 if (saved)
                 {
                     pictures = await LoadImagesFromDB();
-                    pictures = pictures.GetRange(0, 10);
+                    var categoryTags = await SaveCategoryTagsInDB();
                     var classified = await ClassifyAllPictures(pictures);
                 }
             }
@@ -131,6 +131,23 @@ namespace DLuOvBamG.ViewModels
             return false;
         }
 
+        async Task<int[]> SaveCategoryTagsInDB()
+        {
+            IAssetsService assetsService = DependencyService.Get<IAssetsService>();
+            List<string> labels = assetsService.LoadClassificationLabels();
+            List<CategoryTag> categoryTags = labels.Select(label =>
+                {
+                    return new CategoryTag()
+                    { 
+                        Name = label 
+                    };
+                }
+            ).ToList();
+            var categoryTagsTasks = categoryTags.Select(categoryTag => db.SaveCategoryTagAsync(categoryTag));
+            var categoryTagIdArray = await Task.WhenAll(categoryTagsTasks);
+            return categoryTagIdArray;
+        }
+
         async Task<bool> ClassifyAllPictures(List<Picture> pictures)
         {
             if (pictures.Count > 0)
@@ -144,10 +161,9 @@ namespace DLuOvBamG.ViewModels
 
         async Task ClassifyPicture(Picture picture)
         {
-            Console.WriteLine("[DEBUG]: STARTING picture classification {0}", picture.Uri);
             // get classifications above 10% and put them in a list
             List<CategoryTag> categoryTags = new List<CategoryTag>();
-            if(picture.CategoryTags is null)
+            if (picture.CategoryTags is null)
             {
                 picture.CategoryTags = new List<CategoryTag>();
             }
@@ -171,12 +187,11 @@ namespace DLuOvBamG.ViewModels
             // find or insert all category tag objects
             categoryTags.ForEach(categoryTag => categoryTag.FindOrInsert());
             // add the categoryTags, now with id, to the picture and update it
-            categoryTags.ForEach(categoryTag => {
-                Console.WriteLine("[DEBUG]: categoryTag {0}-{2} for picture {1}", categoryTag.Name, picture.Uri, categoryTag.Id);
-                picture.CategoryTags.Add(categoryTag); 
+            categoryTags.ForEach(categoryTag =>
+            {
+                picture.CategoryTags.Add(categoryTag);
             });
             db.SavePictureAsync(picture);
-            Console.WriteLine("[DEBUG]: FINISH picture classification {0}", picture.Uri);
         }
 
         public ICommand ItemTappedCommand
