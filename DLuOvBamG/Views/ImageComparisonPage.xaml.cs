@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -58,13 +59,16 @@ namespace DLuOvBamG.Views
                         double currentPoint = args.Location.X;
                         double diff = fistPoint - currentPoint;
                         bool right = diff > 0;
-                        bool enoughDiff = diff > 30;
+                        double devicewidth = DeviceDisplay.MainDisplayInfo.Width;
+                        bool enoughDiff = diff > devicewidth / 5;
                         if (right && enoughDiff)
                         {
-                            Console.WriteLine("swiped right");
-          
+                            VM.SwipeRight();
+                        } 
+                        else if (!right && enoughDiff)
+                        {
+                            VM.SwipeLeft();
                         }
-                        //else Console.WriteLine("swiped left");
                         fistPoint = -1;
                         pointerCounter = 0;
                     }
@@ -90,7 +94,7 @@ namespace DLuOvBamG.Views
 
         public async Task ShowBasePic(Image currentPicture)
         {
-            await Task.Delay(2000);
+            await Task.Delay(1000);
             if(!stop)
                 currentPicture.Source = VM.ComparingPictureUri;
 

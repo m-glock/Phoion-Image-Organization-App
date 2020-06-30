@@ -55,24 +55,32 @@ namespace DLuOvBamG.ViewModels
             PicsToDelete = new List<Picture>();
         }
 
-        public ICommand SwipeLeft => new Command( () =>
+        /*public ICommand SwipeDown => new Command(async () =>
         {
-            Console.WriteLine("left swipe");
-            CarouselView.Position = CarouselView.Position + 1;
-        });
 
-        public ICommand SwipeRight => new Command( () =>
+        });*/
+
+        public void SwipeLeft()
         {
-            Console.WriteLine("right swipe");
-            CarouselView.Position = CarouselView.Position - 1;
-        });
+            if (CarouselView.Position < PictureList.Count - 1)
+            {
+                CarouselView.Position = CarouselView.Position + 1;
+            }
+        }
 
-        public ICommand SwipeDown => new Command( () =>
+        public void SwipeRight()
+        {
+            if (CarouselView.Position > 0)
+            {
+                CarouselView.Position = CarouselView.Position - 1;
+            }
+        }
+
+        public void SwipeDown()
         {
             // Handle the swipe
             Picture picToDelete = PictureList.Find(pic => pic.Uri == CurrentPictureUri);
             PicsToDelete.Add(picToDelete);
-            Console.WriteLine("Down swipe");
-        });
+        }
     }
 }
