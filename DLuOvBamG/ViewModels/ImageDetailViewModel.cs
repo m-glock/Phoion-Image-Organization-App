@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Input;
 using DLuOvBamG.Models;
@@ -9,42 +10,34 @@ using Xamarin.Forms;
 
 namespace DLuOvBamG.ViewModels
 {
-    public class ImageDetailView : ContentPage
+    public class ImageDetailViewModel : BaseViewModel, INotifyPropertyChanged
     {
         public Picture Image { get; set; }
         public string debugString { get; set; } = "test";
         public INavigation Navigation;
 
-        public ImageDetailView(Picture item)
+
+        public ImageDetailViewModel(Picture item)
         {
-            
+
             Image = item;
         }
 
-        void OnImageButtonClicked(object sender, EventArgs args)
-        {
-            debugString = "pressed";
-        }
 
-        public void getInfo()
-        {
+        public ICommand GetCategories => new Command(async () => {
+
+        });
+        public ICommand GetInfo => new Command(async () => {
             var newPage = new InfoPage(Image);
             Navigation.PushAsync(newPage, true);
-        }
+        });
 
-        public void deleteImage()
+        public ICommand DeleteImage => new Command(async () => {
+
+        });
+        public ICommand GetSimilar => new Command(async () =>
         {
 
-        }
-
-        public void getCategories()
-        {
-
-        }
-
-        public void similarImages()
-        {
-
-        }
+        });
     }
 }

@@ -28,16 +28,16 @@
              </ctrl:PinchAndPanContainer.Content>
         </ctrl:PinchAndPanContainer>
         <Grid  BackgroundColor="White" Grid.Row="1" Grid.Column="0">
-            <ImageButton x:Name ="categories" Source="categories_64px.png" WidthRequest="32" HeightRequest="32" VerticalOptions="Center" HorizontalOptions="Center" Clicked="categoriesBtn"></ImageButton>
+            <ImageButton x:Name ="categories" Source="categories_64px.png" WidthRequest="32" HeightRequest="32" VerticalOptions="Center" HorizontalOptions="Center" Command="{Binding GetCategories}"></ImageButton>
         </Grid>
         <Grid  BackgroundColor="White" Grid.Row="1" Grid.Column="1">
-            <ImageButton x:Name ="info" Source="Info_64px.png" WidthRequest="32" HeightRequest="32" VerticalOptions="Center" HorizontalOptions="Center" Clicked="infoBtn"></ImageButton>
+            <ImageButton x:Name ="info" Source="Info_64px.png" WidthRequest="32" HeightRequest="32" VerticalOptions="Center" HorizontalOptions="Center" Command="{Binding GetInfo}"></ImageButton>
         </Grid>
         <Grid  BackgroundColor="White" Grid.Row="1" Grid.Column="2">
-            <ImageButton  x:Name="delete" Source="delete_64px.png" WidthRequest="32" HeightRequest="32" VerticalOptions="Center" HorizontalOptions="Center" Clicked="deleteBtn"></ImageButton>
+            <ImageButton  x:Name="delete" Source="delete_64px.png" WidthRequest="32" HeightRequest="32" VerticalOptions="Center" HorizontalOptions="Center" Command="{Binding DeleteImage}" ></ImageButton>
         </Grid>   
         <Grid  BackgroundColor="White" Grid.Row="1" Grid.Column="3"  >
-            <ImageButton x:Name="similar" Source="similar_pictures_64px.png" WidthRequest="32" HeightRequest="32" VerticalOptions="Center" HorizontalOptions="Center" Clicked="similarBtn"></ImageButton>
+            <ImageButton x:Name="similar" Source="similar_pictures_64px.png" WidthRequest="32" HeightRequest="32" VerticalOptions="Center" HorizontalOptions="Center" Command="{Binding GetSimilar}" ></ImageButton>
         </Grid>
         <!--<Label x:Name="debugTestString" BackgroundColor="White" Text="{Binding debugString}"  Grid.Row="2" Grid.ColumnSpan="4"/>-->
     </Grid>    

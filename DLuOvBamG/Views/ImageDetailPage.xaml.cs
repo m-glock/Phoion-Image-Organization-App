@@ -13,45 +13,15 @@ namespace DLuOvBamG.Views
     public partial class ImageDetailPage : ContentPage
     {
 
-        ImageDetailView DV;
+        ImageDetailViewModel DV;
         
 
         public ImageDetailPage(Picture image)
         {
             InitializeComponent();
-            DV =new ViewModels.ImageDetailView(image);
+            DV =new ViewModels.ImageDetailViewModel(image);
             BindingContext = DV;
             DV.Navigation = Navigation;
         }
-
-        void OnImageButtonClicked(object sender, EventArgs args)
-        {
-            
-            Console.WriteLine("test");
-           
-        }
-
-        void categoriesBtn(object sender, EventArgs args)
-        {
-            DV.getCategories();
-            Console.WriteLine("categries");
-        }
-        void infoBtn(object sender, EventArgs args)
-        {
-            DV.getInfo();
-            Console.WriteLine("info");
-        }
-        void deleteBtn(object sender, EventArgs args)
-        {
-            DV.deleteImage();
-            Console.WriteLine("delete");
-        }
-
-        void similarBtn(object sender, EventArgs args)
-        {
-            DV.similarImages();
-            Console.WriteLine("similar");
-        }
-
     }
 }
