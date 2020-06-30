@@ -5,7 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -15,13 +15,14 @@ namespace DLuOvBamG.Views
     public partial class ImageComparisonPage : ContentPage
     {
         private ImageComparisonViewModel VM;
-        private Point point;
+        private double fistPoint = -1;
+        private int pointerCounter;
         private bool stop;
 
         public ImageComparisonPage(List<Picture> pictures, Picture mainPic)
         {
             VM = new ImageComparisonViewModel();
-            
+
             Picture comparingPicture = mainPic;
             pictures.Remove(comparingPicture);
             VM.PictureList = pictures;
@@ -40,36 +41,46 @@ namespace DLuOvBamG.Views
             VM.CurrentPictureUri = currentPicture.Uri;
         }
 
-        public void ImageTouched(object sender, TouchActionEventArgs args)
+        public async void ImageTouched(object sender, TouchActionEventArgs args)
         {
             Image currentPicture = sender as Image;
 
             switch (args.Type)
             {
                 case TouchActionType.Moved:
-                    //Console.WriteLine("Location: " + args.Location);
-                    Point newPoint = args.Location;
-                    if (point != null)
+                    pointerCounter++;
+                    Console.WriteLine(pointerCounter);
+                    if (fistPoint == -1)
+                        fistPoint = args.Location.X;
+                    
+                    if (pointerCounter >= 10)
                     {
-                        double diff = point.X - newPoint.X;
+                        double currentPoint = args.Location.X;
+                        double diff = fistPoint - currentPoint;
                         bool right = diff > 0;
-                        bool enoughDiff = diff > 100;
-                        if (right && enoughDiff) Console.WriteLine("swiped right");
+                        bool enoughDiff = diff > 30;
+                        if (right && enoughDiff)
+                        {
+                            Console.WriteLine("swiped right");
+          
+                        }
                         //else Console.WriteLine("swiped left");
+                        fistPoint = -1;
+                        pointerCounter = 0;
                     }
-                    point = newPoint;
+
                     break;
                 case TouchActionType.Pressed:
                     //Console.WriteLine("tap started");
                     stop = false;
-                    ShowBasePic(currentPicture);
+                    await ShowBasePic(currentPicture);
                     //currentPicture.Source = VM.ComparingPictureUri;
                     break;
                 case TouchActionType.Released:
                     //Console.WriteLine("tap stopped");
                     currentPicture.Source = VM.CurrentPictureUri;
                     stop = true;
-                    Console.WriteLine("stop is true");
+                    //Console.WriteLine("stop is true");
                     //currentPicture.Source = VM.CurrentPictureUri;
                     break;
                 default:
@@ -77,27 +88,13 @@ namespace DLuOvBamG.Views
             }
         }
 
-        private async void ShowBasePic(Image currentPicture)
+        public async Task ShowBasePic(Image currentPicture)
         {
-            Console.WriteLine("start stopwatch");
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            while (stopwatch.ElapsedMilliseconds >= 2000) //Timer
-            {
-                Console.WriteLine("time: " + stopwatch.ElapsedMilliseconds);
-                if (stop)
-                {
-                    Console.WriteLine("stop loop");
-                    break;
-                }
-            }
-
-            stopwatch.Stop();
-            if (!stop)
-            {
-                Console.WriteLine("change pic image");
+            await Task.Delay(2000);
+            if(!stop)
                 currentPicture.Source = VM.ComparingPictureUri;
-            }
+
         }
+
     }
 }

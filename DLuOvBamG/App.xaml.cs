@@ -18,7 +18,7 @@ namespace DLuOvBamG
             
             IClassifier classifier = DependencyService.Get<IClassifier>();
             // Debug
-            classifier.test();
+            //classifier.test();
             
         }
 
