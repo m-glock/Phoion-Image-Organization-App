@@ -6,7 +6,6 @@ using Xamarin.Forms;
 
 namespace DLuOvBamG.Services
 {
-    //TODO: merge with existing TF Service
     public class TensorflowExecutor
     {
         private Dictionary<ScanOptionsEnum, List<List<Picture>>> pictures;
@@ -32,23 +31,24 @@ namespace DLuOvBamG.Services
 
             // TODO make it asynchronous
             List<Picture> pictureList = DatabaseImageRetriever.GetImagesFromDatabase().Result;
-            List<List<Picture>> outsideList = new List<List<Picture>>();
 
-
-            // TODO make it possible to start a new search with a new threshold, makes problmes with the dark pics
             foreach (ScanOptionsEnum option in options.Keys.ToList())
             {
+                // when there is already an entry && the entry has the same slider value
                 if (pictures.ContainsKey(option) && oldOptions[option].Equals(options[option]))
                     continue;
                 else
                 {
+                    // when there is already a value for the 'option key' -> empty it
                     if (pictures.ContainsKey(option))
                         pictures[option] = new List<List<Picture>>();
                 }
 
+                List<List<Picture>> outputList = new List<List<Picture>>();
+
                 if (option == ScanOptionsEnum.darkPics)
                 {
-
+                    brightnessClassifier.Threshold = (int)options[option] * 10;
                     List<Picture> darkPictures = new List<Picture>();
                     List<Picture> brightPictures = new List<Picture>();
 
@@ -66,9 +66,8 @@ namespace DLuOvBamG.Services
                         }
                     }
 
-                    outsideList.Add(darkPictures);
-                    outsideList.Add(brightPictures);
-
+                    outputList.Add(darkPictures);
+                    outputList.Add(brightPictures);
 
                 }
                 else if (option == ScanOptionsEnum.blurryPics)
@@ -86,19 +85,16 @@ namespace DLuOvBamG.Services
                         }
                     }
 
-                    outsideList.Add(blurryPics);
+                    outputList.Add(blurryPics);
                 }
                 else
                 {
                     // TODO similar pics
                 }
 
-                pictures[option] = outsideList;
+                pictures[option] = outputList;
 
                 oldOptions[option] = options[option];
-                
-
-
             }
 
 
