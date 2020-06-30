@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:touch="clr-namespace:TouchEffect;assembly=TouchEffect"
+             xmlns:gestures="clr-namespace:DLuOvBamG.Services.Gestures"
              mc:Ignorable="d"
              x:Name="root"
              x:Class="DLuOvBamG.Views.ImageComparisonPage">
@@ -27,30 +27,24 @@
                 </CarouselView.ItemTemplate>
             </CarouselView>
 
-            <!--<touch:TouchImage x:Name="TouchImage" 
-                              touch:TouchEff.Command="{Binding Command, Source={x:Reference root}}"
-                              RegularBackgroundImageSource="{Binding CurrentPictureUri}"
-                              PressedBackgroundImageSource="{Binding ComparingPictureUri}">
-                <touch:TouchImage.RegularBackgroundImageSource>
-                    <UriImageSource Uri="{Binding CurrentPictureUri}"></UriImageSource>
-                </touch:TouchImage.RegularBackgroundImageSource>
-                <touch:TouchImage.PressedBackgroundImageSource>
-                    <UriImageSource Uri="{Binding ComparingPictureUri}"></UriImageSource>
-                </touch:TouchImage.PressedBackgroundImageSource>
-                <touch:TouchImage.GestureRecognizers>
+            <Frame Margin="0" Padding="0"  Grid.Row="1">
+                <Frame.GestureRecognizers>
                     <SwipeGestureRecognizer Direction="Left" Command="{Binding SwipeLeft}"/>
                     <SwipeGestureRecognizer Direction="Right" Command="{Binding SwipeRight}"/>
                     <SwipeGestureRecognizer Direction="Down" Command="{Binding SwipeDown}"/>
-                </touch:TouchImage.GestureRecognizers>
-            </touch:TouchImage>-->
-
-            <Image x:Name="CurrentPicture" Source="{Binding CurrentPictureUri}" Grid.Row="1">
-                <Image.GestureRecognizers>
-                    <SwipeGestureRecognizer Direction="Left" Command="{Binding SwipeLeft}"/>
-                    <SwipeGestureRecognizer Direction="Right" Command="{Binding SwipeRight}"/>
-                    <SwipeGestureRecognizer Direction="Down" Command="{Binding SwipeDown}"/>
-                </Image.GestureRecognizers>
+                </Frame.GestureRecognizers>
+            <Image x:Name="CurrentPicture" Source="{Binding CurrentPictureUri}">
+                    <Image.GestureRecognizers>
+                        <SwipeGestureRecognizer Direction="Left" Command="{Binding SwipeLeft}"/>
+                        <SwipeGestureRecognizer Direction="Right" Command="{Binding SwipeRight}"/>
+                        <SwipeGestureRecognizer Direction="Down" Command="{Binding SwipeDown}"/>
+                    </Image.GestureRecognizers>
+                    <Image.Effects>
+                    <gestures:TouchEffect TouchAction="ImageTouched">
+                    </gestures:TouchEffect>
+                </Image.Effects>
             </Image>
+            </Frame>
             <Image Source="delete_64px.png" Grid.Row="2"></Image>
         </Grid>
     </ContentPage.Content>
