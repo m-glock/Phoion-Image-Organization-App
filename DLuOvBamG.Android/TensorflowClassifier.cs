@@ -21,7 +21,7 @@ namespace DLuOvBamG.Droid
     public class TensorflowClassifier : IClassifier
     {
         // TODO remove debug
-        private bool testing = true;
+        private bool testing = false;
 
         private Interpreter interpreter;
         private List<string> labels;
@@ -77,27 +77,27 @@ namespace DLuOvBamG.Droid
 
         #region testing 
 
-        public void test()
-        {
-            ChangeModel(ScanOptionsEnum.similarPics);
-            string[] listAssets = Android.App.Application.Context.Assets.List("stockImages");
-            foreach (var entry in listAssets)
-            {
-                System.Console.WriteLine("reading image " + entry);
-                byte[] image = GetImageBytes(entry);
-                var sortedList = ClassifySimilar(image);
+        //public void test()
+        //{
+        //    ChangeModel(ScanOptionsEnum.similarPics);
+        //    string[] listAssets = Android.App.Application.Context.Assets.List("stockImages");
+        //    foreach (var entry in listAssets)
+        //    {
+        //        System.Console.WriteLine("reading image " + entry);
+        //        byte[] image = GetImageBytes(entry);
+        //        var sortedList = ClassifySimilar(image);
 
-                if (sortedList.Count > 0)
-                {
-                    ModelClassification top = sortedList.First();
-                    System.Console.WriteLine(top.TagName + " " + Math.Round(top.Probability * 100, 2) + "% ultra result for " + entry);
-                }
-                foreach (ModelClassification item in sortedList)
-                {
-                    System.Console.WriteLine(item.TagName + " " + Math.Round(item.Probability * 100, 2) + "% result for " + entry);
-                }
-            }
-        }
+        //        if (sortedList.Count > 0)
+        //        {
+        //            ModelClassification top = sortedList.First();
+        //            System.Console.WriteLine(top.TagName + " " + Math.Round(top.Probability * 100, 2) + "% ultra result for " + entry);
+        //        }
+        //        foreach (ModelClassification item in sortedList)
+        //        {
+        //            System.Console.WriteLine(item.TagName + " " + Math.Round(item.Probability * 100, 2) + "% result for " + entry);
+        //        }
+        //    }
+        //}
 
 
 
@@ -105,19 +105,19 @@ namespace DLuOvBamG.Droid
 
         public byte[] GetImageBytes(string path)
         {
-            Stream stream;
-            if (testing)
-            {
-                AssetFileDescriptor assetDescriptor = Android.App.Application.Context.Assets.OpenFd("stockImages/" + path);
-                stream = assetDescriptor.CreateInputStream();
-            }
-            else
-            {
-                stream = System.IO.File.OpenRead(path);
-            }
-            
+            //Stream stream;
+            //if (testing)
+            //{
+            //    AssetFileDescriptor assetDescriptor = Android.App.Application.Context.Assets.OpenFd("stockImages/" + path);
+            //    stream = assetDescriptor.CreateInputStream();
+            //}
+            //else
+            //{
+            //    stream = System.IO.File.OpenRead(path);
+            //}
 
-            
+
+            Stream stream = System.IO.File.OpenRead(path);
             byte[] fileBytes = ReadStream(stream);
 
             return fileBytes;
@@ -213,14 +213,8 @@ namespace DLuOvBamG.Droid
                 result.Add(new ModelClassification(label, classificationResult[0][i]));
             }
 
-            double n2 = 0;
-            for (int i = 0; i < 1280; i++)
-            {
-                n2 += Math.Pow(featureVectorResult[0][0][0][i], 2);
-                
-            }
-            n2 = Math.Sqrt(n2);
-            System.Console.WriteLine(n2 + " feature vector");
+            float[] featureVector = featureVectorResult[0][0][0];
+            featureVector = normalizeVector(featureVector);
 
             var sortedList = result.OrderByDescending(x => x.Probability).ToList();
             sortedList = sortedList.FindAll(x => System.Math.Round(x.Probability * 100, 2) > thresholdSimilar);
@@ -229,6 +223,20 @@ namespace DLuOvBamG.Droid
             ClassificationCompleted?.Invoke(this, new ClassificationEventArgs(result));
 
             return sortedList;
+        }
+
+        private float[] normalizeVector(float[] vector)
+        {
+            // Calculate magnitude
+            double magnitude = 0;
+            for (int i = 0; i < vector.Length; i++)
+                magnitude += Math.Pow(vector[i], 2);
+            magnitude = Math.Sqrt(magnitude);
+            // normalize
+            for (int i = 0; i < vector.Length; i++)
+                vector[i] = (float)(vector[i] / magnitude);
+
+            return vector;
         }
 
         public List<ModelClassification> ClassifyBlurry(byte[] bytes)
@@ -244,12 +252,12 @@ namespace DLuOvBamG.Droid
             float[][] outputLabels = new float[1][] { new float[labels.Count] };
             var outputLabelsConverted = Java.Lang.Object.FromArray(outputLabels);
 
-    
+
             interpreter.Run(byteBuffer, outputLabelsConverted);
 
             // Classification Results
             float[][] classificationResult = outputLabelsConverted.ToArray<float[]>();
- 
+
             List<ModelClassification> result = new List<ModelClassification>();
             for (int i = 0; i < labels.Count; i++)
             {
