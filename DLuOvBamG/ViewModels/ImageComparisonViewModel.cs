@@ -20,6 +20,7 @@ namespace DLuOvBamG.ViewModels
         private double firstPoint = -1;
         private int pointerCounter;
         private bool stop;
+        private bool pauseSwiping;
 
         #region PropertyChanged
         public string CurrentPictureUri
@@ -75,6 +76,7 @@ namespace DLuOvBamG.ViewModels
 
         public async void OnSwiped(TouchActionEventArgs args)
         {
+            if (pauseSwiping) return;
             pointerCounter++;
             Console.WriteLine(pointerCounter);
             if (firstPoint == -1)
@@ -91,7 +93,9 @@ namespace DLuOvBamG.ViewModels
                 {
                     if (diff > 0) SwipeRight();
                     else SwipeLeft();
+                    pauseSwiping = true;
                     await Task.Delay(1000);
+                    pauseSwiping = false;
                 }
                 firstPoint = -1;
                 pointerCounter = 0;
