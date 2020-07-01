@@ -171,7 +171,7 @@ namespace DLuOvBamG.ViewModels
             byte[] fileBytes = imageService.GetFileBytes(picture.Uri);
 
             // get classifications from classifier
-            List<ModelClassification> modelClassifications = classifier.Classify(fileBytes);
+            List<ModelClassification> modelClassifications = classifier.ClassifySimilar(fileBytes);
             // filter classifications, to get only above 10% probability
             List<ModelClassification> topClassifications = modelClassifications.Where(classification => classification.Probability > 0.1f).ToList();
 
@@ -199,7 +199,7 @@ namespace DLuOvBamG.ViewModels
         {
             get
             {
-                return new Command((sender) =>
+                return new Command(async (sender) =>
                 {
                     var Item = sender as Picture;
 
@@ -208,9 +208,7 @@ namespace DLuOvBamG.ViewModels
                         if (picture.Id == Item.Id)
                         {
                             Console.WriteLine("tapped {0}", picture.Id);
-                            var newPage = new ImageTagPage(picture.Id);
-                            // var newPage = new ImageDetailPage(picture);
-                            Navigation.PushAsync(newPage, true);
+                            await Navigation.PushAsync(new ImageDetailPage(picture), true);
                         }
                     }
 

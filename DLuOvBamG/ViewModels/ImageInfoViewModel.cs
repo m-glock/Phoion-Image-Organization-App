@@ -5,7 +5,7 @@ namespace DLuOvBamG.ViewModels
 {
     class ImageInfoViewModel : BaseViewModel
     {
-        public string InfoName { get; };
+        public string InfoName { get; }
         public string InfoLocation { get; }
         public string[] InfoTagsArray { get; }
         public string InfoTags { get; }
