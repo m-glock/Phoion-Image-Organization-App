@@ -17,7 +17,6 @@ namespace DLuOvBamG
             tf = new TensorflowExecutor();
 
             Device.SetFlags(new string[] { "Expander_Experimental" });
-            DependencyService.Register<MockDataStore>();
             MainPage = new NavigationPage(new ImageGrid());
             
             
