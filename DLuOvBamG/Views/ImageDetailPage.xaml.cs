@@ -19,7 +19,7 @@ namespace DLuOvBamG.Views
         public ImageDetailPage(Picture image)
         {
             InitializeComponent();
-            DV =new ViewModels.ImageDetailViewModel(image);
+            DV = new ViewModels.ImageDetailViewModel(image);
             BindingContext = DV;
             DV.Navigation = Navigation;
         }

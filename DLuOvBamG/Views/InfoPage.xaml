@@ -22,31 +22,15 @@
                     <RowDefinition Height="50" />
                     <!--<RowDefinition Height="50"/>-->
                 </Grid.RowDefinitions>
-                <Grid  BackgroundColor="White" Grid.Row="1" Grid.Column="0">
-                    <Label Text="Name:" VerticalOptions ="Center" HorizontalOptions="End"></Label>
-                </Grid>
-                <Grid  BackgroundColor="White" Grid.Row="1" Grid.Column="1">
-                    <Label Text="{Binding infoName}"></Label>
-                </Grid>
-                <Grid  BackgroundColor="White" Grid.Row="2" Grid.Column="0">
-                    <Label Text="Location: " VerticalOptions ="Center" HorizontalOptions="End"></Label>
-                </Grid>
-                <Grid  BackgroundColor="White" Grid.Row="2" Grid.Column="1">
-                    <Label Text="{Binding infoLocation}"></Label>
-                </Grid>
-                <Grid  BackgroundColor="White" Grid.Row="3" Grid.Column="0">
-                    <Label Text="Date: " VerticalOptions ="Center" HorizontalOptions="End"></Label>
-                </Grid>
-                <Grid  BackgroundColor="White" Grid.Row="3" Grid.Column="1">
-                    <Label Text="{Binding infoDate}"></Label>
-                </Grid>
-                <Grid  BackgroundColor="White" Grid.Row="4" Grid.Column="0">
-                    <Label Text="Tags:  " VerticalOptions ="Center" HorizontalOptions="End"></Label>
-                </Grid>
-                <Grid  BackgroundColor="White" Grid.Row="4" Grid.Column="1">
-                    <Label Text="{Binding infoTags}"></Label>
-                </Grid>
-            </Grid>
+                <Label Text="Name:" VerticalOptions ="Center" HorizontalOptions="End" Grid.Row="1" Grid.Column="0"></Label>
+                <Label Text="{Binding infoName}" Grid.Row="1" Grid.Column="1"></Label>
+                <Label Text="Location: " VerticalOptions ="Center" HorizontalOptions="End" Grid.Row="2" Grid.Column="0"></Label>
+                <Label Text="{Binding infoLocation}" Grid.Row="2" Grid.Column="1"></Label>
+                <Label Text="Date: " VerticalOptions ="Center" HorizontalOptions="End" Grid.Row="3" Grid.Column="0"></Label>
+                <Label Text="{Binding infoDate}" Grid.Row="3" Grid.Column="1"></Label>
+                <Label Text="Tags:  " VerticalOptions ="Center" HorizontalOptions="End" Grid.Row="4" Grid.Column="0"></Label>
+                <Label Text="{Binding infoTags}" Grid.Row="4" Grid.Column="1"></Label>
+             </Grid>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
