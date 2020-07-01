@@ -9,7 +9,7 @@ namespace DLuOvBamG
         static ImageOrganizationDatabase database;
         static IClassifier classifier;
         static ViewModelLocator viewModelLocator;
-        public static Tensorflow tf;
+        public static TensorflowExecutor tf;
 
         public App()
         {
