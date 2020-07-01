@@ -14,7 +14,7 @@ namespace DLuOvBamG
         public App()
         {
             InitializeComponent();
-            tf = new Tensorflow();
+            tf = new TensorflowExecutor();
 
             Device.SetFlags(new string[] { "Expander_Experimental" });
             DependencyService.Register<MockDataStore>();
