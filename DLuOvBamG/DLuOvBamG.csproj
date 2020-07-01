@@ -17,14 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Views\Page1.xaml.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Remove="Views\Page1.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
 	  <PackageReference Include="DLToolkit.Forms.Controls.FlowListView" Version="2.0.11" />
 	  <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
 	  <PackageReference Include="SQLiteNetExtensions.Async" Version="2.1.0" />
@@ -57,6 +49,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Views\AddTagPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\ImageGrid.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>

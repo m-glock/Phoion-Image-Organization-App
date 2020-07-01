@@ -139,7 +139,8 @@ namespace DLuOvBamG.ViewModels
                 {
                     return new CategoryTag()
                     { 
-                        Name = label 
+                        Name = label,
+                        IsCustom = false
                     };
                 }
             ).ToList();

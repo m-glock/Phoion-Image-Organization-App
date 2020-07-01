@@ -10,10 +10,14 @@ namespace DLuOvBamG.Views
 {
     public partial class ImageTagPage : ContentPage
     {
+        ImageTagViewModel vm { get; set; }
         public ImageTagPage(int pictureId)
         {
             InitializeComponent();
-            BindingContext = new ImageTagViewModel(pictureId);
+            vm = App.ViewModelLocator.ImageTagViewModel;
+            BindingContext = vm;
+            vm.Navigation = Navigation;
+            vm.GetCategoryTagsOfPicture(pictureId);
         }
     }
 }

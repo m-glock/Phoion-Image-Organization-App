@@ -83,6 +83,11 @@ namespace DLuOvBamG.Services
             return Database.Table<CategoryTag>().Where(i => i.Id == id).FirstOrDefaultAsync();
         }
 
+        public Task<List<CategoryTag>> GetCustomCategoryTagsAsync()
+        {
+            return Database.Table<CategoryTag>().Where(i => i.IsCustom == true).ToListAsync();
+        }
+
         public CategoryTag GetCategoryTagByName(string name)
         {
             return SynchronousDB.Table<CategoryTag>().Where(i => i.Name.Equals(name)).FirstOrDefault();

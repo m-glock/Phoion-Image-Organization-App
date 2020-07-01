@@ -15,6 +15,8 @@ namespace DLuOvBamG.Models
         public int Id { get; set; }
         public string Name { get; set; }
 
+        public bool IsCustom { get; set; }
+
         [ManyToMany(typeof(PictureTags))]
         public List<Picture> Pictures { get; set; }
 

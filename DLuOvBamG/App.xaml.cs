@@ -8,6 +8,7 @@ namespace DLuOvBamG
     {
         static ImageOrganizationDatabase database;
         static IClassifier classifier;
+        static ViewModelLocator viewModelLocator;
         public App()
         {
             InitializeComponent();
@@ -43,6 +44,18 @@ namespace DLuOvBamG
                     database = new ImageOrganizationDatabase();
                 }
                 return database;
+            }
+        }
+
+        public static ViewModelLocator ViewModelLocator
+        {
+            get 
+            {
+                if (viewModelLocator == null)
+                {
+                    viewModelLocator = new ViewModelLocator();
+                }
+                return viewModelLocator;
             }
         }
 
