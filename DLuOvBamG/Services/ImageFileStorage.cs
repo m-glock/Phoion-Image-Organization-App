@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 
 namespace DLuOvBamG.Services
 {
-    public class ImageFileStorage : IImagagFileStorage
+    public class ImageFileStorage
     {
         public Task DeleteFileAsync(string filePath)
         {
