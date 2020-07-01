@@ -141,29 +141,25 @@ namespace DLuOvBamG.Droid
         {
             float IMAGE_STD = 128.0f;
             int IMAGE_MEAN = 128;
-
+            // ERROR:  W/ServiceManagement(21703): getService: unable to call into hwbinder service for vendor.huawei.hardware.jpegdec@1.0::IJpegDecode/default.
             Bitmap bitmap = BitmapFactory.DecodeByteArray(bytes, 0, bytes.Length);
+            // ERROR: (21703): [ZeroHung]zrhung_get_config: Get config failed for wp[0x0008]
             Bitmap resizedBitmap = Bitmap.CreateScaledBitmap(bitmap, width, height, true);
 
             ByteBuffer byteBuffer;
             int modelInputSize = 4 * height * width * 3;
 
             byteBuffer = ByteBuffer.AllocateDirect(modelInputSize);
-
             byteBuffer.Order(ByteOrder.NativeOrder());
-            int[] intValues = new int[width * height];
-            resizedBitmap.GetPixels(intValues, 0, resizedBitmap.Width, 0, 0, resizedBitmap.Width, resizedBitmap.Height);
-            int pixel = 0;
-            for (int i = 0; i < width; ++i)
-            {
-                for (int j = 0; j < height; ++j)
-                {
-                    int val = intValues[pixel++];
-                    byteBuffer.PutFloat((((val >> 16) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
-                    byteBuffer.PutFloat((((val >> 8) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
-                    byteBuffer.PutFloat((((val) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
-                }
+            int[] pixels = new int[width * height];
+            resizedBitmap.GetPixels(pixels, 0, resizedBitmap.Width, 0, 0, resizedBitmap.Width, resizedBitmap.Height);
+            foreach ( int pixelVal in pixels) {
+                byteBuffer.PutFloat((((pixelVal >> 16) & 0xFF) - 128) / 128.0f);
+                byteBuffer.PutFloat((((pixelVal >> 8) & 0xFF) - 128) / 128.0f);
+                byteBuffer.PutFloat((((pixelVal) & 0xFF) - 128) / 128.0f);
             }
+
+            
             return byteBuffer;
         }
 
@@ -221,7 +217,7 @@ namespace DLuOvBamG.Droid
 
             // Notify all listeners
             ClassificationCompleted?.Invoke(this, new ClassificationEventArgs(result));
-
+            
             return sortedList;
         }
 

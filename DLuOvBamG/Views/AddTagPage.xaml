@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="DLuOvBamG.Views.AddTagPage">
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness">
+            <On Platform="iOS" Value="0,40,0,0" />
+        </OnPlatform>
+    </ContentPage.Padding>
+    <ContentPage.Content>
+        <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+            <Picker 
+                x:Name="picker"
+                Title="Select a tag"
+                ItemsSource="{Binding CustomTags}"
+                ItemDisplayBinding="{Binding Name}"
+                SelectedItem="{Binding SelectedCustomTag}"
+            />
+            <Entry Text="{Binding CustomTagInput}"/>
+            <Button Text="Save" Command="{Binding SaveNewTag}" />
+            <Button Text="Dismiss" Command="{Binding CloseEditPage}" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

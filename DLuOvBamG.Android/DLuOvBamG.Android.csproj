@@ -76,6 +76,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssetsService.cs" />
     <Compile Include="ImageService.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="PathService.cs" />
@@ -110,12 +111,6 @@
     <AndroidResource Include="Resources\mipmap-xxxhdpi\icon.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\launcher_foreground.png" />
     <AndroidResource Include="Resources\drawable\xamarin_logo.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DLuOvBamG\DLuOvBamG.csproj">
-      <Project>{D8B0B417-2BBB-445A-BCD6-388B345F5F37}</Project>
-      <Name>DLuOvBamG</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\stockImages\catdog.jpg" />

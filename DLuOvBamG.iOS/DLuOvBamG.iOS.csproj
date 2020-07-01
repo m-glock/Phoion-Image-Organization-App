@@ -138,10 +138,4 @@
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
-  <ItemGroup>
-    <ProjectReference Include="..\DLuOvBamG\DLuOvBamG.csproj">
-      <Project>{D8B0B417-2BBB-445A-BCD6-388B345F5F37}</Project>
-      <Name>DLuOvBamG</Name>
-    </ProjectReference>
-  </ItemGroup>
 </Project>

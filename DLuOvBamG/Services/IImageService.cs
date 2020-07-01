@@ -7,5 +7,6 @@ namespace DLuOvBamG.Services
     public interface IImageService
     {
         DateTime GetDateTaken(string filePath);
+        byte[] GetFileBytes(string filePath);
     }
 }

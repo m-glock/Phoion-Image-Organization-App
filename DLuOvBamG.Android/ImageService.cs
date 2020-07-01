@@ -24,6 +24,16 @@ namespace DLuOvBamG.Droid
             dateTaken = r.Replace(dateTaken, "-", 2);
             return DateTime.Parse(dateTaken);
         }
+
+        public byte[] GetFileBytes(string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                throw new ArgumentException("file does not exists");
+            }
+
+            return File.ReadAllBytes(filePath);
+        }
     }
 }
 

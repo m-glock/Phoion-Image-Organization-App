@@ -18,9 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DLToolkit.Forms.Controls.FlowListView" Version="2.0.11" />  
-    <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />  
-    <PackageReference Include="Xamarin.Forms" Version="4.6.0.847" />
+	  <PackageReference Include="DLToolkit.Forms.Controls.FlowListView" Version="2.0.11" />
+	  <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
+	  <PackageReference Include="SQLiteNetExtensions.Async" Version="2.1.0" />
+	  <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
+	  <PackageReference Include="Xamarin.Forms" Version="4.6.0.847" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,15 +47,24 @@
     <Compile Update="Views\ImageInfoPage.xaml.cs">
       <DependentUpon>ImageInfoPage.xaml</DependentUpon>
     </Compile>
+	<Compile Update="Views\ImageTagPage.xaml.cs">
+	  <DependentUpon>ImageTagPage.xaml</DependentUpon>
+	</Compile>
   </ItemGroup>
 
   <ItemGroup>
+	<EmbeddedResource Update="Views\AddTagPage.xaml">
+		<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+	</EmbeddedResource>
     <EmbeddedResource Update="Views\ImageDetailPage.xaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\ImageGrid.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
+	</EmbeddedResource>
+	<EmbeddedResource Update="Views\ImageGrid.xaml">
+		<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+	</EmbeddedResource>
+	<EmbeddedResource Update="Views\ImageTagPage.xaml">
+		<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+	</EmbeddedResource>
     <EmbeddedResource Update="Views\ImageInfoPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
