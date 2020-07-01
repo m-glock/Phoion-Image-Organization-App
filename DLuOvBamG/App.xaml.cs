@@ -9,9 +9,12 @@ namespace DLuOvBamG
         static ImageOrganizationDatabase database;
         static IClassifier classifier;
         static ViewModelLocator viewModelLocator;
+        public static Tensorflow tf;
+
         public App()
         {
             InitializeComponent();
+            tf = new Tensorflow();
 
             Device.SetFlags(new string[] { "Expander_Experimental" });
             DependencyService.Register<MockDataStore>();

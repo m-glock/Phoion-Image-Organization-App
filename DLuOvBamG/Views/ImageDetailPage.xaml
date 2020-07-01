@@ -28,28 +28,16 @@
              </ctrl:PinchAndPanContainer.Content>
         </ctrl:PinchAndPanContainer>
         <Grid  BackgroundColor="White" Grid.Row="1" Grid.Column="0">
-            <Grid.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding MenuTapped}"  CommandParameter="categories"/>
-            </Grid.GestureRecognizers>
-            <Image Source="categories_64px.png" WidthRequest="32" HeightRequest="32"  VerticalOptions="Center" HorizontalOptions="Center"></Image>
+            <ImageButton x:Name ="categories" Source="categories_64px.png" WidthRequest="32" HeightRequest="32" VerticalOptions="Center" HorizontalOptions="Center" Command="{Binding GetCategories}"></ImageButton>
         </Grid>
         <Grid  BackgroundColor="White" Grid.Row="1" Grid.Column="1">
-            <Grid.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding MenuTapped}" CommandParameter="info" />
-            </Grid.GestureRecognizers>
-            <Image Source="Info_64px.png" WidthRequest="32" HeightRequest="32"  VerticalOptions="Center" HorizontalOptions="Center"></Image>
+            <ImageButton x:Name ="info" Source="Info_64px.png" WidthRequest="32" HeightRequest="32" VerticalOptions="Center" HorizontalOptions="Center" Command="{Binding GetInfo}"></ImageButton>
         </Grid>
         <Grid  BackgroundColor="White" Grid.Row="1" Grid.Column="2">
-            <Grid.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding MenuTapped}" CommandParameter="delete" />
-            </Grid.GestureRecognizers>
-            <Image Source="delete_64px.png"  WidthRequest="32" HeightRequest="32" VerticalOptions="Center" HorizontalOptions="Center"></Image>
-        </Grid>
-        <Grid  BackgroundColor="White" Grid.Row="1" Grid.Column="3">
-            <Grid.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding MenuTapped}" CommandParameter="similar" />
-            </Grid.GestureRecognizers>
-            <Image Source="similar_pictures_64px.png" WidthRequest="32" HeightRequest="32" VerticalOptions="Center" HorizontalOptions="Center"></Image>
+            <ImageButton  x:Name="delete" Source="delete_64px.png" WidthRequest="32" HeightRequest="32" VerticalOptions="Center" HorizontalOptions="Center" Command="{Binding DeleteImage}" ></ImageButton>
+        </Grid>   
+        <Grid  BackgroundColor="White" Grid.Row="1" Grid.Column="3"  >
+            <ImageButton x:Name="similar" Source="similar_pictures_64px.png" WidthRequest="32" HeightRequest="32" VerticalOptions="Center" HorizontalOptions="Center" Command="{Binding GetSimilar}" ></ImageButton>
         </Grid>
         <!--<Label x:Name="debugTestString" BackgroundColor="White" Text="{Binding debugString}"  Grid.Row="2" Grid.ColumnSpan="4"/>-->
     </Grid>    
