@@ -23,13 +23,13 @@
                     <!--<RowDefinition Height="50"/>-->
                 </Grid.RowDefinitions>
                 <Label Text="Name:" VerticalOptions ="Center" HorizontalOptions="End" Grid.Row="1" Grid.Column="0"></Label>
-                <Label Text="{Binding infoName}" Grid.Row="1" Grid.Column="1"></Label>
+                <Label Text="{Binding InfoName}" Grid.Row="1" Grid.Column="1"></Label>
                 <Label Text="Location: " VerticalOptions ="Center" HorizontalOptions="End" Grid.Row="2" Grid.Column="0"></Label>
-                <Label Text="{Binding infoLocation}" Grid.Row="2" Grid.Column="1"></Label>
+                <Label Text="{Binding InfoLocation}" Grid.Row="2" Grid.Column="1"></Label>
                 <Label Text="Date: " VerticalOptions ="Center" HorizontalOptions="End" Grid.Row="3" Grid.Column="0"></Label>
-                <Label Text="{Binding infoDate}" Grid.Row="3" Grid.Column="1"></Label>
+                <Label Text="{Binding InfoDate}" Grid.Row="3" Grid.Column="1"></Label>
                 <Label Text="Tags:  " VerticalOptions ="Center" HorizontalOptions="End" Grid.Row="4" Grid.Column="0"></Label>
-                <Label Text="{Binding infoTags}" Grid.Row="4" Grid.Column="1"></Label>
+                <Label Text="{Binding InfoTags}" Grid.Row="4" Grid.Column="1"></Label>
              </Grid>
         </StackLayout>
     </ContentPage.Content>

@@ -38,6 +38,9 @@
     <Compile Update="Views\ImageDetailPage.xaml.cs">
       <DependentUpon>ImageDetailPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\ImageInfoPage.xaml.cs">
+      <DependentUpon>ImageInfoPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -47,7 +50,7 @@
     <EmbeddedResource Update="Views\ImageGrid.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\InfoPage.xaml">
+    <EmbeddedResource Update="Views\ImageInfoPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
