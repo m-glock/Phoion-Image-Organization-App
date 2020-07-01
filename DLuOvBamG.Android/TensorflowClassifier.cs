@@ -10,9 +10,6 @@ using Java.Nio;
 using Java.Nio.Channels;
 using Org.Tensorflow.Lite;
 using Xamarin.Forms;
-using System.Collections;
-using static DLuOvBamG.IClassifier;
-using Android.Support.Annotation;
 
 [assembly: Dependency(typeof(DLuOvBamG.Droid.TensorflowClassifier))]
 namespace DLuOvBamG.Droid

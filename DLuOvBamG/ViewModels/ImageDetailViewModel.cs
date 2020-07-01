@@ -25,7 +25,7 @@ namespace DLuOvBamG.ViewModels
 
 
         public ICommand GetCategories => new Command(async () => {
-
+            await Navigation.PushAsync(new ImageTagPage(Image.Id), true);
         });
 
         public ICommand GetInfo => new Command(async () => {
