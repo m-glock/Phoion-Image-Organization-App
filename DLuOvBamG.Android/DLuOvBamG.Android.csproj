@@ -64,6 +64,12 @@
     <PackageReference Include="glidex.forms">
       <Version>2.0.1.394</Version>
     </PackageReference>
+    <PackageReference Include="System.Collections">
+      <Version>4.3.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.Collections.NonGeneric">
+      <Version>4.3.0</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
     <PackageReference Include="Xamarin.Forms">
       <Version>4.6.0.847</Version>
@@ -78,7 +84,10 @@
     <Compile Include="TensorflowClassifier.cs" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\mobilenet_v1_1.0_224.tflite" />
+    <AndroidAsset Include="Assets\mobilenet_v2_1.0_224.tflite" />
+    <AndroidAsset Include="Assets\converted_model.tflite" />
+    <AndroidAsset Include="Assets\modelBlur.tflite" />
+    <AndroidAsset Include="Assets\converted_modelTroelf.tflite" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />
@@ -109,13 +118,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\mobilenet_v1_1.0_224.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="Assets\stockImages\catdog.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\stockImages\Katri.jpg" />
+    <AndroidAsset Include="Assets\stockImages\goldfish.jpg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\stockImages\squirrel.jpg" />
@@ -124,19 +130,19 @@
     <AndroidAsset Include="Assets\stockImages\stuhl.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\stockImages\2011-05-22 13.00.54.jpg" />
+    <AndroidAsset Include="Assets\stockImages\buildingFlag.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\stockImages\2013-05-27 08.07.36.jpg" />
+    <AndroidAsset Include="Assets\stockImages\blackboard.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\stockImages\20140528_115535.jpg" />
+    <AndroidAsset Include="Assets\stockImages\pcs.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\stockImages\20150406_182259.jpg" />
+    <AndroidAsset Include="Assets\stockImages\bottle.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\stockImages\kawaiione.jpg" />
+    <AndroidAsset Include="Assets\stockImages\sloth.jpg" />
     <AndroidResource Include="Resources\drawable\categories_64px.png" />
   </ItemGroup>
   <ItemGroup>
@@ -149,7 +155,29 @@
     <AndroidResource Include="Resources\drawable\similar_pictures_64px.png" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidAsset Include="Assets\labelsSqueezenet.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\stockImages\motion.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\stockImages\sharp.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\stockImages\defocused.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\stockImages\dark1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\stockImages\dark3.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\stockImages\dark2.jpg" />
     <AndroidResource Include="Resources\drawable\broom_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\labelsBlur.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>
