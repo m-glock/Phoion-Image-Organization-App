@@ -4,12 +4,13 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:gestures="clr-namespace:DLuOvBamG.Services.Gestures"
+             xmlns:touch="clr-namespace:TouchEffect;assembly=TouchEffect"
              mc:Ignorable="d"
              x:Name="root"
              x:Class="DLuOvBamG.Views.ImageComparisonPage">
 
     <ContentPage.Content>
-        <Grid Margin="10,10,10,10">
+        <Grid x:Name="Grid" Margin="10,10,10,10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="10*"></RowDefinition>
                 <RowDefinition Height="83*"></RowDefinition>
@@ -27,12 +28,27 @@
                 </CarouselView.ItemTemplate>
             </CarouselView>
 
-            <Image x:Name="CurrentPicture" Source="{Binding CurrentPictureUri}" Grid.Row="1">
+            <CarouselView x:Name="ImageCarouselView2" ItemsSource="{Binding PictureList}" Position="{Binding CarouselViewPosition}" CurrentItemChanged="OnCurrentItemChanged" Grid.Row="1">
+                <CarouselView.ItemTemplate>
+                    <DataTemplate>
+                        <Image Source="{Binding Uri}">
+                            <Image.Effects>
+                                <gestures:TouchEffect TouchAction="ImageTouched">
+                                </gestures:TouchEffect>
+                            </Image.Effects>
+                        </Image>
+                        <!--<touch:TouchImage RegularBackgroundImageSource="{Binding Uri}" PressedBackgroundImageSource="{Binding ComparingPictureUri}" touch:TouchEff.PressedAnimationDuration="0">
+                        </touch:TouchImage>-->
+                    </DataTemplate>
+                </CarouselView.ItemTemplate>
+            </CarouselView>
+
+            <!--<Image x:Name="CurrentPicture" Source="{Binding CurrentPictureUri}" Grid.Row="1">
                 <Image.Effects>
                     <gestures:TouchEffect TouchAction="ImageTouched">
                     </gestures:TouchEffect>
                 </Image.Effects>
-            </Image>
+            </Image>-->
 
             <Image Source="delete_64px.png" Grid.Row="2"></Image>
         </Grid>

@@ -86,12 +86,31 @@ namespace DLuOvBamG.ViewModels
 
         public async Task OnReleasedAsync(Image currentPicture)
         {
-            await Task.Delay(500); 
+            //await Task.Delay(500); 
             currentPicture.Source = CurrentPictureUri;
             stop = true;
         }
 
-        public async void OnSwiped(TouchActionEventArgs args)
+        private async Task ShowBasePic(Image currentPicture)
+        {
+            await Task.Delay(1000);
+            if (!stop)
+            {
+                Console.WriteLine("successful long tap");
+                currentPicture.Source = ComparingPictureUri;
+            } else
+            {
+                System.Console.WriteLine("unsuccessful long tap");
+            }
+                
+        }
+
+        public void onMoved()
+        {
+            stop = true;
+        }
+
+        /*public async void OnSwiped(TouchActionEventArgs args)
         {
             if (pauseSwiping) return;
             pointerCounter++;
@@ -119,13 +138,6 @@ namespace DLuOvBamG.ViewModels
             }
         }
 
-        private async Task ShowBasePic(Image currentPicture)
-        {
-            await Task.Delay(1000);
-            if (!stop)
-                currentPicture.Source = ComparingPictureUri;
-        }
-
         private void SwipeRight()
         {
             Console.WriteLine("swipe left " + CarouselViewPosition);
@@ -150,6 +162,6 @@ namespace DLuOvBamG.ViewModels
             //CarouselViewItem picToDelete = PictureList.Find(pic => pic.Uri == CurrentPictureUri);
             //PicsToDelete.Add(picToDelete);
             //picToDelete.Id;
-        }
+        }*/
     }
 }

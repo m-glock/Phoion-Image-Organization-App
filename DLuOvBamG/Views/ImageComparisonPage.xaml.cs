@@ -20,7 +20,7 @@ namespace DLuOvBamG.Views
 
             foreach (Picture pic in pictures)
             {
-                if(!pic.Equals(mainPic)) picsForCarousel.Add(new CarouselViewItem(pic.Uri));
+                if(!pic.Equals(mainPic)) picsForCarousel.Add(new CarouselViewItem(pic.Uri, comparingPicture.Uri));
             }
             
             VM = new ImageComparisonViewModel();
@@ -30,6 +30,23 @@ namespace DLuOvBamG.Views
             BindingContext = VM;
 
             InitializeComponent();
+
+            /*CarouselView carouselView = new CarouselView();
+            carouselView.SetBinding(ItemsView.ItemsSourceProperty, "PictureList");
+            carouselView.SetBinding(CarouselView.PositionProperty, "CarouselViewPosition");
+            carouselView.CurrentItemChanged += OnCurrentItemChanged;
+            carouselView.ItemTemplate = new DataTemplate(() =>
+            {
+                TouchImage touchImage = new TouchImage();
+                touchImage.SetBinding(TouchImage.RegularBackgroundImageSourceProperty, "Uri");
+                touchImage.SetBinding(TouchImage.PressedBackgroundImageSourceProperty, "ComparingPictureUri");
+                touchImage. = TouchEff;
+
+                return contentView;
+            });
+            Grid.Children.Add(carouselView);
+            Grid.SetRow(carouselView, 1);*/
+
         }
 
 
@@ -42,21 +59,20 @@ namespace DLuOvBamG.Views
         public void ImageTouched(object sender, TouchActionEventArgs args)
         {
             Image currentPicture = sender as Image;
-            
+
             switch (args.Type)
             {
-                case TouchActionType.Moved:
+                /*case TouchActionType.Moved:
                     Console.WriteLine("moved");
-                    VM.OnSwiped(args);
-                    break;
+                    break;*/
                 case TouchActionType.Pressed:
-                    //Console.WriteLine("tap started");
+                    //Console.WriteLine("tap started"); 
                     VM.OnPressedAsync(currentPicture);
                     break;
                 case TouchActionType.Released:
-                //case TouchActionType.Cancelled:
+                case TouchActionType.Cancelled:
                 case TouchActionType.Exited:
-                    Console.WriteLine("tap stopped");
+                    //Console.WriteLine("tap stopped");
                     VM.OnReleasedAsync(currentPicture);
                     break;
                 default:
