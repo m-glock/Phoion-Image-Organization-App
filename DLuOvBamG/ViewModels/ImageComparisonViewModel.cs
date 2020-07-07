@@ -147,8 +147,8 @@ namespace DLuOvBamG.ViewModels
         private void SwipeDown()
         {
             // Handle the swipe
-            CarouselViewItem picToDelete = PictureList.Find(pic => pic.Uri == CurrentPictureUri);
-            PicsToDelete.Add(picToDelete);
+            //CarouselViewItem picToDelete = PictureList.Find(pic => pic.Uri == CurrentPictureUri);
+            //PicsToDelete.Add(picToDelete);
             //picToDelete.Id;
         }
     }

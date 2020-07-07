@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DLuOvBamG.Models
+﻿namespace DLuOvBamG.Models
 {
     class CarouselViewItem
     {
+        public string Uri { get; }
+        public bool MarkedForDeletion { get; set; }
 
-        public string Uri { get; set; }
-        public bool markedForDeletion { get; set; }
+        public CarouselViewItem(string uri)
+        {
+            Uri = uri;
+            MarkedForDeletion = false;
+        }
     }
 }

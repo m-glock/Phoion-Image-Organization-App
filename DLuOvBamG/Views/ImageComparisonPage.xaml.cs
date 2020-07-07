@@ -3,7 +3,6 @@ using DLuOvBamG.Services.Gestures;
 using DLuOvBamG.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -17,23 +16,26 @@ namespace DLuOvBamG.Views
         public ImageComparisonPage(List<Picture> pictures, Picture mainPic)
         {
             Picture comparingPicture = mainPic;
-            List<Picture> temp = new List<Picture>(pictures);
-            List<CarouselViewItem> pics = temp.Cast()
-            pics.Remove(comparingPicture); 
+            List<CarouselViewItem> picsForCarousel = new List<CarouselViewItem>();
+
+            foreach (Picture pic in pictures)
+            {
+                if(!pic.Equals(mainPic)) picsForCarousel.Add(new CarouselViewItem(pic.Uri));
+            }
             
             VM = new ImageComparisonViewModel();
-            VM.PictureList = pics;
+            VM.PictureList = picsForCarousel;
             VM.ComparingPictureUri = comparingPicture.Uri;
             VM.CurrentPictureUri = pictures[0].Uri;
             BindingContext = VM;
-            
+
             InitializeComponent();
         }
 
 
         public void OnCurrentItemChanged(object sender, CurrentItemChangedEventArgs e)
         {
-            Picture currentPicture = (Picture)e.CurrentItem;
+            CarouselViewItem currentPicture = (CarouselViewItem)e.CurrentItem;
             VM.CurrentPictureUri = currentPicture.Uri;
         }
 
