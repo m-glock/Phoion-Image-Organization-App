@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Xamarin.Essentials;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace DLuOvBamG.ViewModels
@@ -12,16 +12,18 @@ namespace DLuOvBamG.ViewModels
     class ImageComparisonViewModel : BaseViewModel, INotifyPropertyChanged
     {
         public List<CarouselViewItem> PictureList { get; set; }
+        public int carouselViewPosition { get; set; }
         public string currentPictureUri { get; set; }
         public string comparingPictureUri { get; set; }
-        //public CarouselView CarouselView { get; set; }
-        public int carouselViewPosition { get; set; }
-        public List<Picture> PicsToDelete { get; set; }
-        public event PropertyChangedEventHandler PropertyChanged;
-        private double firstPoint = -1;
-        private int pointerCounter;
         private bool stop;
-        private bool pauseSwiping;
+        public CarouselView CarouselViewMain { get; set; }
+
+        public List<CarouselViewItem> PicsToDelete { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
+        //private double firstPoint = -1;
+        //private int pointerCounter;
+        
+        //private bool pauseSwiping;
 
         #region PropertyChanged
         public string CurrentPictureUri
@@ -75,7 +77,7 @@ namespace DLuOvBamG.ViewModels
 
         public ImageComparisonViewModel()
         {
-            PicsToDelete = new List<Picture>();
+            PicsToDelete = new List<CarouselViewItem>();
         }
 
         public async Task OnPressedAsync(Image currentPicture)
@@ -85,8 +87,7 @@ namespace DLuOvBamG.ViewModels
         }
 
         public async Task OnReleasedAsync(Image currentPicture)
-        {
-            //await Task.Delay(500); 
+        { 
             currentPicture.Source = CurrentPictureUri;
             stop = true;
         }
@@ -100,14 +101,26 @@ namespace DLuOvBamG.ViewModels
                 currentPicture.Source = ComparingPictureUri;
             } else
             {
-                System.Console.WriteLine("unsuccessful long tap");
+                Console.WriteLine("unsuccessful long tap");
             }
                 
         }
 
-        public void onMoved()
+        public ICommand MarkPictureAsDeleted
         {
-            stop = true;
+            get
+            {
+                return new Command(() =>
+                {
+                    CarouselViewItem currentPicture = (CarouselViewItem)CarouselViewMain.CurrentItem;
+                    currentPicture.MarkForDeletion();
+                    if (!PicsToDelete.Contains(currentPicture))
+                    {
+                        PicsToDelete.Add(currentPicture);
+                    }
+                    
+                });
+            }
         }
 
         /*public async void OnSwiped(TouchActionEventArgs args)

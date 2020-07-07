@@ -1,7 +1,6 @@
 ﻿using DLuOvBamG.Models;
 using DLuOvBamG.Services.Gestures;
 using DLuOvBamG.ViewModels;
-using System;
 using System.Collections.Generic;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -24,29 +23,14 @@ namespace DLuOvBamG.Views
             }
             
             VM = new ImageComparisonViewModel();
+            BindingContext = VM;
             VM.PictureList = picsForCarousel;
             VM.ComparingPictureUri = comparingPicture.Uri;
             VM.CurrentPictureUri = pictures[0].Uri;
-            BindingContext = VM;
 
             InitializeComponent();
 
-            /*CarouselView carouselView = new CarouselView();
-            carouselView.SetBinding(ItemsView.ItemsSourceProperty, "PictureList");
-            carouselView.SetBinding(CarouselView.PositionProperty, "CarouselViewPosition");
-            carouselView.CurrentItemChanged += OnCurrentItemChanged;
-            carouselView.ItemTemplate = new DataTemplate(() =>
-            {
-                TouchImage touchImage = new TouchImage();
-                touchImage.SetBinding(TouchImage.RegularBackgroundImageSourceProperty, "Uri");
-                touchImage.SetBinding(TouchImage.PressedBackgroundImageSourceProperty, "ComparingPictureUri");
-                touchImage. = TouchEff;
-
-                return contentView;
-            });
-            Grid.Children.Add(carouselView);
-            Grid.SetRow(carouselView, 1);*/
-
+            VM.CarouselViewMain = ImageMainView;
         }
 
 
