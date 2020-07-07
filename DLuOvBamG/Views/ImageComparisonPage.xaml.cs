@@ -3,6 +3,7 @@ using DLuOvBamG.Services.Gestures;
 using DLuOvBamG.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -16,7 +17,8 @@ namespace DLuOvBamG.Views
         public ImageComparisonPage(List<Picture> pictures, Picture mainPic)
         {
             Picture comparingPicture = mainPic;
-            List<Picture> pics = new List<Picture>(pictures);
+            List<Picture> temp = new List<Picture>(pictures);
+            List<CarouselViewItem> pics = temp.Cast()
             pics.Remove(comparingPicture); 
             
             VM = new ImageComparisonViewModel();
@@ -26,7 +28,6 @@ namespace DLuOvBamG.Views
             BindingContext = VM;
             
             InitializeComponent();
-            VM.CarouselView = ImageCarouselView;
         }
 
 

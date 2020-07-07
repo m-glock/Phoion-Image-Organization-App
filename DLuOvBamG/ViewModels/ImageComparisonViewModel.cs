@@ -11,10 +11,11 @@ namespace DLuOvBamG.ViewModels
 {
     class ImageComparisonViewModel : BaseViewModel, INotifyPropertyChanged
     {
-        public List<Picture> PictureList { get; set; }
+        public List<CarouselViewItem> PictureList { get; set; }
         public string currentPictureUri { get; set; }
         public string comparingPictureUri { get; set; }
-        public CarouselView CarouselView { get; set; }
+        //public CarouselView CarouselView { get; set; }
+        public int carouselViewPosition { get; set; }
         public List<Picture> PicsToDelete { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
         private double firstPoint = -1;
@@ -52,6 +53,22 @@ namespace DLuOvBamG.ViewModels
             get
             {
                 return comparingPictureUri;
+            }
+        }
+
+        public int CarouselViewPosition
+        {
+            set
+            {
+                if (carouselViewPosition != value)
+                {
+                    carouselViewPosition = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CarouselViewPosition"));
+                }
+            }
+            get
+            {
+                return carouselViewPosition;
             }
         }
         #endregion
@@ -111,27 +128,28 @@ namespace DLuOvBamG.ViewModels
 
         private void SwipeRight()
         {
-            Console.WriteLine("swipe left " + CarouselView.Position);
-            if (CarouselView.Position < PictureList.Count - 1)
+            Console.WriteLine("swipe left " + CarouselViewPosition);
+            if (CarouselViewPosition < PictureList.Count - 1)
             {
-                CarouselView.Position = CarouselView.Position + 1;
+                CarouselViewPosition += 1;
             }
         }
 
         private void SwipeLeft()
         {
-            Console.WriteLine("swipe right " + CarouselView.Position);
-            if (CarouselView.Position > 0)
+            Console.WriteLine("swipe right " + CarouselViewPosition);
+            if (CarouselViewPosition > 0)
             {
-                CarouselView.Position = CarouselView.Position - 1;
+                CarouselViewPosition -= 1;
             }
         }
 
         private void SwipeDown()
         {
             // Handle the swipe
-            Picture picToDelete = PictureList.Find(pic => pic.Uri == CurrentPictureUri);
+            CarouselViewItem picToDelete = PictureList.Find(pic => pic.Uri == CurrentPictureUri);
             PicsToDelete.Add(picToDelete);
+            //picToDelete.Id;
         }
     }
 }
