@@ -43,5 +43,10 @@ namespace DLuOvBamG.Models
         {
             MarkedForDeletion = 1;
         }
+
+        public bool IsMarkedForDeletion()
+        {
+            return MarkedForDeletion != 1;
+        }
     }
 }

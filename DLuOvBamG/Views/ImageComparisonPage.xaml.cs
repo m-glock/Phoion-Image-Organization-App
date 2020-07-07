@@ -1,6 +1,7 @@
 ﻿using DLuOvBamG.Models;
 using DLuOvBamG.Services.Gestures;
 using DLuOvBamG.ViewModels;
+using System;
 using System.Collections.Generic;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -16,7 +17,7 @@ namespace DLuOvBamG.Views
         {
             Picture comparingPicture = mainPic;
             List<CarouselViewItem> picsForCarousel = new List<CarouselViewItem>();
-
+            
             foreach (Picture pic in pictures)
             {
                 if(!pic.Equals(mainPic)) picsForCarousel.Add(new CarouselViewItem(pic.Uri, comparingPicture.Uri));
@@ -43,24 +44,27 @@ namespace DLuOvBamG.Views
         public void ImageTouched(object sender, TouchActionEventArgs args)
         {
             Image currentPicture = sender as Image;
+            CarouselViewItem currentPictureItem = (CarouselViewItem)ImageMainView.CurrentItem;
 
-            switch (args.Type)
-            {
-                /*case TouchActionType.Moved:
-                    Console.WriteLine("moved");
-                    break;*/
-                case TouchActionType.Pressed:
-                    //Console.WriteLine("tap started"); 
-                    VM.OnPressedAsync(currentPicture);
-                    break;
-                case TouchActionType.Released:
-                case TouchActionType.Cancelled:
-                case TouchActionType.Exited:
-                    //Console.WriteLine("tap stopped");
-                    VM.OnReleasedAsync(currentPicture);
-                    break;
-                default:
-                    break;
+            if (!currentPictureItem.IsMarkedForDeletion()) {
+                switch (args.Type)
+                {
+                    /*case TouchActionType.Moved:
+                        Console.WriteLine("moved");
+                        break;*/
+                    case TouchActionType.Pressed:
+                        //Console.WriteLine("tap started"); 
+                        VM.OnPressedAsync(currentPicture);
+                        break;
+                    case TouchActionType.Released:
+                    case TouchActionType.Cancelled:
+                    case TouchActionType.Exited:
+                        //Console.WriteLine("tap stopped");
+                        VM.OnReleasedAsync(currentPicture);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }

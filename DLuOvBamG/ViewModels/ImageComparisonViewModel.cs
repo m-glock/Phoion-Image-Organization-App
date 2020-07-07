@@ -118,7 +118,7 @@ namespace DLuOvBamG.ViewModels
                     {
                         PicsToDelete.Add(currentPicture);
                     }
-                    
+
                 });
             }
         }
