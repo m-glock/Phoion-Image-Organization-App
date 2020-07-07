@@ -13,6 +13,10 @@ using Xamarin.Forms;
 using System.Collections;
 using static DLuOvBamG.IClassifier;
 using Android.Support.Annotation;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
+using Console = System.Console;
 
 [assembly: Dependency(typeof(DLuOvBamG.Droid.TensorflowClassifier))]
 namespace DLuOvBamG.Droid
@@ -21,12 +25,12 @@ namespace DLuOvBamG.Droid
     public class TensorflowClassifier : IClassifier
     {
         // TODO remove debug
-        private bool testing = false;
+        private bool testing = true;
 
         private Interpreter interpreter;
         private List<string> labels;
 
-        private string[] modelFiles = { "modelBlur.tflite", "converted_modelTroelf.tflite" };
+        private string[] modelFiles = { "modelBlur.tflite", "converted_modelKuhmuhMilch.tflite" };
         private string[] labelFiles = { "labelsBlur.txt", "labelsSqueezenet.txt" };
 
         private int thresholdBlurry;
@@ -77,47 +81,83 @@ namespace DLuOvBamG.Droid
 
         #region testing 
 
-        //public void test()
-        //{
-        //    ChangeModel(ScanOptionsEnum.similarPics);
-        //    string[] listAssets = Android.App.Application.Context.Assets.List("stockImages");
-        //    foreach (var entry in listAssets)
-        //    {
-        //        System.Console.WriteLine("reading image " + entry);
-        //        byte[] image = GetImageBytes(entry);
-        //        var sortedList = ClassifySimilar(image);
+        public void test()
+        {
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
 
-        //        if (sortedList.Count > 0)
-        //        {
-        //            ModelClassification top = sortedList.First();
-        //            System.Console.WriteLine(top.TagName + " " + Math.Round(top.Probability * 100, 2) + "% ultra result for " + entry);
-        //        }
-        //        foreach (ModelClassification item in sortedList)
-        //        {
-        //            System.Console.WriteLine(item.TagName + " " + Math.Round(item.Probability * 100, 2) + "% result for " + entry);
-        //        }
-        //    }
-        //}
+            List<Thread> threads = new List<Thread>();
+
+            ChangeModel(ScanOptionsEnum.similarPics);
+            string[] listAssets = Android.App.Application.Context.Assets.List("stockImages");
+
+            //int threadAmount = 4;
+            //for (int i = 1; i <= threadAmount; i++)
+            //{
+            //    Task.Run(async () =>
+            //    {
+            //        int run = listAssets.Length / threadAmount;
+            //        for (int j = 0; j < run * i; j++)
+            //        {
+            //            j *= run;
+            //            Console.WriteLine(j + " jay");
+            //            byte[] image = GetImageBytes(listAssets[j]);
+            //            var sortedList = ClassifySimilar(image);
+
+            //            if (sortedList.Count > 0)
+            //            {
+            //                ModelClassification top = sortedList.First();
+            //                System.Console.WriteLine(top.TagName + " " + Math.Round(top.Probability * 100, 2) + "% ultra result for " + listAssets[j]);
+            //            }
+            //        }
+
+            //    });
+
+            //}
+
+            foreach (var entry in listAssets)
+            {
+
+                byte[] image = GetImageBytes(entry);
+                var sortedList = ClassifySimilar(image);
+
+                if (sortedList.Count > 0)
+                {
+                    ModelClassification top = sortedList.First();
+                    System.Console.WriteLine(top.TagName + " " + Math.Round(top.Probability * 100, 2) + "% ultra result for " + entry);
+                }
+                //foreach (ModelClassification item in sortedList)
+                //{
+                //    System.Console.WriteLine(item.TagName + " " + Math.Round(item.Probability * 100, 2) + "% result for " + entry);
+                //}
+
+            }
 
 
+
+            stopWatch.Stop();
+            Console.WriteLine("PassedTime " + stopWatch.ElapsedMilliseconds);
+
+
+        }
 
         #endregion
 
         public byte[] GetImageBytes(string path)
         {
-            //Stream stream;
-            //if (testing)
-            //{
-            //    AssetFileDescriptor assetDescriptor = Android.App.Application.Context.Assets.OpenFd("stockImages/" + path);
-            //    stream = assetDescriptor.CreateInputStream();
-            //}
-            //else
-            //{
-            //    stream = System.IO.File.OpenRead(path);
-            //}
+            Stream stream;
+            if (testing)
+            {
+                AssetFileDescriptor assetDescriptor = Android.App.Application.Context.Assets.OpenFd("stockImages/" + path);
+                stream = assetDescriptor.CreateInputStream();
+            }
+            else
+            {
+                stream = System.IO.File.OpenRead(path);
+            }
 
 
-            Stream stream = System.IO.File.OpenRead(path);
+            //Stream stream = System.IO.File.OpenRead(path);
             byte[] fileBytes = ReadStream(stream);
 
             return fileBytes;
@@ -153,16 +193,13 @@ namespace DLuOvBamG.Droid
             byteBuffer.Order(ByteOrder.NativeOrder());
             int[] intValues = new int[width * height];
             resizedBitmap.GetPixels(intValues, 0, resizedBitmap.Width, 0, 0, resizedBitmap.Width, resizedBitmap.Height);
-            int pixel = 0;
-            for (int i = 0; i < width; ++i)
+
+            for (int i = 0; i < width * height; i+=2)
             {
-                for (int j = 0; j < height; ++j)
-                {
-                    int val = intValues[pixel++];
+                    int val = intValues[i];
                     byteBuffer.PutFloat((((val >> 16) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
                     byteBuffer.PutFloat((((val >> 8) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
                     byteBuffer.PutFloat((((val) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
-                }
             }
             return byteBuffer;
         }
