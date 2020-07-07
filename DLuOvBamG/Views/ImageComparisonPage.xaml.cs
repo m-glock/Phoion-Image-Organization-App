@@ -1,4 +1,5 @@
-﻿using DLuOvBamG.Models;
+﻿using Android.Views;
+using DLuOvBamG.Models;
 using DLuOvBamG.Services.Gestures;
 using DLuOvBamG.ViewModels;
 using System;
@@ -9,7 +10,7 @@ using Xamarin.Forms.Xaml;
 namespace DLuOvBamG.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ImageComparisonPage : ContentPage
+    public partial class ImageComparisonPage : CustomBackButtonPage
     {
         private ImageComparisonViewModel VM;
 
@@ -32,6 +33,22 @@ namespace DLuOvBamG.Views
             InitializeComponent();
 
             VM.CarouselViewMain = ImageMainView;
+
+            if (EnableBackButtonOverride)
+            {
+                this.CustomBackButtonAction = async () =>
+                {
+                    //TODO: shorten and only display if images to delet contains elements
+                    bool result = await this.DisplayAlert("Careful",
+                        "If you go back now, your selection of images to delete will be lost. The images themselves will remain, but you might have to select them again for deletion.",
+                        "Go back", "Stay here");
+
+                    if (result)
+                    {
+                        await Navigation.PopAsync(true);
+                    }
+                };
+            }
         }
 
 
