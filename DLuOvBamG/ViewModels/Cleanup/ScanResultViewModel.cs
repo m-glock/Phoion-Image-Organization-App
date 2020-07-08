@@ -16,12 +16,12 @@ namespace DLuOvBamG.ViewModels
 
         public ScanResultViewModel()
         {
-             
+
         }
 
         public void FillPictureListsTF()
         {
-            App.tf.FillPictureLists(OptionValues.Keys.ToList());//TODO async
+            App.tf.FillPictureLists(new List<ScanOptionsEnum>(OptionValues.Keys));//TODO async
         }
 
         public ICommand openBlurryPicsPage => new Command(async () =>

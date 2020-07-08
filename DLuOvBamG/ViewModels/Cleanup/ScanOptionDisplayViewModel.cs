@@ -7,7 +7,7 @@ using DLuOvBamG.Views;
 
 namespace DLuOvBamG.ViewModels
 {
-    public class ScanOptionDisplayViewModel : BaseViewModel, INotifyPropertyChanged
+	public class ScanOptionDisplayViewModel : BaseViewModel, INotifyPropertyChanged
 	{
 		public ScanOptionsEnum Option;
 		public List<List<Picture>> Pictures;
@@ -17,23 +17,23 @@ namespace DLuOvBamG.ViewModels
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		public double Precision
-        {
-            set
-            {
-                if (precision != value)
-                {
-                    precision = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Precision"));
-                }
-            }
-            get
-            {
-                return precision;
-            }
-        }
+		{
+			set
+			{
+				if (precision != value)
+				{
+					precision = value;
+					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Precision"));
+				}
+			}
+			get
+			{
+				return precision;
+			}
+		}
 
 		public ScanOptionDisplayViewModel()
-        {
+		{
 			Title = "Aufräumergebnisse";
 		}
 
@@ -48,7 +48,8 @@ namespace DLuOvBamG.ViewModels
 			try
 			{
 				int id = Int32.Parse(groupID);
-				List<Picture> pictures = App.tf.GetPicturesForOption(Option, id);
+				List<List<Picture>> allPictures = App.tf.GetPicturesForOption(Option);
+				List<Picture> pictures = allPictures[id];
 				await Navigation.PushAsync(new ImageComparisonPage(pictures, pic));
 			}
 			catch (FormatException)
@@ -56,7 +57,7 @@ namespace DLuOvBamG.ViewModels
 				//TODO: output to user?
 				Console.WriteLine($"Unable to parse '{groupID}'");
 			}
-			
+
 		}
 	}
 }
