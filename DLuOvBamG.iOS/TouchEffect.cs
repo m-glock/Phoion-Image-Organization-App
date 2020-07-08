@@ -6,14 +6,14 @@ using Xamarin.Forms.Platform.iOS;
 using UIKit;
 
 [assembly: ResolutionGroupName("XamarinDocs")]
-[assembly: ExportEffect(typeof(DLuOvBamG.iOS.TouchEffect), "TouchEffect")]
+//[assembly: ExportEffect(typeof(DLuOvBamG.iOS.TouchEffect), "TouchEffect")]
 
 /**
 from https://docs.microsoft.com/en-us/samples/xamarin/xamarin-forms-samples/effects-touchtrackingeffect/
 */
 namespace DLuOvBamG.iOS
 {
-    public class TouchEffect : PlatformEffect
+    /*public class TouchEffect : PlatformEffect
     {
         UIView view;
         TouchRecognizer touchRecognizer;
@@ -48,5 +48,5 @@ namespace DLuOvBamG.iOS
                 view.RemoveGestureRecognizer(touchRecognizer);
             }
         }
-    }
+    }*/
 }
