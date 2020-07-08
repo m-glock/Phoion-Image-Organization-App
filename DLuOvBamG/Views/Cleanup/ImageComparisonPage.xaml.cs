@@ -17,12 +17,9 @@ namespace DLuOvBamG.Views
         public ImageComparisonPage(List<Picture> pictures, Picture mainPic)
         {
             Picture comparingPicture = mainPic;
-            List<Picture> temp = new List<Picture>(pictures);
-            List<CarouselViewItem> pics = temp.Cast()
-            pics.Remove(comparingPicture); 
             
             VM = new ImageComparisonViewModel();
-            VM.PictureList = pics;
+            VM.PictureList = pictures;
             VM.ComparingPictureUri = comparingPicture.Uri;
             VM.CurrentPictureUri = pictures[0].Uri;
             BindingContext = VM;

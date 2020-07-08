@@ -50,7 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Views\ImageComparisonPage.xaml">
+    <EmbeddedResource Update="Views\Cleanup\ImageComparisonPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\ImageGrid.xaml">
