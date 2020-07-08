@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Xamarin.Forms;
 
 using CoreGraphics;
 using Foundation;
 using UIKit;
 
+/**
+from https://docs.microsoft.com/en-us/samples/xamarin/xamarin-forms-samples/effects-touchtrackingeffect/
+*/
 namespace DLuOvBamG.iOS
 {
     class TouchRecognizer : UIGestureRecognizer
     {
-        Element element;        // Forms element for firing events
+        /*Element element;        // Forms element for firing events
         UIView view;            // iOS UIView 
         Services.Gestures.TouchEffect touchEffect;
         bool capture;
@@ -23,7 +25,7 @@ namespace DLuOvBamG.iOS
         static Dictionary<long, TouchRecognizer> idToTouchDictionary =
             new Dictionary<long, TouchRecognizer>();
 
-        public TouchRecognizer(Element element, UIView view, Services.Gestures.TouchEffect touchEffect)
+        public TouchRecognizer(Element element, UIView view, Gestures.TouchEffect touchEffect)
         {
             this.element = element;
             this.view = view;
@@ -168,6 +170,6 @@ namespace DLuOvBamG.iOS
             // Call that method
             onTouchAction(recognizer.element,
                 new Services.Gestures.TouchActionEventArgs(id, actionType, xfPoint, isInContact));
-        }
+        }*/
     }
 }

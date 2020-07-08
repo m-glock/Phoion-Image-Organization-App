@@ -1,4 +1,7 @@
-﻿namespace DLuOvBamG.Services.Gestures
+﻿/**
+from https://docs.microsoft.com/en-us/samples/xamarin/xamarin-forms-samples/effects-touchtrackingeffect/
+*/
+namespace DLuOvBamG.Services.Gestures
 {
     public enum TouchActionType
     {

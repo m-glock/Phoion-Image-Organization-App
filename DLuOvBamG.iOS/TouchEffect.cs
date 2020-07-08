@@ -8,6 +8,9 @@ using UIKit;
 [assembly: ResolutionGroupName("XamarinDocs")]
 [assembly: ExportEffect(typeof(DLuOvBamG.iOS.TouchEffect), "TouchEffect")]
 
+/**
+from https://docs.microsoft.com/en-us/samples/xamarin/xamarin-forms-samples/effects-touchtrackingeffect/
+*/
 namespace DLuOvBamG.iOS
 {
     public class TouchEffect : PlatformEffect

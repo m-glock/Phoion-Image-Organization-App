@@ -10,6 +10,9 @@ using Android.Views;
 [assembly: ResolutionGroupName("XamarinDocs")]
 [assembly: ExportEffect(typeof(DLuOvBamG.Droid.TouchEffect), "TouchEffect")]
 
+/**
+ from https://docs.microsoft.com/en-us/samples/xamarin/xamarin-forms-samples/effects-touchtrackingeffect/
+ */
 namespace DLuOvBamG.Droid
 {
     public class TouchEffect : PlatformEffect
