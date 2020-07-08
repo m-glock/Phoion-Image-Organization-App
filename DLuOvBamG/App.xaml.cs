@@ -16,13 +16,12 @@ namespace DLuOvBamG
             InitializeComponent();
             tf = new TensorflowExecutor();
 
-            Device.SetFlags(new string[] { "Expander_Experimental" });
+            Device.SetFlags(new string[] { "Expander_Experimental", "SwipeView_Experimental" });
             MainPage = new NavigationPage(new ImageGrid());
             
             
             // Debug
-            // classifier.test();
-            
+            //classifier.test();  
         }
 
         public static IClassifier Classifier
