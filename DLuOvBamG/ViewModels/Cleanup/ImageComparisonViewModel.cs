@@ -42,7 +42,6 @@ namespace DLuOvBamG.ViewModels
         }
         #endregion
 
-<<<<<<< HEAD
         public ImageComparisonViewModel(INavigation navigation, List<CarouselViewItem> picsForCarousel)
         {
             Navigation = navigation;
@@ -60,11 +59,6 @@ namespace DLuOvBamG.ViewModels
             {
                 await Navigation.PopAsync(true);
             }
-=======
-        public ImageComparisonViewModel()
-        {
-            PicsToDelete = new List<Picture>();
->>>>>>> develop
         }
 
         public async Task OnPressedAsync(Image currentPicture)
@@ -73,7 +67,6 @@ namespace DLuOvBamG.ViewModels
             await ShowBasePic(currentPicture);
         }
 
-<<<<<<< HEAD
         public void OnReleasedAsync(Image currentPicture)
         {
             CarouselViewItem currentItem = (CarouselViewItem)CarouselViewMain.CurrentItem;
@@ -118,17 +111,6 @@ namespace DLuOvBamG.ViewModels
         /*public async void OnSwiped(TouchActionEventArgs args)
         {
             if (pauseSwiping) return;
-=======
-        public async Task OnReleasedAsync(Image currentPicture)
-        {
-            await Task.Delay(500); 
-            currentPicture.Source = CurrentPictureUri;
-            stop = true;
-        }
-
-        /*public async void OnSwiped(TouchActionEventArgs args)
-        {
->>>>>>> develop
             pointerCounter++;
             Console.WriteLine(pointerCounter);
             if (firstPoint == -1)
@@ -145,27 +127,14 @@ namespace DLuOvBamG.ViewModels
                 {
                     if (diff > 0) SwipeRight();
                     else SwipeLeft();
-<<<<<<< HEAD
                     pauseSwiping = true;
                     await Task.Delay(1000);
                     pauseSwiping = false;
-=======
                     await Task.Delay(1000);
->>>>>>> develop
                 }
                 firstPoint = -1;
                 pointerCounter = 0;
             }
-<<<<<<< HEAD
-=======
-        }*/
-
-        private async Task ShowBasePic(Image currentPicture)
-        {
-            await Task.Delay(1000);
-            if (!stop)
-                currentPicture.Source = ComparingPictureUri;
->>>>>>> develop
         }
 
         private void SwipeRight()
@@ -189,16 +158,9 @@ namespace DLuOvBamG.ViewModels
         private void SwipeDown()
         {
             // Handle the swipe
-<<<<<<< HEAD
             //CarouselViewItem picToDelete = PictureList.Find(pic => pic.Uri == CurrentPictureUri);
             //PicsToDelete.Add(picToDelete);
             //picToDelete.Id;
         }*/
-=======
-            CarouselViewItem picToDelete = PictureList.Find(pic => pic.Uri == CurrentPictureUri);
-            //PicsToDelete.Add(picToDelete);
-            //picToDelete.Id;
-        }
->>>>>>> develop
     }
 }

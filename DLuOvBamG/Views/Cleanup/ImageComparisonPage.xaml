@@ -1,5 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<<<<<<< HEAD
 <views:CustomBackButtonPage  xmlns:views="clr-namespace:DLuOvBamG.Views"
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -8,17 +7,10 @@
              xmlns:gestures="clr-namespace:DLuOvBamG.Services.Gestures"
              xmlns:touch="clr-namespace:TouchEffect;assembly=TouchEffect"
              EnableBackButtonOverride="True"
-=======
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
->>>>>>> develop
              mc:Ignorable="d"
              x:Name="root"
              x:Class="DLuOvBamG.Views.ImageComparisonPage">
 
-<<<<<<< HEAD
     <Grid x:Name="Grid" Margin="10,10,10,10">
         <Grid.RowDefinitions>
             <RowDefinition Height="10*"></RowDefinition>
@@ -54,35 +46,3 @@
         <!--<Image Source="delete_64px.png" Grid.Row="2"></Image>-->
     </Grid>
 </views:CustomBackButtonPage>
-=======
-    <ContentPage.Content>
-        <Grid Margin="10,10,10,10">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="10*"></RowDefinition>
-                <RowDefinition Height="83*"></RowDefinition>
-                <RowDefinition Height="7*"></RowDefinition>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-
-            <CarouselView x:Name="ImageCarouselView" ItemsSource="{Binding PictureList}" Position="{Binding CarouselViewPosition}" CurrentItemChanged="OnCurrentItemChanged" PeekAreaInsets="150" Grid.Row="0">
-                <CarouselView.ItemTemplate>
-                    <DataTemplate>
-                        <Image Source="{Binding Uri}"></Image>
-                    </DataTemplate>
-                </CarouselView.ItemTemplate>
-            </CarouselView>
-
-            <Image x:Name="CurrentPicture" Source="{Binding CurrentPictureUri}" Grid.Row="1">
-                <!--<Image.Effects>
-                    <gestures:TouchEffect TouchAction="ImageTouched">
-                    </gestures:TouchEffect>
-                </Image.Effects>-->
-            </Image>
-
-            <Image Source="delete_64px.png" Grid.Row="2"></Image>
-        </Grid>
-    </ContentPage.Content>
-</ContentPage>
->>>>>>> develop
