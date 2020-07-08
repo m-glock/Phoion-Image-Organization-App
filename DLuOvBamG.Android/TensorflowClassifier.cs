@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Android.Content.Res;
@@ -10,13 +11,6 @@ using Java.Nio;
 using Java.Nio.Channels;
 using Org.Tensorflow.Lite;
 using Xamarin.Forms;
-using System.Collections;
-using static DLuOvBamG.IClassifier;
-using Android.Support.Annotation;
-using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
-using Console = System.Console;
 
 [assembly: Dependency(typeof(DLuOvBamG.Droid.TensorflowClassifier))]
 namespace DLuOvBamG.Droid
@@ -30,7 +24,7 @@ namespace DLuOvBamG.Droid
         private Interpreter interpreter;
         private List<string> labels;
 
-        private string[] modelFiles = { "modelBlur.tflite", "converted_modelKuhmuhMilch.tflite" };
+        private string[] modelFiles = { "modelBlur.tflite", "converted_modelTroelf.tflite" };
         private string[] labelFiles = { "labelsBlur.txt", "labelsSqueezenet.txt" };
 
         private int thresholdBlurry;
@@ -83,41 +77,11 @@ namespace DLuOvBamG.Droid
 
         public void test()
         {
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
-
-            List<Thread> threads = new List<Thread>();
-
             ChangeModel(ScanOptionsEnum.similarPics);
             string[] listAssets = Android.App.Application.Context.Assets.List("stockImages");
-
-            //int threadAmount = 4;
-            //for (int i = 1; i <= threadAmount; i++)
-            //{
-            //    Task.Run(async () =>
-            //    {
-            //        int run = listAssets.Length / threadAmount;
-            //        for (int j = 0; j < run * i; j++)
-            //        {
-            //            j *= run;
-            //            Console.WriteLine(j + " jay");
-            //            byte[] image = GetImageBytes(listAssets[j]);
-            //            var sortedList = ClassifySimilar(image);
-
-            //            if (sortedList.Count > 0)
-            //            {
-            //                ModelClassification top = sortedList.First();
-            //                System.Console.WriteLine(top.TagName + " " + Math.Round(top.Probability * 100, 2) + "% ultra result for " + listAssets[j]);
-            //            }
-            //        }
-
-            //    });
-
-            //}
-
             foreach (var entry in listAssets)
             {
-
+                System.Console.WriteLine("reading image " + entry);
                 byte[] image = GetImageBytes(entry);
                 var sortedList = ClassifySimilar(image);
 
@@ -126,20 +90,14 @@ namespace DLuOvBamG.Droid
                     ModelClassification top = sortedList.First();
                     System.Console.WriteLine(top.TagName + " " + Math.Round(top.Probability * 100, 2) + "% ultra result for " + entry);
                 }
-                //foreach (ModelClassification item in sortedList)
-                //{
-                //    System.Console.WriteLine(item.TagName + " " + Math.Round(item.Probability * 100, 2) + "% result for " + entry);
-                //}
-
+                foreach (ModelClassification item in sortedList)
+                {
+                    System.Console.WriteLine(item.TagName + " " + Math.Round(item.Probability * 100, 2) + "% result for " + entry);
+                }
             }
-
-
-
-            stopWatch.Stop();
-            Console.WriteLine("PassedTime " + stopWatch.ElapsedMilliseconds);
-
-
         }
+
+
 
         #endregion
 
@@ -177,31 +135,52 @@ namespace DLuOvBamG.Droid
             }
         }
 
-        private ByteBuffer ConvertBitmapToByteBuffer(byte[] bytes, int height, int width)
+        private float[][][][] ConvertBitmapToByteBuffer(byte[] bytes, int height, int width)
         {
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
             float IMAGE_STD = 128.0f;
             int IMAGE_MEAN = 128;
-
+            // ERROR:  W/ServiceManagement(21703): getService: unable to call into hwbinder service for vendor.huawei.hardware.jpegdec@1.0::IJpegDecode/default.
             Bitmap bitmap = BitmapFactory.DecodeByteArray(bytes, 0, bytes.Length);
+            // ERROR: (21703): [ZeroHung]zrhung_get_config: Get config failed for wp[0x0008]
             Bitmap resizedBitmap = Bitmap.CreateScaledBitmap(bitmap, width, height, true);
+
+            
 
             ByteBuffer byteBuffer;
             int modelInputSize = 4 * height * width * 3;
 
+            float[][][] neoTheo = new float[height][][];
+
             byteBuffer = ByteBuffer.AllocateDirect(modelInputSize);
-
             byteBuffer.Order(ByteOrder.NativeOrder());
-            int[] intValues = new int[width * height];
-            resizedBitmap.GetPixels(intValues, 0, resizedBitmap.Width, 0, 0, resizedBitmap.Width, resizedBitmap.Height);
+            int[] pixels = new int[width * height];
+  
+            resizedBitmap.GetPixels(pixels, 0, resizedBitmap.Width, 0, 0, resizedBitmap.Width, resizedBitmap.Height);
 
-            for (int i = 0; i < width * height; i+=2)
+            for (int i = 0; i < height; i++)
             {
-                    int val = intValues[i];
-                    byteBuffer.PutFloat((((val >> 16) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
-                    byteBuffer.PutFloat((((val >> 8) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
-                    byteBuffer.PutFloat((((val) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
+                neoTheo[i] = new float[width][];
+                for (int j = 0; j < width; j++)
+                {
+                    int pixelVal = pixels[i * width + j];
+                    neoTheo[i][j] = new float[3];
+                    neoTheo[i][j][0] = ((((pixelVal >> 16) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
+                    neoTheo[i][j][1] = ((((pixelVal >> 8) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
+                    neoTheo[i][j][2] = ((((pixelVal) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
+
+                }
             }
-            return byteBuffer;
+
+            float[][][][] superFinal = new float[1][][][];
+            superFinal[0] = neoTheo;
+
+
+            stopWatch.Stop();
+            System.Console.WriteLine(stopWatch.ElapsedMilliseconds + " passed time");
+
+            return superFinal;
         }
 
         public List<ModelClassification> ClassifySimilar(byte[] bytes)
@@ -215,7 +194,7 @@ namespace DLuOvBamG.Droid
             int[] shape = tensor.Shape();
             int width = shape[1];
             int height = shape[2];
-            ByteBuffer byteBuffer = ConvertBitmapToByteBuffer(bytes, width, height);
+            //ByteBuffer byteBuffer = ConvertBitmapToByteBuffer(bytes, width, height);
 
             // Output Labels
             float[][] outputLabels = new float[1][] { new float[labels.Count] };
@@ -234,9 +213,10 @@ namespace DLuOvBamG.Droid
                 { (Java.Lang.Integer)1, outputVectorsConverted }
             };
 
-            Java.Lang.Object[] inputs = { byteBuffer };
+            float[][][][] inputs = ConvertBitmapToByteBuffer(bytes, width, height);
+            Java.Lang.Object[] finalInput = { Java.Lang.Object.FromArray(inputs) };
 
-            interpreter.RunForMultipleInputsOutputs(inputs, outputs);
+            interpreter.RunForMultipleInputsOutputs(finalInput, outputs);
 
             // Classification Results
             float[][] classificationResult = outputLabelsConverted.ToArray<float[]>();
@@ -278,40 +258,45 @@ namespace DLuOvBamG.Droid
 
         public List<ModelClassification> ClassifyBlurry(byte[] bytes)
         {
-            Tensor tensor = interpreter.GetInputTensor(0);
-
-            int[] shape = tensor.Shape();
-            int width = shape[1];
-            int height = shape[2];
-            ByteBuffer byteBuffer = ConvertBitmapToByteBuffer(bytes, width, height);
-
-            // Output Labels
-            float[][] outputLabels = new float[1][] { new float[labels.Count] };
-            var outputLabelsConverted = Java.Lang.Object.FromArray(outputLabels);
-
-
-            interpreter.Run(byteBuffer, outputLabelsConverted);
-
-            // Classification Results
-            float[][] classificationResult = outputLabelsConverted.ToArray<float[]>();
-
-            List<ModelClassification> result = new List<ModelClassification>();
-            for (int i = 0; i < labels.Count; i++)
-            {
-                string label = labels[i];
-
-                result.Add(new ModelClassification(label, classificationResult[0][i]));
-            }
-
-
-            var sortedList = result.OrderByDescending(x => x.Probability).ToList();
-            sortedList = sortedList.FindAll(x => System.Math.Round(x.Probability * 100, 2) > thresholdBlurry);
-
-            // Notify all listeners
-            ClassificationCompleted?.Invoke(this, new ClassificationEventArgs(result));
-
-            return sortedList;
+            throw new NotImplementedException();
         }
+
+        //public List<ModelClassification> ClassifyBlurry(byte[] bytes)
+        //{
+        //    Tensor tensor = interpreter.GetInputTensor(0);
+
+        //    int[] shape = tensor.Shape();
+        //    int width = shape[1];
+        //    int height = shape[2];
+        //    //ByteBuffer byteBuffer = ConvertBitmapToByteBuffer(bytes, width, height);
+
+        //    // Output Labels
+        //    float[][] outputLabels = new float[1][] { new float[labels.Count] };
+        //    var outputLabelsConverted = Java.Lang.Object.FromArray(outputLabels);
+
+
+        //    interpreter.Run(ConvertBitmapToByteBuffer(bytes, width, height), outputLabelsConverted);
+
+        //    // Classification Results
+        //    float[][] classificationResult = outputLabelsConverted.ToArray<float[]>();
+
+        //    List<ModelClassification> result = new List<ModelClassification>();
+        //    for (int i = 0; i < labels.Count; i++)
+        //    {
+        //        string label = labels[i];
+
+        //        result.Add(new ModelClassification(label, classificationResult[0][i]));
+        //    }
+
+
+        //    var sortedList = result.OrderByDescending(x => x.Probability).ToList();
+        //    sortedList = sortedList.FindAll(x => System.Math.Round(x.Probability * 100, 2) > thresholdBlurry);
+
+        //    // Notify all listeners
+        //    ClassificationCompleted?.Invoke(this, new ClassificationEventArgs(result));
+
+        //    return sortedList;
+        //}
     }
 }
 
