@@ -18,7 +18,7 @@ namespace DLuOvBamG.Views
 			VM = BindingContext as ScanOptionDisplayViewModel;
 			VM.Navigation = Navigation;
 			VM.Option = option;
-			List<List<Picture>> pictures = App.tf.GetPicturesForOption(option);
+			List<List<Picture>> pictures = App.tf.GetAllPicturesForOption(option);
 			VM.Pictures = pictures;
 			slider.Value = optionValue;
 

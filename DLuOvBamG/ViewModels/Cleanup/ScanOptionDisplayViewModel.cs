@@ -48,7 +48,8 @@ namespace DLuOvBamG.ViewModels
 			try
 			{
 				int id = Int32.Parse(groupID);
-				List<Picture> pictures = App.tf.GetPicturesForOption(Option, id);
+				List<List<Picture>> allPictures = App.tf.GetAllPicturesForOption(Option);
+				List<Picture> pictures = allPictures[id];
 				await Navigation.PushAsync(new ImageComparisonPage(pictures, pic));
 			}
 			catch (FormatException)
