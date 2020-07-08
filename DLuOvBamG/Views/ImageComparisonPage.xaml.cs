@@ -1,8 +1,6 @@
-﻿using Android.Views;
-using DLuOvBamG.Models;
+﻿using DLuOvBamG.Models;
 using DLuOvBamG.Services.Gestures;
 using DLuOvBamG.ViewModels;
-using System;
 using System.Collections.Generic;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -24,11 +22,8 @@ namespace DLuOvBamG.Views
                 if(!pic.Equals(mainPic)) picsForCarousel.Add(new CarouselViewItem(pic.Uri, comparingPicture.Uri));
             }
             
-            VM = new ImageComparisonViewModel();
+            VM = new ImageComparisonViewModel(Navigation, picsForCarousel);
             BindingContext = VM;
-            VM.PictureList = picsForCarousel;
-            VM.ComparingPictureUri = comparingPicture.Uri;
-            VM.CurrentPictureUri = pictures[0].Uri;
 
             InitializeComponent();
 
@@ -36,26 +31,11 @@ namespace DLuOvBamG.Views
 
             if (EnableBackButtonOverride)
             {
-                this.CustomBackButtonAction = async () =>
+                this.CustomBackButtonAction = () =>
                 {
-                    //TODO: shorten and only display if images to delet contains elements
-                    bool result = await this.DisplayAlert("Careful",
-                        "If you go back now, your selection of images to delete will be lost. The images themselves will remain, but you might have to select them again for deletion.",
-                        "Go back", "Stay here");
-
-                    if (result)
-                    {
-                        await Navigation.PopAsync(true);
-                    }
+                    VM.ShowAlertSelectionLost(this);
                 };
             }
-        }
-
-
-        public void OnCurrentItemChanged(object sender, CurrentItemChangedEventArgs e)
-        {
-            CarouselViewItem currentPicture = (CarouselViewItem)e.CurrentItem;
-            VM.CurrentPictureUri = currentPicture.Uri;
         }
 
         public void ImageTouched(object sender, TouchActionEventArgs args)

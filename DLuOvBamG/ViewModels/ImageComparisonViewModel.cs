@@ -12,52 +12,18 @@ namespace DLuOvBamG.ViewModels
     class ImageComparisonViewModel : BaseViewModel, INotifyPropertyChanged
     {
         public List<CarouselViewItem> PictureList { get; set; }
-        public int carouselViewPosition { get; set; }
-        public string currentPictureUri { get; set; }
-        public string comparingPictureUri { get; set; }
-        private bool stop;
         public CarouselView CarouselViewMain { get; set; }
-
-        public List<CarouselViewItem> PicsToDelete { get; set; }
+        private int carouselViewPosition { get; set; }
+        private List<CarouselViewItem> PicsToDelete { get; set; }
+        private INavigation Navigation;
+        private bool stop;
         public event PropertyChangedEventHandler PropertyChanged;
         //private double firstPoint = -1;
         //private int pointerCounter;
-        
+
         //private bool pauseSwiping;
 
         #region PropertyChanged
-        public string CurrentPictureUri
-        {
-            set
-            {
-                if (currentPictureUri != value)
-                {
-                    currentPictureUri = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CurrentPictureUri"));
-                }
-            }
-            get
-            {
-                return currentPictureUri;
-            }
-        }
-
-        public string ComparingPictureUri
-        {
-            set
-            {
-                if (comparingPictureUri != value)
-                {
-                    comparingPictureUri = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ComparingPictureUri"));
-                }
-            }
-            get
-            {
-                return comparingPictureUri;
-            }
-        }
-
         public int CarouselViewPosition
         {
             set
@@ -75,9 +41,23 @@ namespace DLuOvBamG.ViewModels
         }
         #endregion
 
-        public ImageComparisonViewModel()
+        public ImageComparisonViewModel(INavigation navigation, List<CarouselViewItem> picsForCarousel)
         {
+            Navigation = navigation;
+            PictureList = picsForCarousel;
             PicsToDelete = new List<CarouselViewItem>();
+        }
+
+        public async void ShowAlertSelectionLost(Page imageComparionPage)
+        {
+            bool result = await imageComparionPage.DisplayAlert("Careful",
+                "If you go back now without deleting the selected pictures, your selection will be lost.",
+                "Go back", "Stay here");
+
+            if (result)
+            {
+                await Navigation.PopAsync(true);
+            }
         }
 
         public async Task OnPressedAsync(Image currentPicture)
@@ -86,9 +66,10 @@ namespace DLuOvBamG.ViewModels
             await ShowBasePic(currentPicture);
         }
 
-        public async Task OnReleasedAsync(Image currentPicture)
-        { 
-            currentPicture.Source = CurrentPictureUri;
+        public void OnReleasedAsync(Image currentPicture)
+        {
+            CarouselViewItem currentItem = (CarouselViewItem)CarouselViewMain.CurrentItem;
+            currentPicture.Source = currentItem.Uri;
             stop = true;
         }
 
@@ -98,7 +79,8 @@ namespace DLuOvBamG.ViewModels
             if (!stop)
             {
                 Console.WriteLine("successful long tap");
-                currentPicture.Source = ComparingPictureUri;
+                CarouselViewItem currentItem = (CarouselViewItem)CarouselViewMain.CurrentItem;
+                currentPicture.Source = currentItem.ComparingPictureUri;
             } else
             {
                 Console.WriteLine("unsuccessful long tap");
@@ -122,6 +104,8 @@ namespace DLuOvBamG.ViewModels
                 });
             }
         }
+
+
 
         /*public async void OnSwiped(TouchActionEventArgs args)
         {
