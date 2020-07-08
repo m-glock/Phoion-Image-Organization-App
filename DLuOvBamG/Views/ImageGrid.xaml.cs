@@ -5,13 +5,21 @@ using DLToolkit.Forms.Controls;
 
 namespace DLuOvBamG.Views{
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ImageGrid : ContentPage{ 
-        
+    public partial class ImageGrid : ContentPage{
+
+        ImageGalleryViewModel vm { get; set; }
         public ImageGrid(){
             InitializeComponent();
             FlowListView.Init();
-            ImageGalleryViewModel vm = BindingContext as ImageGalleryViewModel;
+            vm = new ImageGalleryViewModel();
+            BindingContext = vm;
             vm.Navigation = Navigation;                
-        } 
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            vm.GetPictures();   
+        }
     }
 }

@@ -14,19 +14,43 @@ using Xamarin.Forms;
 [assembly: Dependency(typeof(DLuOvBamG.Droid.TensorflowClassifier))]
 namespace DLuOvBamG.Droid
 {
+
     public class TensorflowClassifier : IClassifier
     {
-        private readonly Interpreter interpreter;
-        private readonly List<string> labels;
+        // TODO remove debug
+        private bool testing = false;
 
-        private float AcceptableResultPercentage = 20;
+        private Interpreter interpreter;
+        private List<string> labels;
+
+        private string[] modelFiles = { "modelBlur.tflite", "converted_modelTroelf.tflite" };
+        private string[] labelFiles = { "labelsBlur.txt", "labelsSqueezenet.txt" };
+
+        private int thresholdBlurry;
+        private int thresholdSimilar = 10;
+
+        int IClassifier.ThresholdBlurry { get => thresholdBlurry; set => thresholdBlurry = value; }
+        int IClassifier.ThresholdSimilar { get => thresholdSimilar; set => thresholdSimilar = value; }
 
         public event EventHandler<ClassificationEventArgs> ClassificationCompleted;
 
-        public TensorflowClassifier()
+
+        public void ChangeModel(ScanOptionsEnum type)
         {
-            interpreter = new Interpreter(GetByteBuffer("mobilenet_v1_1.0_224.tflite"));
-            labels = LoadLabelList("mobilenet_v1_1.0_224.txt");
+            int finalType = -1;
+            switch (type)
+            {
+                case ScanOptionsEnum.similarPics:
+                    finalType = 1;
+                    break;
+                case ScanOptionsEnum.blurryPics:
+                    finalType = 0;
+                    break;
+                default:
+                    break;
+            }
+            interpreter = new Interpreter(GetByteBuffer(modelFiles[finalType]));
+            labels = LoadLabelList(labelFiles[finalType]);
         }
 
         // For tflite file
@@ -50,30 +74,47 @@ namespace DLuOvBamG.Droid
 
         #region testing 
 
-        public void test()
-        {
-            string[] listAssets = Android.App.Application.Context.Assets.List("stockImages");
-            foreach (var entry in listAssets)
-            {
-                byte[] image = GetImageBytes(entry);
-                var sortedList = Classify(image);
+        //public void test()
+        //{
+        //    ChangeModel(ScanOptionsEnum.similarPics);
+        //    string[] listAssets = Android.App.Application.Context.Assets.List("stockImages");
+        //    foreach (var entry in listAssets)
+        //    {
+        //        System.Console.WriteLine("reading image " + entry);
+        //        byte[] image = GetImageBytes(entry);
+        //        var sortedList = ClassifySimilar(image);
 
-                if (sortedList.Count > 0)
-                {
-                    ModelClassification top = sortedList.First();
-                    System.Console.WriteLine(top.TagName + " " + Math.Round(top.Probability * 100, 2) + "% ultra result");
-                }
-                foreach (ModelClassification item in sortedList)
-                {
-                    System.Console.WriteLine(item.TagName + " " + Math.Round(item.Probability * 100, 2) + "% result");
-                }
-            }
-        }
+        //        if (sortedList.Count > 0)
+        //        {
+        //            ModelClassification top = sortedList.First();
+        //            System.Console.WriteLine(top.TagName + " " + Math.Round(top.Probability * 100, 2) + "% ultra result for " + entry);
+        //        }
+        //        foreach (ModelClassification item in sortedList)
+        //        {
+        //            System.Console.WriteLine(item.TagName + " " + Math.Round(item.Probability * 100, 2) + "% result for " + entry);
+        //        }
+        //    }
+        //}
 
-        private byte[] GetImageBytes(string path)
+
+
+        #endregion
+
+        public byte[] GetImageBytes(string path)
         {
-            AssetFileDescriptor assetDescriptor = Android.App.Application.Context.Assets.OpenFd("stockImages/" + path);
-            Stream stream = assetDescriptor.CreateInputStream();
+            //Stream stream;
+            //if (testing)
+            //{
+            //    AssetFileDescriptor assetDescriptor = Android.App.Application.Context.Assets.OpenFd("stockImages/" + path);
+            //    stream = assetDescriptor.CreateInputStream();
+            //}
+            //else
+            //{
+            //    stream = System.IO.File.OpenRead(path);
+            //}
+
+
+            Stream stream = System.IO.File.OpenRead(path);
             byte[] fileBytes = ReadStream(stream);
 
             return fileBytes;
@@ -93,68 +134,140 @@ namespace DLuOvBamG.Droid
             }
         }
 
-        #endregion
-
-
         private ByteBuffer ConvertBitmapToByteBuffer(byte[] bytes, int height, int width)
         {
             float IMAGE_STD = 128.0f;
             int IMAGE_MEAN = 128;
-
+            // ERROR:  W/ServiceManagement(21703): getService: unable to call into hwbinder service for vendor.huawei.hardware.jpegdec@1.0::IJpegDecode/default.
             Bitmap bitmap = BitmapFactory.DecodeByteArray(bytes, 0, bytes.Length);
+            // ERROR: (21703): [ZeroHung]zrhung_get_config: Get config failed for wp[0x0008]
             Bitmap resizedBitmap = Bitmap.CreateScaledBitmap(bitmap, width, height, true);
 
             ByteBuffer byteBuffer;
             int modelInputSize = 4 * height * width * 3;
 
             byteBuffer = ByteBuffer.AllocateDirect(modelInputSize);
-
             byteBuffer.Order(ByteOrder.NativeOrder());
-            int[] intValues = new int[width * height];
-            resizedBitmap.GetPixels(intValues, 0, resizedBitmap.Width, 0, 0, resizedBitmap.Width, resizedBitmap.Height);
-            int pixel = 0;
-            for (int i = 0; i < width; ++i)
-            {
-                for (int j = 0; j < height; ++j)
-                {
-                    int val = intValues[pixel++];
-                    byteBuffer.PutFloat((((val >> 16) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
-                    byteBuffer.PutFloat((((val >> 8) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
-                    byteBuffer.PutFloat((((val) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
-                }
+            int[] pixels = new int[width * height];
+            resizedBitmap.GetPixels(pixels, 0, resizedBitmap.Width, 0, 0, resizedBitmap.Width, resizedBitmap.Height);
+            foreach ( int pixelVal in pixels) {
+                byteBuffer.PutFloat((((pixelVal >> 16) & 0xFF) - 128) / 128.0f);
+                byteBuffer.PutFloat((((pixelVal >> 8) & 0xFF) - 128) / 128.0f);
+                byteBuffer.PutFloat((((pixelVal) & 0xFF) - 128) / 128.0f);
             }
+
+            
             return byteBuffer;
         }
 
-        public List<ModelClassification> Classify(byte[] bytes)
+        public List<ModelClassification> ClassifySimilar(byte[] bytes)
         {
             Tensor tensor = interpreter.GetInputTensor(0);
+
+            // TODO get second output as veature vector
+            //Tensor outputTensor = interpreter.GetOutputTensor(1);
+
+
             int[] shape = tensor.Shape();
             int width = shape[1];
             int height = shape[2];
             ByteBuffer byteBuffer = ConvertBitmapToByteBuffer(bytes, width, height);
-            float[][] outputLocations = new float[1][] { new float[labels.Count] };
-            var outputs = Java.Lang.Object.FromArray(outputLocations);
 
-            interpreter.Run(byteBuffer, outputs);
+            // Output Labels
+            float[][] outputLabels = new float[1][] { new float[labels.Count] };
+            var outputLabelsConverted = Java.Lang.Object.FromArray(outputLabels);
 
-            float[][] classificationResult = outputs.ToArray<float[]>();
+            // Output Vectors
+            float[][][][] outputVectors = new float[1][][][];
+            outputVectors[0] = new float[1][][];
+            outputVectors[0][0] = new float[1][];
+            outputVectors[0][0][0] = new float[1280];
+            var outputVectorsConverted = Java.Lang.Object.FromArray(outputVectors);
+
+            Dictionary<Java.Lang.Integer, Java.Lang.Object> outputs = new Dictionary<Java.Lang.Integer, Java.Lang.Object>
+            {
+                { (Java.Lang.Integer)0, outputLabelsConverted },
+                { (Java.Lang.Integer)1, outputVectorsConverted }
+            };
+
+            Java.Lang.Object[] inputs = { byteBuffer };
+
+            interpreter.RunForMultipleInputsOutputs(inputs, outputs);
+
+            // Classification Results
+            float[][] classificationResult = outputLabelsConverted.ToArray<float[]>();
+            float[][][][] featureVectorResult = outputVectorsConverted.ToArray<float[][][]>();
+
             List<ModelClassification> result = new List<ModelClassification>();
             for (int i = 0; i < labels.Count; i++)
             {
                 string label = labels[i];
+
                 result.Add(new ModelClassification(label, classificationResult[0][i]));
             }
 
+            float[] featureVector = featureVectorResult[0][0][0];
+            featureVector = normalizeVector(featureVector);
+
             var sortedList = result.OrderByDescending(x => x.Probability).ToList();
-            sortedList = sortedList.FindAll(x => Math.Round(x.Probability * 100, 2) > AcceptableResultPercentage);
+            sortedList = sortedList.FindAll(x => System.Math.Round(x.Probability * 100, 2) > thresholdSimilar);
+
+            // Notify all listeners
+            ClassificationCompleted?.Invoke(this, new ClassificationEventArgs(result));
+            
+            return sortedList;
+        }
+
+        private float[] normalizeVector(float[] vector)
+        {
+            // Calculate magnitude
+            double magnitude = 0;
+            for (int i = 0; i < vector.Length; i++)
+                magnitude += Math.Pow(vector[i], 2);
+            magnitude = Math.Sqrt(magnitude);
+            // normalize
+            for (int i = 0; i < vector.Length; i++)
+                vector[i] = (float)(vector[i] / magnitude);
+
+            return vector;
+        }
+
+        public List<ModelClassification> ClassifyBlurry(byte[] bytes)
+        {
+            Tensor tensor = interpreter.GetInputTensor(0);
+
+            int[] shape = tensor.Shape();
+            int width = shape[1];
+            int height = shape[2];
+            ByteBuffer byteBuffer = ConvertBitmapToByteBuffer(bytes, width, height);
+
+            // Output Labels
+            float[][] outputLabels = new float[1][] { new float[labels.Count] };
+            var outputLabelsConverted = Java.Lang.Object.FromArray(outputLabels);
+
+
+            interpreter.Run(byteBuffer, outputLabelsConverted);
+
+            // Classification Results
+            float[][] classificationResult = outputLabelsConverted.ToArray<float[]>();
+
+            List<ModelClassification> result = new List<ModelClassification>();
+            for (int i = 0; i < labels.Count; i++)
+            {
+                string label = labels[i];
+
+                result.Add(new ModelClassification(label, classificationResult[0][i]));
+            }
+
+
+            var sortedList = result.OrderByDescending(x => x.Probability).ToList();
+            sortedList = sortedList.FindAll(x => System.Math.Round(x.Probability * 100, 2) > thresholdBlurry);
 
             // Notify all listeners
             ClassificationCompleted?.Invoke(this, new ClassificationEventArgs(result));
 
             return sortedList;
         }
-
     }
 }
 
