@@ -9,6 +9,9 @@ using DLuOvBamG.Models;
 using Java.IO;
 using Java.Nio;
 using Java.Nio.Channels;
+using MathNet.Numerics;
+using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Double;
 using Org.Tensorflow.Lite;
 using Xamarin.Forms;
 
@@ -35,6 +38,9 @@ namespace DLuOvBamG.Droid
 
         public event EventHandler<ClassificationEventArgs> ClassificationCompleted;
 
+
+        public List<double[]> FeatureVectors = new List<double[]>();
+        public Tuple<int, double>[][] featureMatrix;
 
         public void ChangeModel(ScanOptionsEnum type)
         {
@@ -95,6 +101,35 @@ namespace DLuOvBamG.Droid
                     System.Console.WriteLine(item.TagName + " " + Math.Round(item.Probability * 100, 2) + "% result for " + entry);
                 }
             }
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            featureMatrix = new Tuple<int, double>[FeatureVectors.Count][];
+            
+
+            for (int i = 0; i < FeatureVectors.Count; i++)
+            {
+                featureMatrix[i] = new Tuple<int, double>[FeatureVectors.Count];
+                for (int j = 0; j <= i; j++)
+                {
+                    double d = Distance.Cosine(FeatureVectors[i], FeatureVectors[j]);
+                    featureMatrix[i][j] = Tuple.Create(j, d);
+                    featureMatrix[j][i] = Tuple.Create(i, d);
+                    //System.Console.WriteLine(featureMatrix[i][j].Item2 + " item2");
+                }
+            }
+
+            var bla = featureMatrix[0].OrderBy(tupel => tupel.Item2).Take(5).ToList();
+
+            stopWatch.Stop();
+            string output = "";
+            foreach (var item in bla)
+            {
+                output += ", " + item;
+            }
+            System.Console.WriteLine(output + " matrix bam ");
+            System.Console.WriteLine(stopWatch.ElapsedMilliseconds + " passed time matrix");
+
+
         }
 
 
@@ -146,7 +181,7 @@ namespace DLuOvBamG.Droid
             // ERROR: (21703): [ZeroHung]zrhung_get_config: Get config failed for wp[0x0008]
             Bitmap resizedBitmap = Bitmap.CreateScaledBitmap(bitmap, width, height, true);
 
-            
+
 
             ByteBuffer byteBuffer;
             int modelInputSize = 4 * height * width * 3;
@@ -156,7 +191,7 @@ namespace DLuOvBamG.Droid
             byteBuffer = ByteBuffer.AllocateDirect(modelInputSize);
             byteBuffer.Order(ByteOrder.NativeOrder());
             int[] pixels = new int[width * height];
-  
+
             resizedBitmap.GetPixels(pixels, 0, resizedBitmap.Width, 0, 0, resizedBitmap.Width, resizedBitmap.Height);
 
             for (int i = 0; i < height; i++)
@@ -231,7 +266,14 @@ namespace DLuOvBamG.Droid
             }
 
             float[] featureVector = featureVectorResult[0][0][0];
-            featureVector = normalizeVector(featureVector);
+
+            double[] doubleArray = Array.ConvertAll(featureVector, x => (double)x);
+            doubleArray = normalizeVector(doubleArray);
+            FeatureVectors.Add(doubleArray);
+
+            double d = Distance.Pearson(doubleArray, doubleArray);
+            Matrix<double> m = Matrix<double>.Build.Random(3, 4);
+            m[0, 2] = 5;
 
             var sortedList = result.OrderByDescending(x => x.Probability).ToList();
             sortedList = sortedList.FindAll(x => System.Math.Round(x.Probability * 100, 2) > thresholdSimilar);
@@ -242,7 +284,7 @@ namespace DLuOvBamG.Droid
             return sortedList;
         }
 
-        private float[] normalizeVector(float[] vector)
+        private double[] normalizeVector(double[] vector)
         {
             // Calculate magnitude
             double magnitude = 0;
@@ -297,6 +339,11 @@ namespace DLuOvBamG.Droid
 
         //    return sortedList;
         //}
+
+        private void numTest()
+        {
+            
+        }
     }
 }
 
