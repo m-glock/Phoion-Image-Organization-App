@@ -12,7 +12,6 @@ namespace DLuOvBamG.Models
 
     static class ScanOptionsMethods
     {
-
         public static String GetTextForDisplay(this ScanOptionsEnum s1)
         {
             switch (s1)
@@ -41,21 +40,6 @@ namespace DLuOvBamG.Models
                     return 3;
                 default:
                     return 0;
-            }
-        }
-
-        public static String GetNameForGalleryPage(this ScanOptionsEnum s1)
-        {
-            switch (s1)
-            {
-                case ScanOptionsEnum.blurryPics:
-                    return "openBlurryPicsPage";
-                case ScanOptionsEnum.darkPics:
-                    return "openDarkPicsPage";
-                case ScanOptionsEnum.similarPics:
-                    return "openSimilarPicsPage";
-                default:
-                    return null;
             }
         }
     }
