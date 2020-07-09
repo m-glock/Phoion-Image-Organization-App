@@ -106,10 +106,17 @@ namespace DLuOvBamG.Views
 
             int setAmount = App.tf.GetAmountOfSetsForOption(option);
             int pictureAmount = App.tf.GetAmountOfPicturesForOption(option);
-            Label setsAndPics = new Label
+
+            Label setsAndPics = new Label();
+            if (pictureAmount > 0)
             {
-                Text = setAmount + " Sets, " + pictureAmount + " Bilder"
-            };
+                setsAndPics.Text = setAmount + " sets, " + pictureAmount + " pictures";
+            } else
+            {
+                setsAndPics.Text = "No pictures found";
+            }
+
+
             grid.Children.Add(setsAndPics);
             Grid.SetRow(setsAndPics, 1);
             Grid.SetColumn(setsAndPics, 1);
@@ -122,7 +129,6 @@ namespace DLuOvBamG.Views
         {
             int[] spaceDistribution;
 
-            //TODO: empty list? Default
             switch (displayImages.Count)
             {
                 case 1:

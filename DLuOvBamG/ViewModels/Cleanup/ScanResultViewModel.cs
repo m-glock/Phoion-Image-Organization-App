@@ -24,8 +24,12 @@ namespace DLuOvBamG.ViewModels
         public ICommand OpenScanOptionDisplayPage => new Command(async (object option) =>
         {
             ScanOptionsEnum chosenOption = (ScanOptionsEnum)option;
-            double value = OptionValues[chosenOption];
-            await Navigation.PushAsync(new ScanOptionDisplayPage(value, chosenOption));
+            int amountOfPictures = App.tf.GetAmountOfPicturesForOption(chosenOption);
+            if (amountOfPictures > 0)
+            {
+                double value = OptionValues[chosenOption];
+                await Navigation.PushAsync(new ScanOptionDisplayPage(value, chosenOption));
+            }
         });
     }
 }
