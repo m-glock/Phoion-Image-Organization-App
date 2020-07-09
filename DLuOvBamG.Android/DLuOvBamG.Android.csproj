@@ -117,7 +117,6 @@
     <AndroidResource Include="Resources\mipmap-xxhdpi\launcher_foreground.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\icon.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\launcher_foreground.png" />
-    <AndroidResource Include="Resources\drawable\xamarin_logo.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\stockImages\catdog.jpg" />
@@ -176,7 +175,6 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\stockImages\dark2.jpg" />
-    <AndroidResource Include="Resources\drawable\broom_icon.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\labelsBlur.txt" />
@@ -186,6 +184,15 @@
       <Project>{A3788DAB-3090-4CAC-9349-E87969ECE5F4}</Project>
       <Name>DLuOvBamG</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Resources\drawable\cleanup.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\cleaning.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\cleanup_64px.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>
