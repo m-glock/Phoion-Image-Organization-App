@@ -31,9 +31,16 @@ namespace DLuOvBamG.Views
 
             if (EnableBackButtonOverride)
             {
-                this.CustomBackButtonAction = () =>
+                this.CustomBackButtonAction = async () =>
                 {
-                    VM.ShowAlertSelectionLost();
+                    bool result = await this.DisplayAlert("Careful",
+                        "If you go back now without deleting the selected pictures, your selection will be lost.",
+                        "Go back", "Stay here");
+
+                    if (result)
+                    {
+                        await Navigation.PopAsync(true);
+                    }
                 };
             }
         }

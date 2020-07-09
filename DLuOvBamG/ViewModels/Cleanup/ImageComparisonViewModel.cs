@@ -51,7 +51,7 @@ namespace DLuOvBamG.ViewModels
             PicsToDelete = new List<CarouselViewItem>();
         }
 
-        public async void ShowAlertSelectionLost()
+        /*public async void ShowAlertSelectionLost()
         {
             bool result = await ImageComparisonPage.DisplayAlert("Careful",
                 "If you go back now without deleting the selected pictures, your selection will be lost.",
@@ -61,7 +61,7 @@ namespace DLuOvBamG.ViewModels
             {
                 await ImageComparisonPage.Navigation.PopAsync(true);
             }
-        }
+        }*/
 
         public async Task OnPressedAsync(Image currentPicture)
         {
