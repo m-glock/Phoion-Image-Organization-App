@@ -52,7 +52,7 @@ namespace DLuOvBamG.ViewModels
 				List<Picture> pictures = allPictures[id];
 				await Navigation.PushAsync(new ImageComparisonPage(pictures, pic));
 			}
-			catch (FormatException)
+			catch (FormatException ex)
 			{
 				//TODO: output to user?
 				Console.WriteLine($"Unable to parse '{groupID}'");

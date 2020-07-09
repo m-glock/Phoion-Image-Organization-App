@@ -67,8 +67,12 @@ namespace DLuOvBamG.Views
 		{
 			CollectionView view = (CollectionView)sender;
 			string groupID = view.ClassId;
-			Picture selectedPicture = (Picture)e.CurrentSelection[0];
-			VM.OpenComparisonPage(selectedPicture, groupID);
+            if (e.CurrentSelection.Count > 0)
+            {
+				Picture selectedPicture = (Picture)e.CurrentSelection[0];
+				view.SelectedItem = null;
+				VM.OpenComparisonPage(selectedPicture, groupID);
+			}
 		}
 
 		private void ValueChanged(object sender, ValueChangedEventArgs e)
