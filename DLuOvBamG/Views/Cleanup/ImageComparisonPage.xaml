@@ -41,7 +41,7 @@
             </CarouselView.ItemTemplate>
         </CarouselView>
 
-        <ImageButton Command="{Binding MarkPictureAsDeleted}" Source="delete_64px.png" Grid.Row="2"></ImageButton>
+        <ImageButton Command="{Binding DeletePictures}" CommandParameter="this" Source="delete_64px.png" Grid.Row="2"></ImageButton>
         <!--<Image Source="delete_64px.png" Grid.Row="2"></Image>-->
     </Grid>
 </views:CustomBackButtonPage>

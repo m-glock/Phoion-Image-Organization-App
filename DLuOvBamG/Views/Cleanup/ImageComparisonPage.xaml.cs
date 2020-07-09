@@ -22,7 +22,7 @@ namespace DLuOvBamG.Views
                 if (!pic.Equals(mainPic)) picsForCarousel.Add(new CarouselViewItem(pic.Uri, comparingPicture.Uri));
             }
 
-            VM = new ImageComparisonViewModel(Navigation, picsForCarousel);
+            VM = new ImageComparisonViewModel(this, picsForCarousel);
             BindingContext = VM;
 
             InitializeComponent();
@@ -33,7 +33,7 @@ namespace DLuOvBamG.Views
             {
                 this.CustomBackButtonAction = () =>
                 {
-                    VM.ShowAlertSelectionLost(this);
+                    VM.ShowAlertSelectionLost();
                 };
             }
         }

@@ -1,5 +1,6 @@
 ﻿using DLuOvBamG.Models;
 using DLuOvBamG.Services.Gestures;
+using DLuOvBamG.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,7 +17,8 @@ namespace DLuOvBamG.ViewModels
         public CarouselView CarouselViewMain { get; set; }
         private int carouselViewPosition { get; set; }
         private List<CarouselViewItem> PicsToDelete { get; set; }
-        private INavigation Navigation;
+        private ImageComparisonPage ImageComparisonPage;
+        //private INavigation Navigation;
         private bool stop;
         public event PropertyChangedEventHandler PropertyChanged;
         //private double firstPoint = -1;
@@ -42,22 +44,22 @@ namespace DLuOvBamG.ViewModels
         }
         #endregion
 
-        public ImageComparisonViewModel(INavigation navigation, List<CarouselViewItem> picsForCarousel)
+        public ImageComparisonViewModel(ImageComparisonPage page, List<CarouselViewItem> picsForCarousel)
         {
-            Navigation = navigation;
+            ImageComparisonPage = page;
             PictureList = picsForCarousel;
             PicsToDelete = new List<CarouselViewItem>();
         }
 
-        public async void ShowAlertSelectionLost(Page imageComparionPage)
+        public async void ShowAlertSelectionLost()
         {
-            bool result = await imageComparionPage.DisplayAlert("Careful",
+            bool result = await ImageComparisonPage.DisplayAlert("Careful",
                 "If you go back now without deleting the selected pictures, your selection will be lost.",
                 "Go back", "Stay here");
 
             if (result)
             {
-                await Navigation.PopAsync(true);
+                await ImageComparisonPage.Navigation.PopAsync(true);
             }
         }
 
@@ -103,6 +105,25 @@ namespace DLuOvBamG.ViewModels
                         PicsToDelete.Add(currentPicture);
                     }
 
+                });
+            }
+        }
+
+        public ICommand DeletePictures
+        {
+            get
+            {
+                return new Command( async(object imageComparionPage) =>
+                {
+                    bool result = await ((Page)imageComparionPage).DisplayAlert("Are you sure?",
+                        "Do you really want to delete " + PicsToDelete.Count + " pictures?",
+                            "Delete", "Go Back");
+
+                    if (result)
+                    {
+                        //TODO Delete Pictures
+                        // if set has now less than 3 pictures, remove set?
+                    }
                 });
             }
         }
