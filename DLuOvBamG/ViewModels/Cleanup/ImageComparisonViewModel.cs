@@ -51,18 +51,22 @@ namespace DLuOvBamG.ViewModels
             PicsToDelete = new List<CarouselViewItem>();
         }
 
-        /*public async void ShowAlertSelectionLost()
+        public async void ShowAlertSelectionLost()
         {
-            bool result = await ImageComparisonPage.DisplayAlert("Careful",
-                "If you go back now without deleting the selected pictures, your selection will be lost.",
-                "Go back", "Stay here");
+            if (PicsToDelete.Count > 0) {
+                bool result = await ImageComparisonPage.DisplayAlert("Careful",
+                    "If you go back now without deleting the selected pictures, your selection will be lost.",
+                    "Go back", "Stay here");
 
-            if (result)
+                if (result)
+                {
+                    await ImageComparisonPage.Navigation.PopAsync(true);
+                }
+            } else
             {
                 await ImageComparisonPage.Navigation.PopAsync(true);
             }
-        }*/
-
+        }
         public async Task OnPressedAsync(Image currentPicture)
         {
             stop = false;

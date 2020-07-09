@@ -1,13 +1,11 @@
-﻿using System;
-
-using Android.App;
+﻿using Android.App;
 using Android.Content.PM;
 using Android.Runtime;
 using Android.Views;
-using Android.Widget;
 using Android.OS;
 using DLuOvBamG.Views;
 using System.Linq;
+using System;
 
 namespace DLuOvBamG.Droid
 {
@@ -36,59 +34,60 @@ namespace DLuOvBamG.Droid
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
-        public override bool OnOptionsItemSelected(IMenuItem item)
-        {
-            // check if the current item id 
-            // is equals to the back button id
-            if (item.ItemId == 16908332)
-            {
-                // retrieve the current xamarin forms page instance
-                try
-                {
-                    var currentpage = (CustomBackButtonPage)Xamarin.Forms.Application.Current.MainPage.Navigation.NavigationStack.LastOrDefault();
+		public override bool OnOptionsItemSelected(IMenuItem item)
+		{
+			// check if the current item id 
+			// is equals to the back button id
+			if (item.ItemId == 16908332)
+			{
+				// retrieve the current xamarin forms page instance
+				try
+				{
+					var currentpage = (CustomBackButtonPage)Xamarin.Forms.Application.Current.MainPage.Navigation.NavigationStack.LastOrDefault();
 
-                    // check if the page has subscribed to 
-                    // the custom back button event
-                    if (currentpage?.CustomBackButtonAction != null)
-                    {
-                        // invoke the Custom back button action
-                        currentpage?.CustomBackButtonAction.Invoke();
-                    }
-                }
-                catch (InvalidCastException ex) { }
-                // if its not subscribed then go ahead 
-                // with the default back button action
-                return base.OnOptionsItemSelected(item);
-            }
-            else
-            {
-                // since its not the back button 
-                //click, pass the event to the base
-                return base.OnOptionsItemSelected(item);
-            }
-        }
+					// check if the page has subscribed to 
+					// the custom back button event
+					if (currentpage?.CustomBackButtonAction != null)
+					{
+						// invoke the Custom back button action
+						currentpage?.CustomBackButtonAction.Invoke();
+						// and disable the default back button action
+						return false;
+					}
+				}
+				catch (InvalidCastException ex) { }
+				// if its not subscribed then go ahead 
+				// with the default back button action
+				return base.OnOptionsItemSelected(item);
+			}
+			else
+			{
+				// since its not the back button 
+				//click, pass the event to the base
+				return base.OnOptionsItemSelected(item);
+			}
+		}
 
-        //TODO: hardware back button working at all for our app?
-        public override void OnBackPressed()
-        {
-            // this is not necessary, but in Android user 
-            // has both Nav bar back button and
-            // physical back button its safe 
-            // to cover the both events
+		public override void OnBackPressed()
+		{
+			// this is not necessary, but in Android user 
+			// has both Nav bar back button and
+			// physical back button its safe 
+			// to cover the both events
 
-            // retrieve the current xamarin forms page instance
-            var currentpage = (CustomBackButtonPage)Xamarin.Forms.Application.Current.MainPage.Navigation.NavigationStack.LastOrDefault();
+			// retrieve the current xamarin forms page instance
+			var currentpage = (CustomBackButtonPage)Xamarin.Forms.Application.Current.MainPage.Navigation.NavigationStack.LastOrDefault();
 
-            // check if the page has subscribed to 
-            // the custom back button event
-            if (currentpage?.CustomBackButtonAction != null)
-            {
-                currentpage?.CustomBackButtonAction.Invoke();
-            }
-            else
-            {
-                base.OnBackPressed();
-            }
-        }
-    }
+			// check if the page has subscribed to 
+			// the custom back button event
+			if (currentpage?.CustomBackButtonAction != null)
+			{
+				currentpage?.CustomBackButtonAction.Invoke();
+			}
+			else
+			{
+				base.OnBackPressed();
+			}
+		}
+	}
 }
