@@ -51,10 +51,12 @@ namespace DLuOvBamG.Views
                 }
             };
             grid.Margin = new Thickness(0, 0, 0, 20);
-            TapGestureRecognizer tapGestureRecognizer = new TapGestureRecognizer();
-            tapGestureRecognizer.SetBinding(TapGestureRecognizer.CommandProperty, option.GetNameForGalleryPage());
+            TapGestureRecognizer tapGestureRecognizer = new TapGestureRecognizer()
+            {
+                Command = VM.OpenScanOptionDisplayPage,
+                CommandParameter = option,
+            };
             grid.GestureRecognizers.Add(tapGestureRecognizer);
-
 
             BoxView bv = new BoxView
             {
