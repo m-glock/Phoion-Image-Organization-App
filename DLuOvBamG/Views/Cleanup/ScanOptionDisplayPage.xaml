@@ -22,7 +22,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Margin="5, 0, 3, 0" Text="Präzision:" FontAttributes="Bold" Grid.Column="0"></Label>
                 <Label Margin="0, 0, 15, 0" Text="{Binding Precision}" Grid.Column="1"></Label>
-                <Slider x:Name="slider" MaximumTrackColor="gray" WidthRequest="220" Minimum="0" Maximum="10" ValueChanged="ValueChanged" Grid.Column="2"></Slider>
+                <Slider x:Name="Slider" MaximumTrackColor="gray" WidthRequest="220" Minimum="0" Maximum="10" ValueChanged="ValueChanged" Grid.Column="2"></Slider>
             </Grid>
             <!-- Inhalt wird dynamisch eingefuegt, je nachdem welche Optionen ausgewaehlt wurden-->
         </StackLayout>
