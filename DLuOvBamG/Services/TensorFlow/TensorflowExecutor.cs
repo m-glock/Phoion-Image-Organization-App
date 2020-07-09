@@ -105,7 +105,9 @@ namespace DLuOvBamG.Services
         public Picture[] GetImagesForDisplay(ScanOptionsEnum option)
         {
             List<List<Picture>> picturesList = pictures[option];
-            if (picturesList[0] == null) return null;
+            if (picturesList[0] == null || picturesList[0].Count < 1) {
+                return new Picture[]{ new Picture()}; //TODO: return default image
+            }
 
             int picAmount = picturesList[0].Count > 2 ? 3 : picturesList[0].Count;
             Picture[] displayImages = new Picture[picAmount];
