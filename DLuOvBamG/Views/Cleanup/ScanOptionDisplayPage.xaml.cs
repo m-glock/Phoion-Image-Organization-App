@@ -25,12 +25,16 @@ namespace DLuOvBamG.Views
 
 			Title = option.GetTextForDisplay();
 
-			AdaptViewToScanOption();
+			//AdaptViewToScanOption();
+			for (int i = 0; i < pictures.Count; i++)
+			{
+				AddCollectionViewToPage(i);
+			}
 		}
 
-		private void AdaptViewToScanOption()
+		/*private void AdaptViewToScanOption()
         {
-            switch (Option)
+			switch (Option)
             {
                 case ScanOptionsEnum.blurryPics:
 					// add one image grid for all blurry pictures
@@ -44,17 +48,75 @@ namespace DLuOvBamG.Views
 					}
                     break;
                 case ScanOptionsEnum.similarPics:
-					// add one collectionView for each set of similar pictures found
+					// add one vertical collectionView for each set of similar pictures found
 					for (int i = 0; i < VM.Pictures.Count; i++)
 					{
 						AddCollectionViewToPage(i);
 					}
 					break;
             }
-        }
+        }*/
 
-		public void AddCollectionViewGridToPage(int groupID) {
+		public void AddCollectionViewToPage(int groupID)
+        {
+			//get correct text for collectionview label
+			if (Option.Equals(ScanOptionsEnum.darkPics) || Option.Equals(ScanOptionsEnum.similarPics))
+			{
+				Label label = new Label();
+				if (Option.Equals(ScanOptionsEnum.darkPics))
+				{
+					label.Text = groupID == 0 ? "Dunkle Bilder" : "Helle Bilder";
+				}
+				else
+				{
+					label.Text = "Set " + (groupID + 1);
+				}
+				label.FontAttributes = FontAttributes.Bold;
+				label.Margin = new Thickness(10, 20, 0, 0);
+				StackLayout.Children.Add(label);
+			}
+
+			CollectionView colView = new CollectionView();
+			if (Option.Equals(ScanOptionsEnum.similarPics))
+			{
+				colView.ItemsLayout = LinearItemsLayout.Horizontal; 
+				colView.HeightRequest = 100;
+			}
+			else
+			{
+				colView.ItemsLayout = new GridItemsLayout(3, ItemsLayoutOrientation.Vertical);
+				colView.HeightRequest = Math.Ceiling(VM.Pictures[groupID].Count / 3.0) * 100 + 20;
+			}
 			
+			colView.ItemsSource = VM.GetPictureListForGroup(groupID);
+
+			colView.ItemTemplate = new DataTemplate(() =>
+			{
+				ContentView contentView = new ContentView();
+				contentView.Padding = new Thickness(2);
+
+				Image image = new Image { Aspect = Aspect.AspectFill};
+                if (Option.Equals(ScanOptionsEnum.similarPics))
+				{
+					image.WidthRequest = 100;
+				}
+				else
+                {
+					image.HeightRequest = 100;
+
+				}
+				image.SetBinding(Image.SourceProperty, "Uri");
+
+				contentView.Content = image;
+				return contentView;
+			});
+
+			StackLayout.Children.Add(colView);
+		}
+
+		/*public void AddCollectionViewGridToPage(int groupID) {
+			
+			//get correct text for collectionview label
             if (Option.Equals(ScanOptionsEnum.darkPics)){
 				Label label = new Label();
 				label.Text = groupID == 0 ? "Dunkle Bilder" : "Helle Bilder";
@@ -65,7 +127,7 @@ namespace DLuOvBamG.Views
 
 			CollectionView colView = new CollectionView();
 			colView.ItemsLayout = new GridItemsLayout(3, ItemsLayoutOrientation.Vertical);
-			colView.HeightRequest = 100;
+			colView.HeightRequest = Math.Ceiling(VM.Pictures[groupID].Count/3.0) * 100 + 20;
 
 			colView.ItemsSource = VM.GetPictureListForGroup(groupID);
 
@@ -110,7 +172,7 @@ namespace DLuOvBamG.Views
 			});
 
 			StackLayout.Children.Add(colView);
-		}
+		}*/
 
 		private void ValueChanged(object sender, ValueChangedEventArgs e)
 		{
