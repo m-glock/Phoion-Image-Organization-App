@@ -2,6 +2,7 @@
 using DLuOvBamG.Services.Gestures;
 using DLuOvBamG.ViewModels;
 using System.Collections.Generic;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -26,6 +27,10 @@ namespace DLuOvBamG.Views
             BindingContext = VM;
 
             InitializeComponent();
+            DisplayInfo mainDisplayInfo = DeviceDisplay.MainDisplayInfo;
+            double width = mainDisplayInfo.Width / mainDisplayInfo.Density;
+
+            ImageCarouselView.PeekAreaInsets = width < 350 ? 100 : 135;
 
             VM.CarouselViewMain = ImageMainView;
             VM.BinImage = BinImage;

@@ -20,7 +20,7 @@
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <CarouselView x:Name="ImageCarouselView" ItemsSource="{Binding PictureList}" Position="{Binding CarouselViewPosition}" PeekAreaInsets="150" Grid.Row="0">
+        <CarouselView x:Name="ImageCarouselView" ItemsSource="{Binding PictureList}" Position="{Binding CarouselViewPosition}" Grid.Row="0">
             <CarouselView.ItemTemplate>
                 <DataTemplate>
                     <Image Source="{Binding Uri}" Opacity="{Binding MarkedForDeletion}"></Image>
