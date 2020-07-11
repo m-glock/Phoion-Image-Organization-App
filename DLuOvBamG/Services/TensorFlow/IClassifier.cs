@@ -19,7 +19,7 @@ namespace DLuOvBamG
         byte[] GetImageBytes(string path);
 
         void ChangeModel(ScanOptionsEnum type);
-        void test();
+        string test();
     }
 
     public class ClassificationEventArgs : EventArgs

@@ -1,6 +1,8 @@
 ﻿using Xamarin.Forms;
 using DLuOvBamG.Services;
 using DLuOvBamG.Views;
+using System.Threading;
+using System;
 
 namespace DLuOvBamG
 {
@@ -16,6 +18,8 @@ namespace DLuOvBamG
             Device.SetFlags(new string[] { "Expander_Experimental" });
             DependencyService.Register<MockDataStore>();
             MainPage = new NavigationPage(new ImageGrid());
+
+            
         }
 
         protected override void OnStart()

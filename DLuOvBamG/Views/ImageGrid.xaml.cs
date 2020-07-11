@@ -11,7 +11,13 @@ namespace DLuOvBamG.Views{
             InitializeComponent();
             FlowListView.Init();
             ImageGalleryViewModel vm = BindingContext as ImageGalleryViewModel;
-            vm.Navigation = Navigation;                
-        } 
+            vm.Navigation = Navigation;
+
+        }
+
+        private void timeButton_Clicked(object sender, System.EventArgs e)
+        {
+            timeButton.Text = App.tf.timeOutput;
+        }
     }
 }

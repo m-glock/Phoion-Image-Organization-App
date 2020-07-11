@@ -14,6 +14,8 @@ namespace DLuOvBamG.Services
 
         private Dictionary<ScanOptionsEnum, double> oldOptions;
 
+        public string timeOutput = "buh";
+
         public TensorflowExecutor()
         {
             pictures = new Dictionary<ScanOptionsEnum, List<List<Picture>>>();
@@ -23,7 +25,7 @@ namespace DLuOvBamG.Services
             brightnessClassifier = new BrightnessClassifier();
             oldOptions = new Dictionary<ScanOptionsEnum, double>();
             // Debug
-            classifier.test();
+            timeOutput = classifier.test();
         }
 
         public void FillPictureLists(Dictionary<ScanOptionsEnum, double> options)

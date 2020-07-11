@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Android.Content.Res;
 using Android.Graphics;
 using DLuOvBamG.Models;
@@ -27,7 +29,7 @@ namespace DLuOvBamG.Droid
         private Interpreter interpreter;
         private List<string> labels;
 
-        private string[] modelFiles = { "modelBlur.tflite", "converted_modelTroelf.tflite" };
+        private string[] modelFiles = { "modelBlur.tflite", "converted_modelKuhmuhMilch.tflite" };
         private string[] labelFiles = { "labelsBlur.txt", "labelsSqueezenet.txt" };
 
         private int thresholdBlurry;
@@ -38,9 +40,10 @@ namespace DLuOvBamG.Droid
 
         public event EventHandler<ClassificationEventArgs> ClassificationCompleted;
 
-
         public List<double[]> FeatureVectors = new List<double[]>();
         public Tuple<int, double>[][] featureMatrix;
+
+        Stopwatch stopWatch = new Stopwatch();
 
         public void ChangeModel(ScanOptionsEnum type)
         {
@@ -75,36 +78,72 @@ namespace DLuOvBamG.Droid
         {
             StreamReader sr = new StreamReader(Android.App.Application.Context.Assets.Open(path));
             List<string> labels = sr.ReadToEnd().Split('\n').Select(s => s.Trim()).Where(s => !string.IsNullOrEmpty(s)).ToList();
-            //System.Console.WriteLine(String.Join("\n", labels));
+            sr.Close();
             return labels;
         }
 
         #region testing 
 
-        public void test()
+        public void classifyProcess(string entry)
         {
+            System.Console.WriteLine("thread of your life");
+            byte[] image = GetImageBytes(entry);
+            var sortedList = ClassifySimilar(image);
+            
+            //System.Console.WriteLine(stopWatch.ElapsedMilliseconds.ToString() + " timey");
+            if (sortedList.Count > 0)
+            {
+                ModelClassification top = sortedList.First();
+                System.Console.WriteLine(top.TagName + " " + Math.Round(top.Probability * 100, 2) + "% ultra result for " + entry);
+            }
+            foreach (ModelClassification item in sortedList)
+            {
+                System.Console.WriteLine(item.TagName + " " + Math.Round(item.Probability * 100, 2) + "% result for " + entry);
+            }
+        }
+
+        public string test()
+        {
+            if (!testing) return "";
+            string returnVal = "";
+
+            stopWatch.Start();
             ChangeModel(ScanOptionsEnum.similarPics);
             string[] listAssets = Android.App.Application.Context.Assets.List("stockImages");
-            foreach (var entry in listAssets)
+            Task[] tasks = new Task[listAssets.Length];
+            for (int i = 0; i < listAssets.Length; i++)          
             {
-                System.Console.WriteLine("reading image " + entry);
-                byte[] image = GetImageBytes(entry);
-                var sortedList = ClassifySimilar(image);
+                //ThreadPool.QueueUserWorkItem(new WaitCallback(classifyProcess), entry);
+                //System.Console.WriteLine("reading image " + entry);
 
-                if (sortedList.Count > 0)
-                {
-                    ModelClassification top = sortedList.First();
-                    System.Console.WriteLine(top.TagName + " " + Math.Round(top.Probability * 100, 2) + "% ultra result for " + entry);
-                }
-                foreach (ModelClassification item in sortedList)
-                {
-                    System.Console.WriteLine(item.TagName + " " + Math.Round(item.Probability * 100, 2) + "% result for " + entry);
-                }
+                tasks[i] = Task.Factory.StartNew(() => classifyProcess(listAssets[i]));
+
+                
+
             }
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
-            featureMatrix = new Tuple<int, double>[FeatureVectors.Count][];
+            Task.Factory.ContinueWhenAll(tasks, completedTasks => {
+                System.Console.WriteLine("{0} ready to rumble: ", stopWatch.ElapsedMilliseconds.ToString());
+                stopWatch.Stop();
+            });
+
             
+
+
+
+            //string output = "";
+            //foreach (var item in bla)
+            //{
+            //    output += ", " + item;
+            //}
+            //System.Console.WriteLine(output + " matrix bam ");
+            while (FeatureVectors.Count < listAssets.Length)
+            {
+
+            }
+
+            System.Console.WriteLine(stopWatch.ElapsedMilliseconds + " passed time classify");
+
+            featureMatrix = new Tuple<int, double>[FeatureVectors.Count][];
 
             for (int i = 0; i < FeatureVectors.Count; i++)
             {
@@ -118,22 +157,14 @@ namespace DLuOvBamG.Droid
                 }
             }
 
-            var bla = featureMatrix[0].OrderBy(tupel => tupel.Item2).Take(5).ToList();
-
-            stopWatch.Stop();
-            string output = "";
-            foreach (var item in bla)
+            List<List<Tuple<int, double>>> allNeighbours = new List<List<Tuple<int, double>>>();
+            for (int i = 0; i < featureMatrix.Length; i++)
             {
-                output += ", " + item;
+                allNeighbours.Add(featureMatrix[i].OrderBy(tupel => tupel.Item2).Take(10).ToList());
             }
-            System.Console.WriteLine(output + " matrix bam ");
-            System.Console.WriteLine(stopWatch.ElapsedMilliseconds + " passed time matrix");
-
-
+            
+            return returnVal;
         }
-
-
-
         #endregion
 
         public byte[] GetImageBytes(string path)
@@ -145,13 +176,12 @@ namespace DLuOvBamG.Droid
                 stream = assetDescriptor.CreateInputStream();
             }
             else
-            {
                 stream = System.IO.File.OpenRead(path);
-            }
-
 
             //Stream stream = System.IO.File.OpenRead(path);
             byte[] fileBytes = ReadStream(stream);
+
+            stream.Close();
 
             return fileBytes;
         }
@@ -170,10 +200,9 @@ namespace DLuOvBamG.Droid
             }
         }
 
-        private float[][][][] ConvertBitmapToByteBuffer(byte[] bytes, int height, int width)
+        private /*float[][][][]*/ ByteBuffer ConvertBitmapToByteBuffer(byte[] bytes, int height, int width)
         {
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
+
             float IMAGE_STD = 128.0f;
             int IMAGE_MEAN = 128;
             // ERROR:  W/ServiceManagement(21703): getService: unable to call into hwbinder service for vendor.huawei.hardware.jpegdec@1.0::IJpegDecode/default.
@@ -181,55 +210,65 @@ namespace DLuOvBamG.Droid
             // ERROR: (21703): [ZeroHung]zrhung_get_config: Get config failed for wp[0x0008]
             Bitmap resizedBitmap = Bitmap.CreateScaledBitmap(bitmap, width, height, true);
 
+            float[][][] shiftedPixels = new float[height][][];
 
-
-            ByteBuffer byteBuffer;
-            int modelInputSize = 4 * height * width * 3;
-
-            float[][][] neoTheo = new float[height][][];
-
-            byteBuffer = ByteBuffer.AllocateDirect(modelInputSize);
-            byteBuffer.Order(ByteOrder.NativeOrder());
             int[] pixels = new int[width * height];
-
             resizedBitmap.GetPixels(pixels, 0, resizedBitmap.Width, 0, 0, resizedBitmap.Width, resizedBitmap.Height);
 
-            for (int i = 0; i < height; i++)
+
+
+            //for (int i = 0; i < height; i++)
+            //{
+            //    shiftedPixels[i] = new float[width][];
+            //    for (int j = 0; j < width; j++)
+            //    {
+            //        int pixelVal = pixels[i * width + j];
+
+            //        shiftedPixels[i][j] = new float[3];
+            //        shiftedPixels[i][j][0] = ((((pixelVal >> 16) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
+            //        shiftedPixels[i][j][1] = ((((pixelVal >> 8) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
+            //        shiftedPixels[i][j][2] = ((((pixelVal) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
+
+            //    }
+            //}
+
+            Byte[] bli = new byte[4 * width * height * 3];
+            int counter = 0;
+            foreach (var item in pixels)
             {
-                neoTheo[i] = new float[width][];
-                for (int j = 0; j < width; j++)
+                for (int i = 2; i >= 0; i--)
                 {
-                    int pixelVal = pixels[i * width + j];
-                    neoTheo[i][j] = new float[3];
-                    neoTheo[i][j][0] = ((((pixelVal >> 16) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
-                    neoTheo[i][j][1] = ((((pixelVal >> 8) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
-                    neoTheo[i][j][2] = ((((pixelVal) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
+                    var blu = BitConverter.GetBytes(((((item >> i * 8) & 0xFF) - IMAGE_MEAN) / IMAGE_STD));
+
+                    foreach (var muh in blu)
+                    {
+                        bli[counter] = muh;
+                        counter++;
+                    }
 
                 }
+ 
             }
 
-            float[][][][] superFinal = new float[1][][][];
-            superFinal[0] = neoTheo;
+            return ByteBuffer.Wrap(bli);
 
+            //float[][][][] tensorInputResult = new float[1][][][];
+            //tensorInputResult[0] = shiftedPixels;
 
-            stopWatch.Stop();
-            System.Console.WriteLine(stopWatch.ElapsedMilliseconds + " passed time");
-
-            return superFinal;
+            //return tensorInputResult;
         }
 
         public List<ModelClassification> ClassifySimilar(byte[] bytes)
         {
+            // Debug
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+
             Tensor tensor = interpreter.GetInputTensor(0);
-
-            // TODO get second output as veature vector
-            //Tensor outputTensor = interpreter.GetOutputTensor(1);
-
 
             int[] shape = tensor.Shape();
             int width = shape[1];
             int height = shape[2];
-            //ByteBuffer byteBuffer = ConvertBitmapToByteBuffer(bytes, width, height);
 
             // Output Labels
             float[][] outputLabels = new float[1][] { new float[labels.Count] };
@@ -248,10 +287,16 @@ namespace DLuOvBamG.Droid
                 { (Java.Lang.Integer)1, outputVectorsConverted }
             };
 
-            float[][][][] inputs = ConvertBitmapToByteBuffer(bytes, width, height);
-            Java.Lang.Object[] finalInput = { Java.Lang.Object.FromArray(inputs) };
+            //System.Console.WriteLine(stopWatch.ElapsedMilliseconds + " passed tíme assignments");
+
+            //float[][][][] inputs = ConvertBitmapToByteBuffer(bytes, width, height);
+            ByteBuffer inputs = ConvertBitmapToByteBuffer(bytes, width, height);
+            //System.Console.WriteLine(stopWatch.ElapsedMilliseconds + " passed tíme ConvertBitmapToByteBuffer");
+            Java.Lang.Object[] finalInput = { /*Java.Lang.Object.FromArray(inputs)*/ inputs };
 
             interpreter.RunForMultipleInputsOutputs(finalInput, outputs);
+
+            //System.Console.WriteLine(stopWatch.ElapsedMilliseconds + " passed time run");
 
             // Classification Results
             float[][] classificationResult = outputLabelsConverted.ToArray<float[]>();
@@ -265,21 +310,26 @@ namespace DLuOvBamG.Droid
                 result.Add(new ModelClassification(label, classificationResult[0][i]));
             }
 
+            //System.Console.WriteLine(stopWatch.ElapsedMilliseconds + " passed time objects");
+
             float[] featureVector = featureVectorResult[0][0][0];
 
             double[] doubleArray = Array.ConvertAll(featureVector, x => (double)x);
+            //System.Console.WriteLine(stopWatch.ElapsedMilliseconds + " passed time convert");
             doubleArray = normalizeVector(doubleArray);
+            //System.Console.WriteLine(stopWatch.ElapsedMilliseconds + " passed time normalize");
             FeatureVectors.Add(doubleArray);
-
-            double d = Distance.Pearson(doubleArray, doubleArray);
-            Matrix<double> m = Matrix<double>.Build.Random(3, 4);
-            m[0, 2] = 5;
 
             var sortedList = result.OrderByDescending(x => x.Probability).ToList();
             sortedList = sortedList.FindAll(x => System.Math.Round(x.Probability * 100, 2) > thresholdSimilar);
+            //System.Console.WriteLine(stopWatch.ElapsedMilliseconds + " passed time order find");
 
             // Notify all listeners
             ClassificationCompleted?.Invoke(this, new ClassificationEventArgs(result));
+
+            // Debug
+            stopWatch.Stop();
+            //System.Console.WriteLine(stopWatch.ElapsedMilliseconds + " passed time bla");
 
             return sortedList;
         }
@@ -342,7 +392,7 @@ namespace DLuOvBamG.Droid
 
         private void numTest()
         {
-            
+
         }
     }
 }
