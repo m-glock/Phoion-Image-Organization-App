@@ -105,7 +105,11 @@ namespace DLuOvBamG.ViewModels
                 {
                     CarouselViewItem currentPicture = (CarouselViewItem)CarouselViewMain.CurrentItem;
                     currentPicture.MarkForDeletion();
-                    if (!PicsToDelete.Contains(currentPicture))
+                    if (PicsToDelete.Contains(currentPicture))
+                    {
+                        PicsToDelete.Remove(currentPicture);
+                    } 
+                    else
                     {
                         PicsToDelete.Add(currentPicture);
                     }
