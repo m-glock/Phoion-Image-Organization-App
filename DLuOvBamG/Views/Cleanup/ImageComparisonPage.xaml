@@ -28,7 +28,7 @@
             </CarouselView.ItemTemplate>
         </CarouselView>
 
-        <CarouselView x:Name="ImageMainView" ItemsSource="{Binding PictureList}" Position="{Binding CarouselViewPosition}" Grid.Row="1">
+        <CarouselView x:Name="ImageMainView" ItemsSource="{Binding PictureList}" Position="{Binding CarouselViewPosition}" CurrentItemChanged="CurrentItemChanged" Grid.Row="1">
             <CarouselView.ItemTemplate>
                 <DataTemplate>
                     <Image Source="{Binding Uri}" Opacity="{Binding MarkedForDeletion}">
@@ -41,7 +41,8 @@
             </CarouselView.ItemTemplate>
         </CarouselView>
 
-        <ImageButton Command="{Binding MarkPictureAsDeleted}" Source="delete_64px.png" Grid.Row="2"></ImageButton>
+        <ImageButton x:Name="BinImage" Command="{Binding MarkPictureAsDeleted}" 
+                     Source="delete_64px.png" BackgroundColor="White" Grid.Row="2"></ImageButton>
         <!--<Image Source="delete_64px.png" Grid.Row="2"></Image>-->
     </Grid>
 </views:CustomBackButtonPage>

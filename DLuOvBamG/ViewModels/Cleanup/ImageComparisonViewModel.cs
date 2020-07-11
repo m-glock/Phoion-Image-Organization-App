@@ -15,6 +15,7 @@ namespace DLuOvBamG.ViewModels
     {
         public List<CarouselViewItem> PictureList { get; set; }
         public CarouselView CarouselViewMain { get; set; }
+        public ImageButton BinImage {get; set;}
         private int carouselViewPosition { get; set; }
         private List<CarouselViewItem> PicsToDelete { get; set; }
         private ImageComparisonPage ImageComparisonPage;
@@ -108,7 +109,7 @@ namespace DLuOvBamG.ViewModels
                     {
                         PicsToDelete.Add(currentPicture);
                     }
-
+                    BinImage.Source = currentPicture.IsMarkedForDeletion() ? "delete_restore_64px.png" : "delete_64px.png";
                 });
             }
         }

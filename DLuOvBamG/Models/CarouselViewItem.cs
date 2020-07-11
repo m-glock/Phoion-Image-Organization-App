@@ -36,12 +36,7 @@ namespace DLuOvBamG.Models
 
         public void MarkForDeletion()
         {
-            MarkedForDeletion = 0.6;
-        }
-
-        public void UnmarkForDeletion()
-        {
-            MarkedForDeletion = 1;
+            MarkedForDeletion = MarkedForDeletion == 0.6 ? 1 : 0.6;
         }
 
         public bool IsMarkedForDeletion()

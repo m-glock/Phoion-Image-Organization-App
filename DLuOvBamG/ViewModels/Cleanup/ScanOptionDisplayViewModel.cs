@@ -34,7 +34,7 @@ namespace DLuOvBamG.ViewModels
 
 		public ScanOptionDisplayViewModel()
 		{
-			Title = "Aufräumergebnisse";
+			Title = "Cleanup Results";
 		}
 
 		public List<Picture> GetPictureListForGroup(int groupID)
@@ -47,14 +47,13 @@ namespace DLuOvBamG.ViewModels
 		{
 			try
 			{
-				int id = Int32.Parse(groupID);
+				int id = int.Parse(groupID);
 				List<List<Picture>> allPictures = App.tf.GetPicturesForOption(Option);
 				List<Picture> pictures = allPictures[id];
 				await Navigation.PushAsync(new ImageComparisonPage(pictures, pic));
 			}
 			catch (FormatException ex)
 			{
-				//TODO: output to user?
 				Console.WriteLine($"Unable to parse '{groupID}'");
 			}
 

@@ -28,6 +28,7 @@ namespace DLuOvBamG.Views
             InitializeComponent();
 
             VM.CarouselViewMain = ImageMainView;
+            VM.BinImage = BinImage;
 
             if (EnableBackButtonOverride)
             {
@@ -64,6 +65,17 @@ namespace DLuOvBamG.Views
                         break;
                 }
             }
+        }
+
+
+        /**
+         * delete_64px.png: 
+         * delete_restore_64px.png: customisation of delete_64px.png
+         */
+        private void CurrentItemChanged(object sender, CurrentItemChangedEventArgs e)
+        {
+            CarouselViewItem currentPicture = (CarouselViewItem)e.CurrentItem;
+            BinImage.Source = currentPicture.IsMarkedForDeletion() ? "delete_restore_64px.png" : "delete_64px.png";
         }
     }
 }
