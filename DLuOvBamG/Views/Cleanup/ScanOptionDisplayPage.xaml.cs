@@ -10,12 +10,14 @@ namespace DLuOvBamG.Views
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ScanOptionDisplayPage : ContentPage
 	{
-		ScanOptionDisplayViewModel VM;
+		private ScanOptionDisplayViewModel VM;
 
 		public ScanOptionDisplayPage(double optionValue, ScanOptionsEnum option)
 		{
 			InitializeComponent();
 			VM = BindingContext as ScanOptionDisplayViewModel;
+			VM.Navigation = Navigation;
+			VM.Option = option;
 			List<List<Picture>> pictures = App.tf.GetAllPicturesForOption(option);
 			VM.Pictures = pictures;
 			slider.Value = optionValue;
@@ -36,8 +38,12 @@ namespace DLuOvBamG.Views
 			label.Margin = new Thickness(10, 20, 0, 0);
 			StackLayout.Children.Add(label);
 
-			CollectionView colView = new CollectionView();
+			CollectionView colView = new CollectionView()
+			{
+				SelectionMode = SelectionMode.Single
+			};
 			colView.HeightRequest = 100;
+			colView.ClassId = groupNumber.ToString();
 			colView.ItemsLayout = LinearItemsLayout.Horizontal;
 			colView.ItemsSource = VM.GetPictureListForGroup(groupNumber);
 			
@@ -48,12 +54,21 @@ namespace DLuOvBamG.Views
 
 				Image image = new Image { Aspect = Aspect.AspectFill, WidthRequest = 100 };
 				image.SetBinding(Image.SourceProperty, "Uri");
-
 				contentView.Content = image;
+
 				return contentView;
 			});
+			colView.SelectionChanged += OnCollectionViewSelectionChanged;
 
 			StackLayout.Children.Add(colView);
+		}
+
+		void OnCollectionViewSelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			CollectionView view = (CollectionView)sender;
+			string groupID = view.ClassId;
+			Picture selectedPicture = (Picture)e.CurrentSelection[0];
+			VM.OpenComparisonPage(selectedPicture, groupID);
 		}
 
 		private void ValueChanged(object sender, ValueChangedEventArgs e)

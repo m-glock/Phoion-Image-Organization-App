@@ -11,99 +11,195 @@ using DLuOvBamG.Services;
 using System.IO;
 using System.Linq;
 using DLToolkit.Forms.Controls;
+using System.Threading.Tasks;
 
 namespace DLuOvBamG.ViewModels
 {
     public class ImageGalleryViewModel : INotifyPropertyChanged
     {
-        public FlowObservableCollection<Grouping<string, Picture>> GroupedItems { get; set; }
+        static string CAMERA_PATH = "/Camera";
+        IImageService imageService = DependencyService.Get<IImageService>();
+        IClassifier classifier = App.Classifier;
+        ImageOrganizationDatabase db = App.Database;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        FlowObservableCollection<Grouping<string, Picture>> groupedItems;
+
+        public FlowObservableCollection<Grouping<string, Picture>> GroupedItems
+        {
+            set
+            {
+
+                groupedItems = value;
+
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("GroupedItems"));
+                }
+            }
+
+            get
+            {
+                return groupedItems;
+            }
+        }
+
         public List<Picture> Items { get; set; }
         public INavigation Navigation;
 
-        [DataContract]
-        class ImageList
-        {
-            [DataMember(Name = "photos")]
-            public List<string> Photos = null;
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public ImageGalleryViewModel()
         {
             Items = new List<Picture>();
             GroupedItems = new FlowObservableCollection<Grouping<string, Picture>>();
-            LoadImagesFromStorage();
         }
 
-        async void LoadImagesFromStorage()
+
+        public async void GetPictures()
         {
-            string[] stockImages = {
-                "https://farm9.staticflickr.com/8625/15806486058_7005d77438.jpg",
-                "https://farm5.staticflickr.com/4011/4308181244_5ac3f8239b.jpg",
-                "https://farm8.staticflickr.com/7423/8729135907_79599de8d8.jpg",
-                "https://farm3.staticflickr.com/2475/4058009019_ecf305f546.jpg",
-                "https://farm6.staticflickr.com/5117/14045101350_113edbe20b.jpg",
-                "https://farm8.staticflickr.com/7524/15620725287_3357e9db03.jpg",
-                "https://farm9.staticflickr.com/8351/8299022203_de0cb894b0.jpg",
-                 "https://farm9.staticflickr.com/8625/15806486058_7005d77438.jpg",
-                "https://farm5.staticflickr.com/4011/4308181244_5ac3f8239b.jpg",
-                "https://farm8.staticflickr.com/7423/8729135907_79599de8d8.jpg",
-                "https://farm3.staticflickr.com/2475/4058009019_ecf305f546.jpg",
-                "https://farm6.staticflickr.com/5117/14045101350_113edbe20b.jpg",
-                "https://farm8.staticflickr.com/7524/15620725287_3357e9db03.jpg",
-                "https://farm9.staticflickr.com/8351/8299022203_de0cb894b0.jpg",
-                 "https://farm9.staticflickr.com/8625/15806486058_7005d77438.jpg",
-                "https://farm5.staticflickr.com/4011/4308181244_5ac3f8239b.jpg",
-                "https://farm8.staticflickr.com/7423/8729135907_79599de8d8.jpg",
-                "https://farm3.staticflickr.com/2475/4058009019_ecf305f546.jpg",
-                "https://farm6.staticflickr.com/5117/14045101350_113edbe20b.jpg",
-                "https://farm8.staticflickr.com/7524/15620725287_3357e9db03.jpg",
-                "https://farm9.staticflickr.com/8351/8299022203_de0cb894b0.jpg",
-                "https://farm9.staticflickr.com/8625/15806486058_7005d77438.jpg",
-                "https://farm5.staticflickr.com/4011/4308181244_5ac3f8239b.jpg",
-                "https://farm8.staticflickr.com/7423/8729135907_79599de8d8.jpg",
-                "https://farm3.staticflickr.com/2475/4058009019_ecf305f546.jpg",
-                "https://farm6.staticflickr.com/5117/14045101350_113edbe20b.jpg",
-                "https://farm8.staticflickr.com/7524/15620725287_3357e9db03.jpg",
-                "https://farm9.staticflickr.com/8351/8299022203_de0cb894b0.jpg",
+            // try to get pictures from db, if this fails load them and put them in db
+            List<Picture> pictures = await LoadImagesFromDB();
 
-            };
+            if (pictures.Count == 0)
+            {
+                var storageImages = await LoadImagesFromStorage();
+                var saved = await SavePicturesInDB(storageImages);
+                if (saved)
+                {
+                    pictures = await LoadImagesFromDB();
+                    var categoryTags = await SaveCategoryTagsInDB();
+                    var classified = await ClassifyAllPictures(pictures);
+                }
+            }
+            Items = pictures;
+            pictures = SetImageSources(pictures);
+            GroupPicturesByDate(pictures);
+        }
 
+        async Task<List<Picture>> LoadImagesFromStorage()
+        {
             IPathService pathService = DependencyService.Get<IPathService>();
             string dcimFolder = pathService.DcimFolder;
-            dcimFolder += "/Camera";
+            dcimFolder += CAMERA_PATH;
             ImageFileStorage imageFileStorage = new ImageFileStorage();
             string[] imagePaths = await imageFileStorage.GetFilesFromDirectory(dcimFolder);
 
-            if(imagePaths.Length == 0)
-            {
-                imagePaths = stockImages;
-            }
-
             var pictureList = new List<Picture>();
-            for (int i = 0; i < imagePaths.Length ; i++)
+            for (int i = 0; i < imagePaths.Length; i++)
             {
-                Picture picture = new Picture(imagePaths[i], i.ToString());
-                picture.ImageSource = ImageSource.FromFile(imagePaths[i]);
+                Picture picture = new Picture(imagePaths[i]);
                 pictureList.Add(picture);
             }
+            return pictureList;
+        }
 
-            var sorted = pictureList
+        Task<List<Picture>> LoadImagesFromDB()
+        {
+            return db.GetPicturesAsync();
+        }
+
+        List<Picture> SetImageSources(List<Picture> pictures)
+        {
+            return pictures.Select(picture =>
+            {
+                // if file exists
+                picture.ImageSource = ImageSource.FromFile(picture.Uri);
+                // else delete image from db
+                return picture;
+            }).ToList();
+        }
+
+        void GroupPicturesByDate(List<Picture> pictures)
+        {
+            var sorted = pictures
                 .OrderByDescending(item => item.Date)
                 .GroupBy(item => item.Date.Date.ToShortDateString())
                 .Select(itemGroup => new Grouping<string, Picture>(itemGroup.Key, itemGroup))
                 .ToList();
-
-            Items = pictureList;
             GroupedItems = new FlowObservableCollection<Grouping<string, Picture>>(sorted);
+        }
+
+        async Task<bool> SavePicturesInDB(List<Picture> pictures)
+        {
+            if (pictures.Count > 0)
+            {
+                var tasks = pictures.Select(picture => db.SavePictureAsync(picture));
+                await Task.WhenAll(tasks);
+                return true;
+            }
+            return false;
+        }
+
+        async Task<int[]> SaveCategoryTagsInDB()
+        {
+            IAssetsService assetsService = DependencyService.Get<IAssetsService>();
+            List<string> labels = assetsService.LoadClassificationLabels();
+            List<CategoryTag> categoryTags = labels.Select(label =>
+                {
+                    return new CategoryTag()
+                    { 
+                        Name = label,
+                        IsCustom = false
+                    };
+                }
+            ).ToList();
+            var categoryTagsTasks = categoryTags.Select(categoryTag => db.SaveCategoryTagAsync(categoryTag));
+            var categoryTagIdArray = await Task.WhenAll(categoryTagsTasks);
+            return categoryTagIdArray;
+        }
+
+        async Task<bool> ClassifyAllPictures(List<Picture> pictures)
+        {
+            if (pictures.Count > 0)
+            {
+                var classifyTasks = pictures.Select(picture => ClassifyPicture(picture));
+                await Task.WhenAll(classifyTasks);
+                return true;
+            }
+            return false;
+        }
+
+        async Task ClassifyPicture(Picture picture)
+        {
+            // get classifications above 10% and put them in a list
+            List<CategoryTag> categoryTags = new List<CategoryTag>();
+            if (picture.CategoryTags is null)
+            {
+                picture.CategoryTags = new List<CategoryTag>();
+            }
+            byte[] fileBytes = imageService.GetFileBytes(picture.Uri);
+
+            // get classifications from classifier
+            List<ModelClassification> modelClassifications = classifier.ClassifySimilar(fileBytes);
+            // filter classifications, to get only above 10% probability
+            List<ModelClassification> topClassifications = modelClassifications.Where(classification => classification.Probability > 0.1f).ToList();
+
+            // map strings to CategoryTag objects
+            topClassifications.ForEach(classification =>
+            {
+                CategoryTag categoryTag = new CategoryTag
+                {
+                    Name = classification.TagName
+                };
+                categoryTags.Add(categoryTag);
+            });
+
+            // find or insert all category tag objects
+            categoryTags.ForEach(categoryTag => categoryTag.FindOrInsert());
+            // add the categoryTags, now with id, to the picture and update it
+            categoryTags.ForEach(categoryTag =>
+            {
+                picture.CategoryTags.Add(categoryTag);
+            });
+            db.SavePictureAsync(picture);
         }
 
         public ICommand ItemTappedCommand
         {
             get
             {
-                return new Command((sender) =>
+                return new Command(async (sender) =>
                 {
                     var Item = sender as Picture;
 
@@ -112,8 +208,7 @@ namespace DLuOvBamG.ViewModels
                         if (picture.Id == Item.Id)
                         {
                             Console.WriteLine("tapped {0}", picture.Id);
-                            var newPage = new ImageDetailPage(picture);
-                            Navigation.PushAsync(newPage, true);
+                            await Navigation.PushAsync(new ImageDetailPage(picture), true);
                         }
                     }
 
@@ -121,7 +216,8 @@ namespace DLuOvBamG.ViewModels
             }
         }
 
-        public ICommand OpenCleanupPage => new Command(async () => {
+        public ICommand OpenCleanupPage => new Command(async () =>
+        {
             await Navigation.PushAsync(new CleanupPage());
         });
     }

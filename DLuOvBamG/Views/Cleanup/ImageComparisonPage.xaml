@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:CustomBackButtonPage  xmlns:views="clr-namespace:DLuOvBamG.Views"
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:gestures="clr-namespace:DLuOvBamG.Services.Gestures"
+             xmlns:touch="clr-namespace:TouchEffect;assembly=TouchEffect"
+             EnableBackButtonOverride="True"
+             mc:Ignorable="d"
+             x:Name="root"
+             x:Class="DLuOvBamG.Views.ImageComparisonPage">
+
+    <Grid x:Name="Grid" Margin="10,10,10,10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"></RowDefinition>
+            <RowDefinition Height="83*"></RowDefinition>
+            <RowDefinition Height="7*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <CarouselView x:Name="ImageCarouselView" ItemsSource="{Binding PictureList}" Position="{Binding CarouselViewPosition}" PeekAreaInsets="150" Grid.Row="0">
+            <CarouselView.ItemTemplate>
+                <DataTemplate>
+                    <Image Source="{Binding Uri}" Opacity="{Binding MarkedForDeletion}"></Image>
+                </DataTemplate>
+            </CarouselView.ItemTemplate>
+        </CarouselView>
+
+        <CarouselView x:Name="ImageMainView" ItemsSource="{Binding PictureList}" Position="{Binding CarouselViewPosition}" Grid.Row="1">
+            <CarouselView.ItemTemplate>
+                <DataTemplate>
+                    <Image Source="{Binding Uri}" Opacity="{Binding MarkedForDeletion}">
+                        <Image.Effects>
+                            <gestures:TouchEffect TouchAction="ImageTouched">
+                            </gestures:TouchEffect>
+                        </Image.Effects>
+                    </Image>
+                </DataTemplate>
+            </CarouselView.ItemTemplate>
+        </CarouselView>
+
+        <ImageButton Command="{Binding MarkPictureAsDeleted}" Source="delete_64px.png" Grid.Row="2"></ImageButton>
+        <!--<Image Source="delete_64px.png" Grid.Row="2"></Image>-->
+    </Grid>
+</views:CustomBackButtonPage>

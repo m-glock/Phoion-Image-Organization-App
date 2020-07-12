@@ -5,19 +5,21 @@ using DLToolkit.Forms.Controls;
 
 namespace DLuOvBamG.Views{
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ImageGrid : ContentPage{ 
-        
+    public partial class ImageGrid : ContentPage{
+
+        ImageGalleryViewModel vm { get; set; }
         public ImageGrid(){
             InitializeComponent();
             FlowListView.Init();
-            ImageGalleryViewModel vm = BindingContext as ImageGalleryViewModel;
-            vm.Navigation = Navigation;
-
+            vm = new ImageGalleryViewModel();
+            BindingContext = vm;
+            vm.Navigation = Navigation;                
         }
 
-        private void timeButton_Clicked(object sender, System.EventArgs e)
+        protected override void OnAppearing()
         {
-            timeButton.Text = App.tf.timeOutput;
+            base.OnAppearing();
+            vm.GetPictures();   
         }
     }
 }

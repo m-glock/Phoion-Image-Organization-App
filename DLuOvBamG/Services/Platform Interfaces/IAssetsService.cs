@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DLuOvBamG.Services
 {
-    public interface IImageService
+    public interface IAssetsService
     {
-        DateTime GetDateTaken(string filePath);
+        List<string> LoadClassificationLabels();
     }
 }
