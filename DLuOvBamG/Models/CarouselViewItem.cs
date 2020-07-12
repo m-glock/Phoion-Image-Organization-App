@@ -78,5 +78,10 @@ namespace DLuOvBamG.Models
         {
             CurrentUri = Uri;
         }
+
+        public void ChangeURIToComparingPicture()
+        {
+            CurrentUri = ComparingPictureUri;
+        }
     }
 }

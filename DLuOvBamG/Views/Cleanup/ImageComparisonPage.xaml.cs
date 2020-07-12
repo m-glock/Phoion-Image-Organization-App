@@ -47,34 +47,29 @@ namespace DLuOvBamG.Views
             }
         }
 
-        /*public void ImageTouched(object sender, TouchActionEventArgs args)
+        public void ImageTouched(object sender, TouchActionEventArgs args)
         {
-            Image currentPicture = sender as Image;
             CarouselViewItem currentPictureItem = (CarouselViewItem)ImageMainView.CurrentItem;
 
             if (!currentPictureItem.IsMarkedForDeletion())
             {
                 switch (args.Type)
                 {
-                    case TouchActionType.Moved:
-                        Console.WriteLine("moved");
-                        VM.OnSwiped(args);
-                        break;
                     case TouchActionType.Pressed:
                         //Console.WriteLine("tap started"); 
-                        VM.OnPressedAsync(currentPicture);
+                        VM.OnPressedAsync();
                         break;
                     case TouchActionType.Released:
                     case TouchActionType.Cancelled:
                     case TouchActionType.Exited:
                         //Console.WriteLine("tap stopped");
-                        VM.OnReleasedAsync(currentPicture);
+                        VM.OnReleasedAsync();
                         break;
                     default:
                         break;
                 }
             }
-        }*/
+        }
 
 
         /**

@@ -19,7 +19,7 @@ namespace DLuOvBamG.ViewModels
         private int carouselViewPosition { get; set; }
         private List<CarouselViewItem> PicsToDelete { get; set; }
         private ImageComparisonPage ImageComparisonPage;
-        //private bool stop;
+        private bool hasTouchStopped;
         public event PropertyChangedEventHandler PropertyChanged;
         //private double firstPoint = -1;
         //private int pointerCounter;
@@ -69,37 +69,42 @@ namespace DLuOvBamG.ViewModels
                 await ImageComparisonPage.Navigation.PopAsync(true);
             }
         }
-        /*public async Task OnPressedAsync(Image currentPicture)
+        
+        public async Task OnPressedAsync()
         {
-            stop = false;
-            await ShowBasePic(currentPicture);
+            hasTouchStopped = false;
+            await ShowBasePic();
         }
 
-        public void OnReleasedAsync(Image currentPicture)
+        public void OnReleasedAsync()
         {
             CarouselViewItem currentItem = (CarouselViewItem)CarouselViewMain.CurrentItem;
-            currentPicture.Source = currentItem.Uri;
-            stop = true;
-        }*/
+            currentItem.ChangeURIBackToOriginal();
+            hasTouchStopped = true;
+        }
 
         /*
          * Displays the comparing image in the background if the touch has been long enough
          */
-        /*private async Task ShowBasePic(Image currentPicture)
+        private async Task ShowBasePic()
         {
             await Task.Delay(1000);
-            if (!stop)
+            if (!hasTouchStopped)
             {
                 Console.WriteLine("successful long tap");
                 CarouselViewItem currentItem = (CarouselViewItem)CarouselViewMain.CurrentItem;
-                currentPicture.Source = currentItem.ComparingPictureUri;
+                currentItem.ChangeURIToComparingPicture();
             }
             else
             {
                 Console.WriteLine("unsuccessful long tap");
             }
+        }
 
-        }*/
+        public void stopTouch()
+        {
+            hasTouchStopped = true;
+        }
 
         public ICommand MarkPictureAsDeleted
         {

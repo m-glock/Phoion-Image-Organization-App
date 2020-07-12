@@ -32,13 +32,13 @@
             <CarouselView.ItemTemplate>
                 <DataTemplate>
                     <Image Source="{Binding CurrentUri}" Opacity="{Binding MarkedForDeletion}">
-                        <Image.GestureRecognizers>
+                        <!--<Image.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="2" Tapped="Tapped"></TapGestureRecognizer>
-                        </Image.GestureRecognizers>
-                        <!--<Image.Effects>
+                        </Image.GestureRecognizers>-->
+                        <Image.Effects>
                             <gestures:TouchEffect TouchAction="ImageTouched">
                             </gestures:TouchEffect>
-                        </Image.Effects>-->
+                        </Image.Effects>
                     </Image>
                 </DataTemplate>
             </CarouselView.ItemTemplate>
