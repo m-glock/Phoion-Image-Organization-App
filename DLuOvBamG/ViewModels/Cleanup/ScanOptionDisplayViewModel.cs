@@ -1,6 +1,8 @@
 ﻿using DLuOvBamG.Models;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows.Input;
+using Xamarin.Forms;
 
 namespace DLuOvBamG.ViewModels
 {
@@ -9,6 +11,8 @@ namespace DLuOvBamG.ViewModels
 		public List<List<Picture>> Pictures;
 		public double precision;
 		public event PropertyChangedEventHandler PropertyChanged;
+        private ScanOptionsEnum Option;
+
         public double Precision
         {
             set
@@ -25,10 +29,10 @@ namespace DLuOvBamG.ViewModels
             }
         }
 
-		public ScanOptionDisplayViewModel()
+		public ScanOptionDisplayViewModel(ScanOptionsEnum option)
         {
-			Title = "Aufräumergebnisse"; 
-			
+			Title = "Aufräumergebnisse";
+            Option = option;
 		}
 
 		public List<Picture> GetPictureListForGroup(int groupID)
@@ -36,5 +40,14 @@ namespace DLuOvBamG.ViewModels
 			if (groupID > Pictures.Count) return null;
 			return Pictures[groupID];
 		}
-	}
+
+        public ICommand UpdatePicturesAfterValueChange => new Command(async () =>
+        {
+            Dictionary<ScanOptionsEnum, double> dictChangedValue = new Dictionary<ScanOptionsEnum, double>();
+            dictChangedValue.Add(Option, Precision);
+            App.tf.FillPictureLists(dictChangedValue);
+            Pictures = App.tf.GetAllPicturesForOption(Option);
+            // TODO: updates automatically? Activity indicator?
+        });
+    }
 }

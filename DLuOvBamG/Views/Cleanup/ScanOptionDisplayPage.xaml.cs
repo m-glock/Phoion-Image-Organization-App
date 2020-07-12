@@ -178,7 +178,6 @@ namespace DLuOvBamG.Views
 		{
 			Slider optionElement = sender as Slider;
 			VM.Precision = e.NewValue;
-			//TODO: Change Content of page while Slider is moved or when movement is finished?
 		}
 	}
 }
