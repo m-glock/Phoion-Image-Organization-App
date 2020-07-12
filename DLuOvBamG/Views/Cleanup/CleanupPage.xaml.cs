@@ -22,6 +22,7 @@ namespace DLuOvBamG.Views
             InitializeComponent();
             VM = BindingContext as CleanupViewModel;
             VM.Navigation = Navigation;
+
             GetOptionElements();
             foreach (ScanOptionViewGroup viewGroup in ViewGroups.Values)
             {
@@ -30,6 +31,9 @@ namespace DLuOvBamG.Views
             ScanButton.IsEnabled = false;
         }
 
+        /** 
+         * create groups of UI elements for each scan option for easier access
+         */
         private void GetOptionElements()
         {
             ViewGroups = new Dictionary<string, ScanOptionViewGroup>();
@@ -42,7 +46,7 @@ namespace DLuOvBamG.Views
         private void OptionToggled(object sender, ToggledEventArgs e)
         {
             Switch optionToggle = sender as Switch;
-            ScanOptionViewGroup viewGroup = GetOptionElementsFromClassID(optionToggle.ClassId);
+            ScanOptionViewGroup viewGroup = ViewGroups[optionToggle.ClassId];
             VM.UpdateScanOptions(viewGroup.Option, ScanButton, viewGroup.OptionSlider.Value);
             if (!optionToggle.IsToggled)
             {
@@ -53,13 +57,12 @@ namespace DLuOvBamG.Views
             {
                 viewGroup.OptionExpander.IsExpanded = true;
             }
-            
         }
 
         private void OptionTapped(object sender, EventArgs e)
         {
             Element optionElement = sender as Element;
-            ScanOptionViewGroup viewGroup = GetOptionElementsFromClassID(optionElement.ClassId);
+            ScanOptionViewGroup viewGroup = ViewGroups[optionElement.ClassId];
             if (viewGroup != null)
             {
                 Switch optionSwitch = viewGroup.OptionSwitch;
@@ -67,28 +70,16 @@ namespace DLuOvBamG.Views
             }
         }
 
+        /**
+         * Update slider value
+         */
         private void ValueChanged(object sender, ValueChangedEventArgs e)
         {
             Element optionElement = sender as Element;
-            ScanOptionViewGroup viewGroup = GetOptionElementsFromClassID(optionElement.ClassId);
+            ScanOptionViewGroup viewGroup = ViewGroups[optionElement.ClassId];
             double value = e.NewValue;
             Console.WriteLine("Value of " + viewGroup.Option.ToString() + " has changed to " + value);
             VM.UpdateScanOptionSliderValue(viewGroup.Option, value);
-        }
-
-        private ScanOptionViewGroup GetOptionElementsFromClassID(String classID)
-        {
-            switch (classID)
-            {
-                case "blurryPics":
-                    return ViewGroups["blurryPics"];
-                case "darkPics":
-                    return ViewGroups["darkPics"];
-                case "similarPics":
-                    return ViewGroups["similarPics"];
-                default:
-                    return null;
-            }
         }
     }
 }

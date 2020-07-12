@@ -16,6 +16,9 @@ namespace DLuOvBamG.ViewModels
         public double darkPrecision;
         public double blurryPrecision;
         public event PropertyChangedEventHandler PropertyChanged;
+
+        // update number that appear next to the slider
+        #region Precisions
         public double SimilarPrecision
         {
             set
@@ -61,11 +64,11 @@ namespace DLuOvBamG.ViewModels
                 return blurryPrecision;
             }
         }
-
+        #endregion
 
         public CleanupViewModel()
         {
-            Title = "Aufräumen";
+            Title = "Cleanup";
             ScanOptions = new Dictionary<ScanOptionsEnum, double>();
         }
 
@@ -89,6 +92,9 @@ namespace DLuOvBamG.ViewModels
             slider.Value = presicionValue;
         }
 
+        /*
+         * Update the value next to the slider
+         */
         public void UpdateScanOptionSliderValue(ScanOptionsEnum option, double value)
         {
             switch (option)
@@ -107,6 +113,10 @@ namespace DLuOvBamG.ViewModels
                 ScanOptions[option] = value;
         }
 
+        /*
+         * Scan button should only be enabled if at least one scan option is toggled
+         * if none are toggled, the button is disabled
+         */
         public void CheckToDisableScanButton(Button scanButton, List<Switch> optionSwitches)
         {
             bool optionsChosen = false;
