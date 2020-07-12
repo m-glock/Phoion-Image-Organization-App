@@ -12,8 +12,6 @@ using Java.IO;
 using Java.Nio;
 using Java.Nio.Channels;
 using MathNet.Numerics;
-using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Double;
 using Org.Tensorflow.Lite;
 using Xamarin.Forms;
 
