@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
+using Xamarin.Forms;
 
 namespace DLuOvBamG.Services
 {
@@ -23,6 +24,21 @@ namespace DLuOvBamG.Services
             }
 
             string[] filePaths = Directory.GetFiles(folderPath, "*.jpg");
+            return filePaths;
+        }
+
+        public async Task<string[]> GetImagePathsFromDevice()
+        {
+            var status = await CheckAndRequestExternalStoragePermissionAsync();
+            if (status != PermissionStatus.Granted)
+            {
+                // Notify user permission was denied
+                string[] empty = new string[] { };
+                return empty;
+            }
+
+            IImageService imageService = DependencyService.Get<IImageService>();
+            string[] filePaths = imageService.GetAllImagesFromDevice();
             return filePaths;
         }
 

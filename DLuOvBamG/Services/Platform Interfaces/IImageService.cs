@@ -8,5 +8,7 @@ namespace DLuOvBamG.Services
     {
         DateTime GetDateTaken(string filePath);
         byte[] GetFileBytes(string filePath);
+
+        string[] GetAllImagesFromDevice();
     }
 }

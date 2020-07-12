@@ -17,7 +17,6 @@ namespace DLuOvBamG.ViewModels
 {
     public class ImageGalleryViewModel : INotifyPropertyChanged
     {
-        static string CAMERA_PATH = "/Camera";
         IImageService imageService = DependencyService.Get<IImageService>();
         IClassifier classifier = App.Classifier;
         ImageOrganizationDatabase db = App.Database;
@@ -79,11 +78,8 @@ namespace DLuOvBamG.ViewModels
 
         async Task<List<Picture>> LoadImagesFromStorage()
         {
-            IPathService pathService = DependencyService.Get<IPathService>();
-            string dcimFolder = pathService.DcimFolder;
-            dcimFolder += CAMERA_PATH;
             ImageFileStorage imageFileStorage = new ImageFileStorage();
-            string[] imagePaths = await imageFileStorage.GetFilesFromDirectory(dcimFolder);
+            string[] imagePaths = await imageFileStorage.GetImagePathsFromDevice();
 
             var pictureList = new List<Picture>();
             for (int i = 0; i < imagePaths.Length; i++)
