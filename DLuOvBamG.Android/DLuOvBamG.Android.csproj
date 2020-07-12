@@ -166,12 +166,6 @@
     <AndroidAsset Include="Assets\stockImages\dark1.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\stockImages\dark3.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\stockImages\dark2.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="Assets\labelsBlur.txt" />
   </ItemGroup>
   <ItemGroup>
