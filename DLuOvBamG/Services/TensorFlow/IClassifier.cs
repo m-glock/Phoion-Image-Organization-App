@@ -16,6 +16,8 @@ namespace DLuOvBamG
         Task<List<ModelClassification>> ClassifySimilar(byte[] bytes);
         List<ModelClassification> ClassifyBlurry(byte[] bytes);
 
+        void FillFeatureVectorMatix();
+
         byte[] GetImageBytes(string path);
 
         void ChangeModel(ScanOptionsEnum type);

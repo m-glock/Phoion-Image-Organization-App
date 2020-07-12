@@ -64,6 +64,9 @@
     <PackageReference Include="glidex.forms">
       <Version>2.0.1.394</Version>
     </PackageReference>
+    <PackageReference Include="MathNet.Numerics">
+      <Version>4.11.0</Version>
+    </PackageReference>
     <PackageReference Include="TouchView">
       <Version>4.1.77</Version>
     </PackageReference>
@@ -96,6 +99,7 @@
     <AndroidAsset Include="Assets\converted_model.tflite" />
     <AndroidAsset Include="Assets\modelBlur.tflite" />
     <AndroidAsset Include="Assets\converted_modelTroelf.tflite" />
+    <AndroidAsset Include="Assets\converted_modelKuhmuhMilch.tflite" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />
@@ -119,16 +123,7 @@
     <AndroidResource Include="Resources\mipmap-xxxhdpi\launcher_foreground.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\stockImages\catdog.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="Assets\stockImages\goldfish.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\stockImages\squirrel.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\stockImages\stuhl.jpg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\stockImages\buildingFlag.jpg" />
@@ -184,12 +179,6 @@
       <Project>{A3788DAB-3090-4CAC-9349-E87969ECE5F4}</Project>
       <Name>DLuOvBamG</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Resources\drawable\cleanup.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable\cleaning.svg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\cleanup_64px.png" />

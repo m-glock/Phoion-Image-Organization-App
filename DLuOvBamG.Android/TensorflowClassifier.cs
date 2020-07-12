@@ -21,9 +21,6 @@ namespace DLuOvBamG.Droid
 
     public class TensorflowClassifier : IClassifier
     {
-        // TODO remove debug
-        private bool testing = true;
-
         private Interpreter interpreter;
         private List<string> labels;
 
@@ -39,7 +36,8 @@ namespace DLuOvBamG.Droid
         public event EventHandler<ClassificationEventArgs> ClassificationCompleted;
 
         public List<double[]> FeatureVectors = new List<double[]>();
-        public Tuple<int, double>[][] featureMatrix;
+        // int -> index; double -> distance
+        public Tuple<int, double>[][] FeatureMatrix;
 
         Stopwatch stopWatch = new Stopwatch();
 
@@ -68,6 +66,7 @@ namespace DLuOvBamG.Droid
             FileInputStream inputStream = new FileInputStream(assetDescriptor.FileDescriptor);
 
             ByteBuffer mappedByteBuffer = inputStream.Channel.Map(FileChannel.MapMode.ReadOnly, assetDescriptor.StartOffset, assetDescriptor.DeclaredLength);
+            inputStream.Close();
 
             return mappedByteBuffer;
         }
@@ -100,7 +99,6 @@ namespace DLuOvBamG.Droid
 
         public async Task<string> testAsync()
         {
-            if (!testing) return "";
             string returnVal = "";
             stopWatch.Start();
             ChangeModel(ScanOptionsEnum.similarPics);
@@ -112,34 +110,13 @@ namespace DLuOvBamG.Droid
             {
                 tasks.Add(classifyProcess(listAssets[i]));
             }
-            while(tasks.Count > 0)
+            while (tasks.Count > 0)
             {
                 Task finishedTask = await Task.WhenAny(tasks);
                 print("freeman");
                 tasks.Remove(finishedTask);
             }
 
-            print(stopWatch.ElapsedMilliseconds + " passed time classify for " + listAssets.Length + " items");
-
-            featureMatrix = new Tuple<int, double>[FeatureVectors.Count][];
-
-            for (int i = 0; i < FeatureVectors.Count; i++)
-            {
-                featureMatrix[i] = new Tuple<int, double>[FeatureVectors.Count];
-                for (int j = 0; j <= i; j++)
-                {
-                    double d = Distance.Cosine(FeatureVectors[i], FeatureVectors[j]);
-                    featureMatrix[i][j] = Tuple.Create(j, d);
-                    featureMatrix[j][i] = Tuple.Create(i, d);
-                    //System.Console.WriteLine(featureMatrix[i][j].Item2 + " item2");
-                }
-            }
-
-            List<List<Tuple<int, double>>> allNeighbours = new List<List<Tuple<int, double>>>();
-            for (int i = 0; i < featureMatrix.Length; i++)
-            {
-                allNeighbours.Add(featureMatrix[i].OrderBy(tupel => tupel.Item2).Take(10).ToList());
-            }
 
             return returnVal;
         }
@@ -147,16 +124,7 @@ namespace DLuOvBamG.Droid
 
         public byte[] GetImageBytes(string path)
         {
-            Stream stream;
-            if (testing)
-            {
-                AssetFileDescriptor assetDescriptor = Android.App.Application.Context.Assets.OpenFd("stockImages/" + path);
-                stream = assetDescriptor.CreateInputStream();
-            }
-            else
-                stream = System.IO.File.OpenRead(path);
-
-            //Stream stream = System.IO.File.OpenRead(path);
+            Stream stream = System.IO.File.OpenRead(path);
             byte[] fileBytes = ReadStream(stream);
 
             stream.Close();
@@ -174,77 +142,50 @@ namespace DLuOvBamG.Droid
                 {
                     ms.Write(buffer, 0, read);
                 }
+                ms.Close();
+
                 return ms.ToArray();
             }
         }
 
-        private /*float[][][][]*/ ByteBuffer ConvertBitmapToByteBuffer(byte[] bytes, int height, int width)
+        private ByteBuffer ConvertBitmapToByteBuffer(byte[] bytes, int height, int width)
         {
 
             float IMAGE_STD = 128.0f;
             int IMAGE_MEAN = 128;
-            // ERROR:  W/ServiceManagement(21703): getService: unable to call into hwbinder service for vendor.huawei.hardware.jpegdec@1.0::IJpegDecode/default.
-            Bitmap bitmap = BitmapFactory.DecodeByteArray(bytes, 0, bytes.Length);
-            // ERROR: (21703): [ZeroHung]zrhung_get_config: Get config failed for wp[0x0008]
-            Bitmap resizedBitmap = Bitmap.CreateScaledBitmap(bitmap, width, height, true);
 
-            float[][][] shiftedPixels = new float[height][][];
+            Bitmap bitmap = BitmapFactory.DecodeByteArray(bytes, 0, bytes.Length);
+            Bitmap resizedBitmap = Bitmap.CreateScaledBitmap(bitmap, width, height, true);
 
             int[] pixels = new int[width * height];
             resizedBitmap.GetPixels(pixels, 0, resizedBitmap.Width, 0, 0, resizedBitmap.Width, resizedBitmap.Height);
 
 
 
-            //for (int i = 0; i < height; i++)
-            //{
-            //    shiftedPixels[i] = new float[width][];
-            //    for (int j = 0; j < width; j++)
-            //    {
-            //        int pixelVal = pixels[i * width + j];
-
-            //        shiftedPixels[i][j] = new float[3];
-            //        shiftedPixels[i][j][0] = ((((pixelVal >> 16) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
-            //        shiftedPixels[i][j][1] = ((((pixelVal >> 8) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
-            //        shiftedPixels[i][j][2] = ((((pixelVal) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
-
-            //    }
-            //}
-
-            Byte[] bli = new byte[4 * width * height * 3];
+            Byte[] imageBytes = new byte[4 * width * height * 3];
             int counter = 0;
-            foreach (var item in pixels)
+            foreach (int pixel in pixels)
             {
                 for (int i = 2; i >= 0; i--)
                 {
-                    var blu = BitConverter.GetBytes(((((item >> i * 8) & 0xFF) - IMAGE_MEAN) / IMAGE_STD));
+                    byte[] pixelBytes = BitConverter.GetBytes(((((pixel >> i * 8) & 0xFF) - IMAGE_MEAN) / IMAGE_STD));
 
-                    foreach (var muh in blu)
+                    foreach (var pixelByte in pixelBytes)
                     {
-                        bli[counter] = muh;
+                        imageBytes[counter] = pixelByte;
                         counter++;
                     }
-
                 }
-
             }
 
-            return ByteBuffer.Wrap(bli);
-
-            //float[][][][] tensorInputResult = new float[1][][][];
-            //tensorInputResult[0] = shiftedPixels;
-
-            //return tensorInputResult;
+            return ByteBuffer.Wrap(imageBytes);
         }
 
         public async Task<List<ModelClassification>> ClassifySimilar(byte[] bytes)
         {
-            // Debug
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
-            await Task.Delay(0);
+            await Task.Delay(0); // await cheat, temporary
 
             Tensor tensor = interpreter.GetInputTensor(0);
-
             int[] shape = tensor.Shape();
             int width = shape[1];
             int height = shape[2];
@@ -266,49 +207,42 @@ namespace DLuOvBamG.Droid
                 { (Java.Lang.Integer)1, outputVectorsConverted }
             };
 
-            //System.Console.WriteLine(stopWatch.ElapsedMilliseconds + " passed tíme assignments");
-
-            //float[][][][] inputs = ConvertBitmapToByteBuffer(bytes, width, height);
             ByteBuffer inputs = ConvertBitmapToByteBuffer(bytes, width, height);
-            //System.Console.WriteLine(stopWatch.ElapsedMilliseconds + " passed tíme ConvertBitmapToByteBuffer");
-            Java.Lang.Object[] finalInput = { /*Java.Lang.Object.FromArray(inputs)*/ inputs };
+            Java.Lang.Object[] finalInput = { inputs };
 
             interpreter.RunForMultipleInputsOutputs(finalInput, outputs);
-
-            //System.Console.WriteLine(stopWatch.ElapsedMilliseconds + " passed time run");
 
             // Classification Results
             float[][] classificationResult = outputLabelsConverted.ToArray<float[]>();
             float[][][][] featureVectorResult = outputVectorsConverted.ToArray<float[][][]>();
 
-            List<ModelClassification> result = new List<ModelClassification>();
+            List<ModelClassification> classificationResults = new List<ModelClassification>();
             for (int i = 0; i < labels.Count; i++)
             {
                 string label = labels[i];
-
-                result.Add(new ModelClassification(label, classificationResult[0][i]));
+                classificationResults.Add(new ModelClassification(label, classificationResult[0][i]));
             }
 
-            //System.Console.WriteLine(stopWatch.ElapsedMilliseconds + " passed time objects");
-
+            // Storing feature vectors
             float[] featureVector = featureVectorResult[0][0][0];
+            // conversion, because doubles are needed later on
+            double[] featureVectorDouble = Array.ConvertAll(featureVector, x => (double)x);
+            featureVectorDouble = normalizeVector(featureVectorDouble);
+            FeatureVectors.Add(featureVectorDouble);
 
-            double[] doubleArray = Array.ConvertAll(featureVector, x => (double)x);
-            //System.Console.WriteLine(stopWatch.ElapsedMilliseconds + " passed time convert");
-            doubleArray = normalizeVector(doubleArray);
-            //System.Console.WriteLine(stopWatch.ElapsedMilliseconds + " passed time normalize");
-            FeatureVectors.Add(doubleArray);
 
-            var sortedList = result.OrderByDescending(x => x.Probability).ToList();
+            var sortedList = classificationResults.OrderByDescending(x => x.Probability).ToList();
+            // only select pictures that are bigger than a given threshold
             sortedList = sortedList.FindAll(x => System.Math.Round(x.Probability * 100, 2) > thresholdSimilar);
-            //System.Console.WriteLine(stopWatch.ElapsedMilliseconds + " passed time order find");
 
             // Notify all listeners
-            ClassificationCompleted?.Invoke(this, new ClassificationEventArgs(result));
+            //ClassificationCompleted?.Invoke(this, new ClassificationEventArgs(classificationResults));
 
-            // Debug
-            stopWatch.Stop();
-            //System.Console.WriteLine(stopWatch.ElapsedMilliseconds + " passed time bla");
+            if (sortedList.Count > 0)
+            {
+                ModelClassification top = sortedList.First();
+                print(top.TagName + " " + Math.Round(top.Probability * 100, 2) + "% ultra result for " + top);
+            }
 
             return sortedList;
         }
@@ -327,47 +261,65 @@ namespace DLuOvBamG.Droid
             return vector;
         }
 
-        public List<ModelClassification> ClassifyBlurry(byte[] bytes)
+        public void FillFeatureVectorMatix()
         {
-            throw new NotImplementedException();
+            stopWatch.Start();
+            FeatureMatrix = new Tuple<int, double>[FeatureVectors.Count][];
+
+            for (int i = 0; i < FeatureVectors.Count; i++)
+            {
+                FeatureMatrix[i] = new Tuple<int, double>[FeatureVectors.Count];
+                for (int j = 0; j <= i; j++)
+                {
+                    double d = Distance.Cosine(FeatureVectors[i], FeatureVectors[j]);
+                    FeatureMatrix[i][j] = Tuple.Create(j, d);
+                    FeatureMatrix[j][i] = Tuple.Create(i, d);
+                }
+            }
+
+            print(stopWatch.ElapsedMilliseconds + " time matrix");
+
+            //List<List<Tuple<int, double>>> allNeighbours = new List<List<Tuple<int, double>>>();
+            //for (int i = 0; i < featureMatrix.Length; i++)
+            //{
+            //    allNeighbours.Add(featureMatrix[i].OrderBy(tupel => tupel.Item2).Take(10).ToList());
+            //}
         }
 
-        //public List<ModelClassification> ClassifyBlurry(byte[] bytes)
-        //{
-        //    Tensor tensor = interpreter.GetInputTensor(0);
+        public List<ModelClassification> ClassifyBlurry(byte[] bytes)
+        {
+            Tensor tensor = interpreter.GetInputTensor(0);
 
-        //    int[] shape = tensor.Shape();
-        //    int width = shape[1];
-        //    int height = shape[2];
-        //    //ByteBuffer byteBuffer = ConvertBitmapToByteBuffer(bytes, width, height);
+            int[] shape = tensor.Shape();
+            int width = shape[1];
+            int height = shape[2];
+            ByteBuffer byteBuffer = ConvertBitmapToByteBuffer(bytes, width, height);
 
-        //    // Output Labels
-        //    float[][] outputLabels = new float[1][] { new float[labels.Count] };
-        //    var outputLabelsConverted = Java.Lang.Object.FromArray(outputLabels);
-
-
-        //    interpreter.Run(ConvertBitmapToByteBuffer(bytes, width, height), outputLabelsConverted);
-
-        //    // Classification Results
-        //    float[][] classificationResult = outputLabelsConverted.ToArray<float[]>();
-
-        //    List<ModelClassification> result = new List<ModelClassification>();
-        //    for (int i = 0; i < labels.Count; i++)
-        //    {
-        //        string label = labels[i];
-
-        //        result.Add(new ModelClassification(label, classificationResult[0][i]));
-        //    }
+            // Output Labels
+            float[][] outputLabels = new float[1][] { new float[labels.Count] };
+            var outputLabelsConverted = Java.Lang.Object.FromArray(outputLabels);
 
 
-        //    var sortedList = result.OrderByDescending(x => x.Probability).ToList();
-        //    sortedList = sortedList.FindAll(x => System.Math.Round(x.Probability * 100, 2) > thresholdBlurry);
+            interpreter.Run(byteBuffer, outputLabelsConverted);
 
-        //    // Notify all listeners
-        //    ClassificationCompleted?.Invoke(this, new ClassificationEventArgs(result));
+            // Classification Results
+            float[][] classificationResult = outputLabelsConverted.ToArray<float[]>();
 
-        //    return sortedList;
-        //}
+            List<ModelClassification> result = new List<ModelClassification>();
+            for (int i = 0; i < labels.Count; i++)
+            {
+                string label = labels[i];
+                result.Add(new ModelClassification(label, classificationResult[0][i]));
+            }
+
+            var sortedList = result.OrderByDescending(x => x.Probability).ToList();
+            sortedList = sortedList.FindAll(x => System.Math.Round(x.Probability * 100, 2) > thresholdBlurry);
+
+            // Notify all listeners
+            //ClassificationCompleted?.Invoke(this, new ClassificationEventArgs(result));
+
+            return sortedList;
+        } 
 
         public void print(string message)
         {

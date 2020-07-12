@@ -155,6 +155,7 @@ namespace DLuOvBamG.ViewModels
             {
                 var classifyTasks = pictures.Select(picture => ClassifyPicture(picture));
                 await Task.WhenAll(classifyTasks);
+                classifier.FillFeatureVectorMatix();
                 return true;
             }
             return false;
@@ -169,14 +170,12 @@ namespace DLuOvBamG.ViewModels
                 picture.CategoryTags = new List<CategoryTag>();
             }
             byte[] fileBytes = imageService.GetFileBytes(picture.Uri);
-
+            classifier.ChangeModel(ScanOptionsEnum.similarPics);
             // get classifications from classifier
-            List<ModelClassification> modelClassifications = classifier.ClassifySimilar(fileBytes);
-            // filter classifications, to get only above 10% probability
-            List<ModelClassification> topClassifications = modelClassifications.Where(classification => classification.Probability > 0.1f).ToList();
+            List<ModelClassification> modelClassifications = await classifier.ClassifySimilar(fileBytes);
 
             // map strings to CategoryTag objects
-            topClassifications.ForEach(classification =>
+            modelClassifications.ForEach(classification =>
             {
                 CategoryTag categoryTag = new CategoryTag
                 {

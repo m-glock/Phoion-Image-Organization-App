@@ -25,16 +25,6 @@ namespace DLuOvBamG.Services
             classifier.ThresholdSimilar = ScanOptionsEnum.similarPics.GetDefaultPresicionValue() * 10;
             brightnessClassifier = new BrightnessClassifier();
             oldOptions = new Dictionary<ScanOptionsEnum, double>();
-            // Debug
-            Task.Run(async () =>
-            {
-                await DebugStuff();
-            });
-        }
-
-        private async Task DebugStuff()
-        {
-            timeOutput = await classifier.testAsync();
         }
 
         public void FillPictureLists(Dictionary<ScanOptionsEnum, double> options)
