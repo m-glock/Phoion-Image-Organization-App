@@ -76,10 +76,12 @@ namespace DLuOvBamG.Views
         private void ValueChanged(object sender, ValueChangedEventArgs e)
         {
             Element optionElement = sender as Element;
-            ScanOptionViewGroup viewGroup = ViewGroups[optionElement.ClassId];
-            double value = e.NewValue;
-            Console.WriteLine("Value of " + viewGroup.Option.ToString() + " has changed to " + value);
-            VM.UpdateScanOptionSliderValue(viewGroup.Option, value);
+            ScanOptionViewGroup viewGroup = ViewGroups[optionElement.ClassId]; 
+            var newStep = Math.Round(e.NewValue);
+
+            viewGroup.OptionSlider.Value = newStep;
+
+            VM.UpdateScanOptionSliderValue(viewGroup.Option, newStep);
         }
     }
 }
