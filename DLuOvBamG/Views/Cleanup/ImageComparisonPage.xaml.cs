@@ -16,8 +16,8 @@ namespace DLuOvBamG.Views
         public ImageComparisonPage(List<Picture> pictures, Picture mainPic)
         {
             Picture comparingPicture = mainPic;
-            List<CarouselViewItem> picsForCarousel = new List<CarouselViewItem>();
 
+            List<CarouselViewItem> picsForCarousel = new List<CarouselViewItem>();
             foreach (Picture pic in pictures)
             {
                 if (!pic.Equals(mainPic)) picsForCarousel.Add(new CarouselViewItem(pic.Uri, comparingPicture.Uri));
@@ -27,14 +27,16 @@ namespace DLuOvBamG.Views
             BindingContext = VM;
 
             InitializeComponent();
+
+            // get carousel view to proper size depending on the screen size
             DisplayInfo mainDisplayInfo = DeviceDisplay.MainDisplayInfo;
             double width = mainDisplayInfo.Width / mainDisplayInfo.Density;
-
             ImageCarouselView.PeekAreaInsets = width < 350 ? 100 : 135;
 
             VM.CarouselViewMain = ImageMainView;
             VM.BinImage = BinImage;
 
+            // show safety alert when clickin the navigation back button
             if (EnableBackButtonOverride)
             {
                 this.CustomBackButtonAction = () =>
@@ -74,6 +76,7 @@ namespace DLuOvBamG.Views
 
 
         /**
+         * change trash icon depending on whether the current image is marked to be deleted or not
          * delete_64px.png: 
          * delete_restore_64px.png: customisation of delete_64px.png
          */

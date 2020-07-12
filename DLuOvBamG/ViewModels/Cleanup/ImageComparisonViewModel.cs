@@ -28,6 +28,7 @@ namespace DLuOvBamG.ViewModels
         //private bool pauseSwiping;
 
         #region PropertyChanged
+        // update carousel view position for both carousel views at the same time
         public int CarouselViewPosition
         {
             set
@@ -54,6 +55,7 @@ namespace DLuOvBamG.ViewModels
 
         public async void ShowAlertSelectionLost()
         {
+            // if there are pictures to be deleted, make sure to let the user know his selection willbe lost if they leave the site
             if (PicsToDelete.Count > 0) {
                 bool result = await ImageComparisonPage.DisplayAlert("Careful",
                     "If you go back now without deleting the selected pictures, your selection will be lost.",
@@ -81,6 +83,9 @@ namespace DLuOvBamG.ViewModels
             stop = true;
         }
 
+        /*
+         * Displays the comparing image in the background if the touch has been long enough
+         */
         private async Task ShowBasePic(Image currentPicture)
         {
             await Task.Delay(1000);
@@ -103,6 +108,7 @@ namespace DLuOvBamG.ViewModels
             {
                 return new Command(() =>
                 {
+                    // (un)mark current picture to be deleted and update the list of pictures to be deleted
                     CarouselViewItem currentPicture = (CarouselViewItem)CarouselViewMain.CurrentItem;
                     currentPicture.MarkForDeletion();
                     if (PicsToDelete.Contains(currentPicture))
@@ -113,6 +119,7 @@ namespace DLuOvBamG.ViewModels
                     {
                         PicsToDelete.Add(currentPicture);
                     }
+                    //update the icon
                     BinImage.Source = currentPicture.IsMarkedForDeletion() ? "delete_restore_64px.png" : "delete_64px.png";
                 });
             }
@@ -124,6 +131,7 @@ namespace DLuOvBamG.ViewModels
             {
                 return new Command( async(object imageComparionPage) =>
                 {
+                    // ask user whether they are sure to delete all the images
                     bool result = await ((Page)imageComparionPage).DisplayAlert("Are you sure?",
                         "Do you really want to delete " + PicsToDelete.Count + " pictures?",
                             "Delete", "Go Back");
