@@ -84,64 +84,44 @@ namespace DLuOvBamG.Droid
 
         #region testing 
 
-        public void classifyProcess(string entry)
+        public async Task classifyProcess(string entry)
         {
-            System.Console.WriteLine("thread of your life");
+            //System.Console.WriteLine("thread of your life");
             byte[] image = GetImageBytes(entry);
-            var sortedList = ClassifySimilar(image);
-            
-            //System.Console.WriteLine(stopWatch.ElapsedMilliseconds.ToString() + " timey");
+            var sortedList = await ClassifySimilar(image);
             if (sortedList.Count > 0)
             {
                 ModelClassification top = sortedList.First();
-                System.Console.WriteLine(top.TagName + " " + Math.Round(top.Probability * 100, 2) + "% ultra result for " + entry);
+                print(top.TagName + " " + Math.Round(top.Probability * 100, 2) + "% ultra result for " + entry);
             }
-            foreach (ModelClassification item in sortedList)
-            {
-                System.Console.WriteLine(item.TagName + " " + Math.Round(item.Probability * 100, 2) + "% result for " + entry);
-            }
+            //foreach (ModelClassification item in sortedList)
+            //{
+            //    System.Console.WriteLine(item.TagName + " " + Math.Round(item.Probability * 100, 2) + "% result for " + entry);
+            //}
         }
 
-        public string test()
+        public async Task<string> testAsync()
         {
             if (!testing) return "";
             string returnVal = "";
-
             stopWatch.Start();
             ChangeModel(ScanOptionsEnum.similarPics);
             string[] listAssets = Android.App.Application.Context.Assets.List("stockImages");
-            Task[] tasks = new Task[listAssets.Length];
-            for (int i = 0; i < listAssets.Length; i++)          
+            //Task[] tasks = new Task[listAssets.Length];
+            List<Task> tasks = new List<Task>();
+
+            for (int i = 0; i < listAssets.Length; i++)
             {
-                //ThreadPool.QueueUserWorkItem(new WaitCallback(classifyProcess), entry);
-                //System.Console.WriteLine("reading image " + entry);
-
-                tasks[i] = Task.Factory.StartNew(() => classifyProcess(listAssets[i]));
-
-                
-
+                tasks.Add(classifyProcess(listAssets[i]));
             }
-            Task.Factory.ContinueWhenAll(tasks, completedTasks => {
-                System.Console.WriteLine("{0} ready to rumble: ", stopWatch.ElapsedMilliseconds.ToString());
-                stopWatch.Stop();
-            });
-
-            
-
-
-
-            //string output = "";
-            //foreach (var item in bla)
-            //{
-            //    output += ", " + item;
-            //}
-            //System.Console.WriteLine(output + " matrix bam ");
-            while (FeatureVectors.Count < listAssets.Length)
+            while(tasks.Count > 0)
             {
-
+                Task finishedTask = await Task.WhenAny(tasks);
+                print("freeman");
+                tasks.Remove(finishedTask);
             }
 
-            System.Console.WriteLine(stopWatch.ElapsedMilliseconds + " passed time classify");
+            print(stopWatch.ElapsedMilliseconds + " passed time classify for " + listAssets.Length + " items");
 
             featureMatrix = new Tuple<int, double>[FeatureVectors.Count][];
 
@@ -162,7 +142,7 @@ namespace DLuOvBamG.Droid
             {
                 allNeighbours.Add(featureMatrix[i].OrderBy(tupel => tupel.Item2).Take(10).ToList());
             }
-            
+
             return returnVal;
         }
         #endregion
@@ -247,7 +227,7 @@ namespace DLuOvBamG.Droid
                     }
 
                 }
- 
+
             }
 
             return ByteBuffer.Wrap(bli);
@@ -258,11 +238,12 @@ namespace DLuOvBamG.Droid
             //return tensorInputResult;
         }
 
-        public List<ModelClassification> ClassifySimilar(byte[] bytes)
+        public async Task<List<ModelClassification>> ClassifySimilar(byte[] bytes)
         {
             // Debug
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
+            await Task.Delay(0);
 
             Tensor tensor = interpreter.GetInputTensor(0);
 
@@ -390,10 +371,11 @@ namespace DLuOvBamG.Droid
         //    return sortedList;
         //}
 
-        private void numTest()
+        public void print(string message)
         {
-
+            System.Console.WriteLine(message);
         }
+
     }
 }
 

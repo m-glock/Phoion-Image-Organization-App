@@ -13,13 +13,13 @@ namespace DLuOvBamG
 
         event EventHandler<ClassificationEventArgs> ClassificationCompleted;
 
-        List<ModelClassification> ClassifySimilar(byte[] bytes);
+        Task<List<ModelClassification>> ClassifySimilar(byte[] bytes);
         List<ModelClassification> ClassifyBlurry(byte[] bytes);
 
         byte[] GetImageBytes(string path);
 
         void ChangeModel(ScanOptionsEnum type);
-        string test();
+        Task<string> testAsync();
     }
 
     public class ClassificationEventArgs : EventArgs

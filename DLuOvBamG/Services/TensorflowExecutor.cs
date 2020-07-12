@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace DLuOvBamG.Services
@@ -25,7 +26,15 @@ namespace DLuOvBamG.Services
             brightnessClassifier = new BrightnessClassifier();
             oldOptions = new Dictionary<ScanOptionsEnum, double>();
             // Debug
-            timeOutput = classifier.test();
+            Task.Run(async () =>
+            {
+                await DebugStuff();
+            });
+        }
+
+        private async Task DebugStuff()
+        {
+            timeOutput = await classifier.testAsync();
         }
 
         public void FillPictureLists(Dictionary<ScanOptionsEnum, double> options)
