@@ -19,10 +19,10 @@ namespace DLuOvBamG.ViewModels
         private int carouselViewPosition { get; set; }
         private List<CarouselViewItem> PicsToDelete { get; set; }
         private ImageComparisonPage ImageComparisonPage;
-        private bool stop;
+        //private bool stop;
         public event PropertyChangedEventHandler PropertyChanged;
-        private double firstPoint = -1;
-        private int pointerCounter;
+        //private double firstPoint = -1;
+        //private int pointerCounter;
 
         //private bool pauseSwiping;
 
@@ -69,7 +69,7 @@ namespace DLuOvBamG.ViewModels
                 await ImageComparisonPage.Navigation.PopAsync(true);
             }
         }
-        public async Task OnPressedAsync(Image currentPicture)
+        /*public async Task OnPressedAsync(Image currentPicture)
         {
             stop = false;
             await ShowBasePic(currentPicture);
@@ -80,12 +80,12 @@ namespace DLuOvBamG.ViewModels
             CarouselViewItem currentItem = (CarouselViewItem)CarouselViewMain.CurrentItem;
             currentPicture.Source = currentItem.Uri;
             stop = true;
-        }
+        }*/
 
         /*
          * Displays the comparing image in the background if the touch has been long enough
          */
-        private async Task ShowBasePic(Image currentPicture)
+        /*private async Task ShowBasePic(Image currentPicture)
         {
             await Task.Delay(1000);
             if (!stop)
@@ -99,7 +99,7 @@ namespace DLuOvBamG.ViewModels
                 Console.WriteLine("unsuccessful long tap");
             }
 
-        }
+        }*/
 
         public ICommand MarkPictureAsDeleted
         {
@@ -144,7 +144,7 @@ namespace DLuOvBamG.ViewModels
             }
         }
 
-        public async void OnSwiped(TouchActionEventArgs args)
+        /*public async void OnSwiped(TouchActionEventArgs args)
         {
             //if (pauseSwiping) return;
             pointerCounter++;
@@ -162,15 +162,15 @@ namespace DLuOvBamG.ViewModels
                 {
                     Console.WriteLine("enough difference");
                     SwipeDown();
-                    /*pauseSwiping = true;
+                    pauseSwiping = true;
                     await Task.Delay(1000);
                     pauseSwiping = false;
-                    await Task.Delay(1000);*/
+                    await Task.Delay(1000);
                 }
                 firstPoint = -1;
                 pointerCounter = 0;
             }
-        }
+        }*/
 
         /*private void SwipeRight()
         {
@@ -189,13 +189,13 @@ namespace DLuOvBamG.ViewModels
             }
         }*/
 
-        private void SwipeDown()
+        /*private void SwipeDown()
         {
             // Handle the swipe
             //CarouselViewItem picToDelete = PictureList.Find(pic => pic.Uri == CurrentPictureUri);
             //PicsToDelete.Add(picToDelete);
             //picToDelete.Id;
             Console.WriteLine("swiped down.");
-        }
+        }*/
     }
 }

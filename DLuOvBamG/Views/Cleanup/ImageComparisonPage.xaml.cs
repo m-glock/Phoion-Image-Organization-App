@@ -37,7 +37,7 @@ namespace DLuOvBamG.Views
             VM.CarouselViewMain = ImageMainView;
             VM.BinImage = BinImage;
 
-            // show safety alert when clickin the navigation back button
+            // show safety alert when clicking the navigation back button
             if (EnableBackButtonOverride)
             {
                 this.CustomBackButtonAction = () =>
@@ -47,7 +47,7 @@ namespace DLuOvBamG.Views
             }
         }
 
-        public void ImageTouched(object sender, TouchActionEventArgs args)
+        /*public void ImageTouched(object sender, TouchActionEventArgs args)
         {
             Image currentPicture = sender as Image;
             CarouselViewItem currentPictureItem = (CarouselViewItem)ImageMainView.CurrentItem;
@@ -74,7 +74,7 @@ namespace DLuOvBamG.Views
                         break;
                 }
             }
-        }
+        }*/
 
 
         /**
@@ -84,8 +84,20 @@ namespace DLuOvBamG.Views
          */
         private void CurrentItemChanged(object sender, CurrentItemChangedEventArgs e)
         {
+            CarouselViewItem previousPicture = (CarouselViewItem)e.PreviousItem;
+            if(previousPicture != null) previousPicture.ChangeURIBackToOriginal();
+
             CarouselViewItem currentPicture = (CarouselViewItem)e.CurrentItem;
             BinImage.Source = currentPicture.IsMarkedForDeletion() ? "delete_restore_64px.png" : "delete_64px.png";
+        }
+
+        private void Tapped(object sender, EventArgs e)
+        {
+            CarouselViewItem currentPictureItem = (CarouselViewItem)ImageMainView.CurrentItem;
+
+            if (!currentPictureItem.IsMarkedForDeletion()) {
+                currentPictureItem.ChangeURIs();
+            }
         }
     }
 }

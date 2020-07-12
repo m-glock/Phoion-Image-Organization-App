@@ -6,7 +6,8 @@ namespace DLuOvBamG.Models
     {
         public string Uri { get; }
         public double markedForDeletion { get; set; }
-        public string ComparingPictureUri { get; }
+        private string ComparingPictureUri;
+        public string currentUri;
         public event PropertyChangedEventHandler PropertyChanged;
 
         #region property changed
@@ -25,11 +26,28 @@ namespace DLuOvBamG.Models
                 return markedForDeletion;
             }
         }
+
+        public string CurrentUri
+        {
+            set
+            {
+                if (currentUri != value)
+                {
+                    currentUri = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CurrentUri"));
+                }
+            }
+            get
+            {
+                return currentUri;
+            }
+        }
         #endregion
 
         public CarouselViewItem(string uri, string comparingUri)
         {
             Uri = uri;
+            CurrentUri = Uri;
             ComparingPictureUri = comparingUri;
             MarkedForDeletion = 1;
         }
@@ -42,6 +60,23 @@ namespace DLuOvBamG.Models
         public bool IsMarkedForDeletion()
         {
             return MarkedForDeletion != 1;
+        }
+
+        public void ChangeURIs()
+        {
+            if (CurrentUri.Equals(Uri))
+            {
+                CurrentUri = ComparingPictureUri;
+            }
+            else
+            {
+                CurrentUri = Uri;
+            }
+        }
+
+        public void ChangeURIBackToOriginal()
+        {
+            CurrentUri = Uri;
         }
     }
 }
