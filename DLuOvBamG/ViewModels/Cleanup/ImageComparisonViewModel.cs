@@ -19,11 +19,10 @@ namespace DLuOvBamG.ViewModels
         private int carouselViewPosition { get; set; }
         private List<CarouselViewItem> PicsToDelete { get; set; }
         private ImageComparisonPage ImageComparisonPage;
-        //private INavigation Navigation;
         private bool stop;
         public event PropertyChangedEventHandler PropertyChanged;
-        //private double firstPoint = -1;
-        //private int pointerCounter;
+        private double firstPoint = -1;
+        private int pointerCounter;
 
         //private bool pauseSwiping;
 
@@ -145,36 +144,35 @@ namespace DLuOvBamG.ViewModels
             }
         }
 
-
-
-        /*public async void OnSwiped(TouchActionEventArgs args)
+        public async void OnSwiped(TouchActionEventArgs args)
         {
-            if (pauseSwiping) return;
+            //if (pauseSwiping) return;
             pointerCounter++;
             Console.WriteLine(pointerCounter);
             if (firstPoint == -1)
-                firstPoint = args.Location.X;
+                firstPoint = args.Location.Y;
             if (pointerCounter >= 7)
             {
-                double diff = firstPoint - args.Location.X;
+                double diff = firstPoint - args.Location.Y;
                 double devicewidth = DeviceDisplay.MainDisplayInfo.Width;
                 //Console.WriteLine(devicewidth + "device width");
-                bool enoughDiff = Math.Abs(diff) > 30;
+                bool enoughDiff = diff < -30;
                 Console.WriteLine(diff + " diff");
                 if (enoughDiff) 
                 {
-                    if (diff > 0) SwipeRight();
-                    else SwipeLeft();
-                    pauseSwiping = true;
+                    Console.WriteLine("enough difference");
+                    SwipeDown();
+                    /*pauseSwiping = true;
                     await Task.Delay(1000);
                     pauseSwiping = false;
-                    await Task.Delay(1000);
+                    await Task.Delay(1000);*/
                 }
                 firstPoint = -1;
                 pointerCounter = 0;
             }
         }
-        private void SwipeRight()
+
+        /*private void SwipeRight()
         {
             Console.WriteLine("swipe left " + CarouselViewPosition);
             if (CarouselViewPosition < PictureList.Count - 1)
@@ -189,13 +187,15 @@ namespace DLuOvBamG.ViewModels
             {
                 CarouselViewPosition -= 1;
             }
-        }
+        }*/
+
         private void SwipeDown()
         {
             // Handle the swipe
             //CarouselViewItem picToDelete = PictureList.Find(pic => pic.Uri == CurrentPictureUri);
             //PicsToDelete.Add(picToDelete);
             //picToDelete.Id;
-        }*/
+            Console.WriteLine("swiped down.");
+        }
     }
 }

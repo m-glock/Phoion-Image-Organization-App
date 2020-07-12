@@ -1,6 +1,7 @@
 ﻿using DLuOvBamG.Models;
 using DLuOvBamG.Services.Gestures;
 using DLuOvBamG.ViewModels;
+using System;
 using System.Collections.Generic;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -55,9 +56,10 @@ namespace DLuOvBamG.Views
             {
                 switch (args.Type)
                 {
-                    /*case TouchActionType.Moved:
+                    case TouchActionType.Moved:
                         Console.WriteLine("moved");
-                        break;*/
+                        VM.OnSwiped(args);
+                        break;
                     case TouchActionType.Pressed:
                         //Console.WriteLine("tap started"); 
                         VM.OnPressedAsync(currentPicture);
