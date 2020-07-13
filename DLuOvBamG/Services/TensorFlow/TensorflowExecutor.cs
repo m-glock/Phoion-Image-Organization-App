@@ -91,7 +91,11 @@ namespace DLuOvBamG.Services
                 else
                 {
                     // TODO similar pics
+                    // take all pictures, compare them, show the nearest with distance smaller X
+                    // store nearest pictures to each pictures
                 }
+
+                // TODO Event when one of the scans is ready, for each
 
                 pictures[option] = outputList;
 
