@@ -16,6 +16,8 @@ namespace DLuOvBamG.ViewModels
         public double darkPrecision;
         public double blurryPrecision;
         public event PropertyChangedEventHandler PropertyChanged;
+
+        #region Precisions
         public double SimilarPrecision
         {
             set
@@ -61,7 +63,7 @@ namespace DLuOvBamG.ViewModels
                 return blurryPrecision;
             }
         }
-
+        #endregion
 
         public CleanupViewModel()
         {

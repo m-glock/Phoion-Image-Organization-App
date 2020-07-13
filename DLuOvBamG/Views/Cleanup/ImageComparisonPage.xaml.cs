@@ -73,6 +73,7 @@ namespace DLuOvBamG.Views
 
 
         /**
+         * always revert from comparing picture back to actual image when swiping to the next element
          * change trash icon depending on whether the current image is marked to be deleted or not
          * delete_64px.png: 
          * delete_restore_64px.png: customisation of delete_64px.png
@@ -88,6 +89,13 @@ namespace DLuOvBamG.Views
 
             CarouselViewItem currentPicture = (CarouselViewItem)e.CurrentItem;
             BinImage.Source = currentPicture.IsMarkedForDeletion() ? "delete_restore_64px.png" : "delete_64px.png";
+        }
+
+        private void CheckedChanged(object sender, CheckedChangedEventArgs e)
+        {
+            CarouselViewItem currentPicture = (CarouselViewItem)ImageMainView.CurrentItem;
+            currentPicture.MarkForDeletion();
+            VM.AddMarkedPictureToDeleteList(currentPicture);
         }
 
         /*private void Tapped(object sender, EventArgs e)

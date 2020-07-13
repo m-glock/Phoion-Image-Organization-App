@@ -31,21 +31,32 @@
         <CarouselView x:Name="ImageMainView" ItemsSource="{Binding PictureList}" Position="{Binding CarouselViewPosition}" CurrentItemChanged="CurrentItemChanged" Grid.Row="1">
             <CarouselView.ItemTemplate>
                 <DataTemplate>
-                    <Image Source="{Binding CurrentUri}" Opacity="{Binding MarkedForDeletion}">
-                        <!--<Image.GestureRecognizers>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="15*"></RowDefinition>
+                            <RowDefinition Height="85*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="85*"></ColumnDefinition>
+                            <ColumnDefinition Width="15*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="{Binding CurrentUri}" Opacity="{Binding MarkedForDeletion}"
+                               Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2">
+                            <!--<Image.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="2" Tapped="Tapped"></TapGestureRecognizer>
                         </Image.GestureRecognizers>-->
-                        <Image.Effects>
-                            <gestures:TouchEffect TouchAction="ImageTouched">
-                            </gestures:TouchEffect>
-                        </Image.Effects>
-                    </Image>
+                            <Image.Effects>
+                                <gestures:TouchEffect TouchAction="ImageTouched">
+                                </gestures:TouchEffect>
+                            </Image.Effects>
+                        </Image>
+                        <CheckBox Grid.Row="0" Grid.Column="1" Color="#00695C" CheckedChanged="CheckedChanged"></CheckBox>
+                    </Grid>
                 </DataTemplate>
             </CarouselView.ItemTemplate>
         </CarouselView>
 
-        <ImageButton x:Name="BinImage" Command="{Binding MarkPictureAsDeleted}" 
+        <ImageButton x:Name="BinImage" Command="{Binding DeletePictures}"
                      Source="delete_64px.png" BackgroundColor="White" Grid.Row="2"></ImageButton>
-        <!--<Image Source="delete_64px.png" Grid.Row="2"></Image>-->
     </Grid>
 </views:CustomBackButtonPage>

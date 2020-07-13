@@ -106,6 +106,7 @@ namespace DLuOvBamG.ViewModels
             hasTouchStopped = true;
         }*/
 
+        /*
         public ICommand MarkPictureAsDeleted
         {
             get
@@ -128,22 +129,48 @@ namespace DLuOvBamG.ViewModels
                 });
             }
         }
+        */
+
+        public void AddMarkedPictureToDeleteList(CarouselViewItem item)
+        {
+            if (PicsToDelete.Contains(item))
+            {
+                PicsToDelete.Remove(item);
+            }
+            else
+            {
+                PicsToDelete.Add(item);
+            }
+            
+        }
 
         public ICommand DeletePictures
         {
             get
             {
-                return new Command( async(object imageComparionPage) =>
+                return new Command( async() =>
                 {
-                    // ask user whether they are sure to delete all the images
-                    bool result = await ((Page)imageComparionPage).DisplayAlert("Are you sure?",
-                        "Do you really want to delete " + PicsToDelete.Count + " pictures?",
-                            "Delete", "Go Back");
-
-                    if (result)
+                    if(PicsToDelete.Count > 0)
                     {
-                        //TODO Delete Pictures
-                        // if set has now less than 3 pictures, remove set?
+                        // ask user whether they are sure to delete all the images
+                        bool result = await ImageComparisonPage.DisplayAlert("Are you sure?",
+                            "Do you really want to delete " + PicsToDelete.Count + " pictures?",
+                                "Delete", "Go Back");
+
+                        if (result)
+                        {
+                            // TODO Delete Pictures (-> Picture, not CarouselViewItem)
+                            
+                            PictureList.RemoveAll(item => PicsToDelete.Contains(item));
+                            PicsToDelete.Clear();
+
+                            // if set has now less than 2 pictures (+ comparison picture), go back to previous page
+                            if (PictureList.Count < 2)
+                            {
+                                // TODO: remove this set 
+                                await ImageComparisonPage.Navigation.PopAsync();
+                            }
+                        }
                     }
                 });
             }
