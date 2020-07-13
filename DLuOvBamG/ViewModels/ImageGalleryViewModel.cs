@@ -78,7 +78,7 @@ namespace DLuOvBamG.ViewModels
 
             if (pictures.Count == 0)
             {
-                Picture[] devicePictures = await imageFileStorage.GetPicturesFromDevice();
+                Picture[] devicePictures = await imageFileStorage.GetPicturesFromDevice(AlbumItems);
                 var saved = await SavePicturesInDB(devicePictures);
                 if (saved)
                 {
@@ -87,10 +87,17 @@ namespace DLuOvBamG.ViewModels
                     // var classified = await ClassifyAllPictures(pictures);
                 }
             }
+            else
+            {
+                pictures = SetImageSources(pictures);
+                GroupPicturesByDirectory(pictures);
+                // TODO update database with missing pictures
+            }
+
             Items = pictures;
-            pictures = SetImageSources(pictures);
+            //pictures = SetImageSources(pictures);
             // GroupPicturesByDate(pictures);
-            GroupPicturesByDirectory(pictures);
+            //GroupPicturesByDirectory(pictures);
         }
 
         Task<List<Picture>> LoadImagesFromDB()
@@ -148,7 +155,7 @@ namespace DLuOvBamG.ViewModels
             List<CategoryTag> categoryTags = labels.Select(label =>
                 {
                     return new CategoryTag()
-                    { 
+                    {
                         Name = label,
                         IsCustom = false
                     };
@@ -231,10 +238,10 @@ namespace DLuOvBamG.ViewModels
             {
                 return new Command(async (sender) =>
                 {
-                    Grouping<string, Picture> selectedGroup = sender as Grouping<string,Picture>;
+                    Grouping<string, Picture> selectedGroup = sender as Grouping<string, Picture>;
                     GroupPicturesByDate(selectedGroup.ToList());
                     await Navigation.PushAsync(new ImageGrid(selectedGroup.Key), true);
-                 
+
                 });
             }
         }

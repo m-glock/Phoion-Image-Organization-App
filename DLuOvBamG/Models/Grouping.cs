@@ -9,7 +9,7 @@ namespace DLuOvBamG.Models
 	public class Grouping<K, T> : FlowObservableCollection<T>
 	{
 		public K Key { get; private set; }
-		public int ColumnCount { get; private set; }
+		public int ColumnCount { get; set; }
 
 		public IEnumerable<T> GroupedItems {
 			get
@@ -36,5 +36,6 @@ namespace DLuOvBamG.Models
 		{
 			ColumnCount = columnCount;
 		}
-	}
+
+    }
 }

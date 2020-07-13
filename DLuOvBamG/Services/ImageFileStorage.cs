@@ -1,4 +1,6 @@
 ﻿using Android.Graphics;
+using DLToolkit.Forms.Controls;
+using DLuOvBamG.Models;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -28,7 +30,7 @@ namespace DLuOvBamG.Services
             return filePaths;
         }
 
-        public async Task<Models.Picture[]> GetPicturesFromDevice()
+        public async Task<Models.Picture[]> GetPicturesFromDevice(FlowObservableCollection<Grouping<string, Models.Picture>> collection)
         {
             var status = await CheckAndRequestExternalStoragePermissionAsync();
             if (status != PermissionStatus.Granted)
@@ -39,7 +41,7 @@ namespace DLuOvBamG.Services
             }
 
             IImageService imageService = DependencyService.Get<IImageService>();
-            Models.Picture[] pictures = imageService.GetAllImagesFromDevice();
+            Models.Picture[] pictures = imageService.GetAllImagesFromDevice(collection);
             return pictures;
         }
 

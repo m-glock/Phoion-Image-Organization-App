@@ -1,7 +1,7 @@
-﻿using DLuOvBamG.Models;
+﻿using DLToolkit.Forms.Controls;
+using DLuOvBamG.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
+
 
 namespace DLuOvBamG.Services
 {
@@ -10,6 +10,6 @@ namespace DLuOvBamG.Services
         DateTime GetDateTaken(string filePath);
         byte[] GetFileBytes(string filePath);
 
-        Picture[] GetAllImagesFromDevice();
+        Picture[] GetAllImagesFromDevice(FlowObservableCollection<Grouping<string, Models.Picture>> collection);
     }
 }
