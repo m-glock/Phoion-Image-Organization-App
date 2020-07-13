@@ -17,21 +17,21 @@ namespace DLuOvBamG.ViewModels
 {
     public class ImageGalleryViewModel : INotifyPropertyChanged
     {
-        IImageService imageService = DependencyService.Get<IImageService>();
-        IClassifier classifier = App.Classifier;
-        ImageOrganizationDatabase db = App.Database;
+        readonly IImageService imageService = DependencyService.Get<IImageService>();
+        readonly ImageFileStorage imageFileStorage = new ImageFileStorage();
+        readonly IClassifier classifier = App.Classifier;
+        readonly ImageOrganizationDatabase db = App.Database;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        FlowObservableCollection<Grouping<string, Picture>> groupedItems;
+        private FlowObservableCollection<Grouping<string, Picture>> albumItems;
+        private FlowObservableCollection<Grouping<string, Picture>> groupedItems;
 
         public FlowObservableCollection<Grouping<string, Picture>> GroupedItems
         {
             set
             {
-
                 groupedItems = value;
-
                 if (PropertyChanged != null)
                 {
                     PropertyChanged(this, new PropertyChangedEventArgs("GroupedItems"));
@@ -44,16 +44,32 @@ namespace DLuOvBamG.ViewModels
             }
         }
 
+        public FlowObservableCollection<Grouping<string, Picture>> AlbumItems
+        {
+            set
+            {
+                albumItems = value;
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("AlbumItems"));
+                }
+            }
+
+            get
+            {
+                return albumItems;
+            }
+        }
+
         public List<Picture> Items { get; set; }
         public INavigation Navigation;
-
 
         public ImageGalleryViewModel()
         {
             Items = new List<Picture>();
             GroupedItems = new FlowObservableCollection<Grouping<string, Picture>>();
+            AlbumItems = new FlowObservableCollection<Grouping<string, Picture>>();
         }
-
 
         public async void GetPictures()
         {
@@ -62,32 +78,19 @@ namespace DLuOvBamG.ViewModels
 
             if (pictures.Count == 0)
             {
-                var storageImages = await LoadImagesFromStorage();
-                var saved = await SavePicturesInDB(storageImages);
+                Picture[] devicePictures = await imageFileStorage.GetPicturesFromDevice();
+                var saved = await SavePicturesInDB(devicePictures);
                 if (saved)
                 {
                     pictures = await LoadImagesFromDB();
                     var categoryTags = await SaveCategoryTagsInDB();
-                    var classified = await ClassifyAllPictures(pictures);
+                    // var classified = await ClassifyAllPictures(pictures);
                 }
             }
             Items = pictures;
             pictures = SetImageSources(pictures);
-            GroupPicturesByDate(pictures);
-        }
-
-        async Task<List<Picture>> LoadImagesFromStorage()
-        {
-            ImageFileStorage imageFileStorage = new ImageFileStorage();
-            string[] imagePaths = await imageFileStorage.GetImagePathsFromDevice();
-
-            var pictureList = new List<Picture>();
-            for (int i = 0; i < imagePaths.Length; i++)
-            {
-                Picture picture = new Picture(imagePaths[i]);
-                pictureList.Add(picture);
-            }
-            return pictureList;
+            // GroupPicturesByDate(pictures);
+            GroupPicturesByDirectory(pictures);
         }
 
         Task<List<Picture>> LoadImagesFromDB()
@@ -116,9 +119,20 @@ namespace DLuOvBamG.ViewModels
             GroupedItems = new FlowObservableCollection<Grouping<string, Picture>>(sorted);
         }
 
-        async Task<bool> SavePicturesInDB(List<Picture> pictures)
+        void GroupPicturesByDirectory(List<Picture> pictures)
         {
-            if (pictures.Count > 0)
+            var sorted = pictures
+                .OrderByDescending(item => item.Date)
+                .GroupBy(item => item.DirectoryName)
+                .Select(itemGroup => new Grouping<string, Picture>(itemGroup.Key, itemGroup, itemGroup.Count()))
+                .OrderByDescending(item => item.ColumnCount)
+                .ToList();
+            AlbumItems = new FlowObservableCollection<Grouping<string, Picture>>(sorted);
+        }
+
+        async Task<bool> SavePicturesInDB(Picture[] pictures)
+        {
+            if (pictures.Length > 0)
             {
                 var tasks = pictures.Select(picture => db.SavePictureAsync(picture));
                 await Task.WhenAll(tasks);
@@ -212,6 +226,19 @@ namespace DLuOvBamG.ViewModels
             }
         }
 
+        public ICommand GroupedItemTappedCommand
+        {
+            get
+            {
+                return new Command(async (sender) =>
+                {
+                    Grouping<string, Picture> selectedGroup = sender as Grouping<string,Picture>;
+                    GroupPicturesByDate(selectedGroup.ToList());
+                    await Navigation.PushAsync(new ImageGrid(selectedGroup.Key), true);
+                 
+                });
+            }
+        }
         public ICommand OpenCleanupPage => new Command(async () =>
         {
             await Navigation.PushAsync(new CleanupPage());

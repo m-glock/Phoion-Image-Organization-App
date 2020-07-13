@@ -22,6 +22,19 @@ namespace DLuOvBamG.Services
             }
         }
 
+        private ImageGalleryViewModel imageGalleryViewModel;
+
+        public ImageGalleryViewModel ImageGalleryViewModel
+        {
+            get
+            {
+                if (imageGalleryViewModel == null)
+                    imageGalleryViewModel = new ImageGalleryViewModel();
+
+                return imageGalleryViewModel;
+            }
+        }
+
         public ViewModelLocator()
         {
 

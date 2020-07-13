@@ -17,7 +17,7 @@ namespace DLuOvBamG
             tf = new TensorflowExecutor();
 
             Device.SetFlags(new string[] { "Expander_Experimental" });
-            MainPage = new NavigationPage(new ImageGrid());
+            MainPage = new NavigationPage(new ImageGallery());
             
             
             // Debug

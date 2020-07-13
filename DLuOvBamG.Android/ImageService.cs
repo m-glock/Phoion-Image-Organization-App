@@ -10,10 +10,8 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using Xamarin.Forms;
-using static Android.Provider.MediaStore;
 using static Android.Provider.MediaStore.Images;
-using System.Linq;
-using Android.App;
+using System.Collections.Generic;
 
 [assembly: Dependency(typeof(ImageService))]
 namespace DLuOvBamG.Droid
@@ -48,35 +46,43 @@ namespace DLuOvBamG.Droid
             return File.ReadAllBytes(filePath);
         }
 
-        public string[] GetAllImagesFromDevice()
+        public Models.Picture[] GetAllImagesFromDevice()
         {
-            string[] internalImagePaths = GetImagesFromUri(InternalContentUri);
+            Models.Picture[] internalPictures = GetImagesFromUri(InternalContentUri);
 
-            string[] externalImagePaths = new string[0];
+            Models.Picture[] externalPictures = new Models.Picture[0];
             Boolean isSDPresent = Android.OS.Environment.ExternalStorageState.Equals(Android.OS.Environment.MediaMounted);
             if (isSDPresent) {
-                externalImagePaths = GetImagesFromUri(ExternalContentUri);
+                externalPictures = GetImagesFromUri(ExternalContentUri);
             }
 
-            if(externalImagePaths.Length != 0)
+            if(externalPictures.Length != 0)
             {
-                string[] result = new string[internalImagePaths.Length + externalImagePaths.Length];
-                internalImagePaths.CopyTo(result, 0);
-                externalImagePaths.CopyTo(result, internalImagePaths.Length);
+                Models.Picture[] result = new Models.Picture[internalPictures.Length + externalPictures.Length];
+                internalPictures.CopyTo(result, 0);
+                externalPictures.CopyTo(result, internalPictures.Length);
                 return result;
             } else
             {
-                return internalImagePaths;
+                return internalPictures;
             }
         }
 
-        private string[] GetImagesFromUri(Android.Net.Uri uri)
+        private Models.Picture[] GetImagesFromUri(Android.Net.Uri uri)
         {
             // A list of which columns to return. Passing null will return all columns, which is inefficient.
             string[] projection = { 
                 ImageColumns.Data,
                 ImageColumns.BucketDisplayName,
-                ImageColumns.Id
+                ImageColumns.Id,
+                ImageColumns.Height,
+                ImageColumns.Width,
+                ImageColumns.Longitude,
+                ImageColumns.Latitude,
+                ImageColumns.IsPrivate,
+                ImageColumns.Size,
+                ImageColumns.DateAdded,
+                ImageColumns.DateTaken,
             };
             // How to order the rows, formatted as an SQL ORDER BY clause
             string orderBy = ImageColumns.Id;
@@ -87,20 +93,59 @@ namespace DLuOvBamG.Droid
             int count = cursor.Count;
 
             //Create an array to store path to all the images
-            string[] arrPath = new String[count];
+            Models.Picture[] arrPictures = new Models.Picture[count];
+            int pathIndex = cursor.GetColumnIndex(ImageColumns.Data);
+            int bucketIndex = cursor.GetColumnIndex(ImageColumns.BucketDisplayName);
+            int idIndex = cursor.GetColumnIndex(ImageColumns.Id);
+            int heightIndex = cursor.GetColumnIndex(ImageColumns.Height);
+            int widthIndex = cursor.GetColumnIndex(ImageColumns.Width);
+            int longitudeIndex = cursor.GetColumnIndex(ImageColumns.Longitude);
+            int latitudeIndex = cursor.GetColumnIndex(ImageColumns.Latitude);
+            int isPrivateIndex = cursor.GetColumnIndex(ImageColumns.IsPrivate);
+            int sizeIndex = cursor.GetColumnIndex(ImageColumns.Size);
+            int dateTakenIndex = cursor.GetColumnIndex(ImageColumns.DateTaken);
 
             for (int i = 0; i < count; i++)
             {
                 cursor.MoveToPosition(i);
-                int dataColumnIndex = cursor.GetColumnIndex(ImageColumns.Data);
-                //Store the path of the image
-                arrPath[i] = cursor.GetString(dataColumnIndex);
+                string path = cursor.GetString(pathIndex);
+                string bucketName = cursor.GetString(bucketIndex);
+                string id = cursor.GetString(idIndex);
+                string height = cursor.GetString(heightIndex);
+                string width = cursor.GetString(widthIndex);
+                string longitude = cursor.GetString(longitudeIndex);
+                string latitude = cursor.GetString(latitudeIndex);
+                string isPrivate = cursor.GetString(isPrivateIndex);
+                string size = cursor.GetString(sizeIndex);
+                string dateTaken = cursor.GetString(dateTakenIndex);
+                DateTime datetimeTaken = ConvertFromUnixTimestamp(Convert.ToDouble(dateTaken) / 1000);
+
+                Models.Picture newPicture = new Models.Picture
+                {
+                    Uri = path,
+                    Date = datetimeTaken,
+                    Longitude = longitude,
+                    Latitude = latitude,
+                    Size = size,
+                    Height = height,
+                    Width = width,
+                    DirectoryName = bucketName
+                };
+                arrPictures[i] = newPicture;
+
             }
             // The cursor should be freed up after use with close()
             cursor.Close();
-            return arrPath;
+            return arrPictures;
+        }
+        private static DateTime ConvertFromUnixTimestamp(double timestamp)
+        {
+            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            return origin.AddSeconds(timestamp);
         }
     }
+
+    
 }
 
 
