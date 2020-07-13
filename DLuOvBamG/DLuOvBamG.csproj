@@ -52,25 +52,34 @@
 	<Compile Update="Views\ImageDetail\ImageTagPage.xaml.cs">
 	  <DependentUpon>ImageTagPage.xaml</DependentUpon>
 	</Compile>
+	<Compile Update="Views\ImageGallery.xaml.cs">
+	  <DependentUpon>ImageGallery.xaml</DependentUpon>
+	</Compile>
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Update="Views\Cleanup\ImageComparisonPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\ImageDetail\AddTagPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
+	<EmbeddedResource Update="Views\AlbumGrid.xaml">
+	  <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+	</EmbeddedResource>
+	<EmbeddedResource Update="Views\ImageDetail\AddTagPage.xaml">
+		<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+	</EmbeddedResource>
     <EmbeddedResource Update="Views\ImageDetail\ImageDetailPage.xaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</EmbeddedResource>
+	<EmbeddedResource Update="Views\ImageGallery.xaml">
+		<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+	</EmbeddedResource>
+	<EmbeddedResource Update="Views\ImageDetail\ImageTagPage.xaml">
+		<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+	</EmbeddedResource>
+    <EmbeddedResource Update="Views\ImageDetail\ImageInfoPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\ImageGrid.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\ImageDetail\ImageTagPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\ImageDetail\ImageInfoPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

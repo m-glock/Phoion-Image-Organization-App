@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+    <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 mc:Ignorable="d"
+                 x:Name="this"
+                 xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
+                 xmlns:converter="clr-namespace:DLuOvBamG.Services.Converter"
+                 x:Class="DLuOvBamG.Views.AlbumGrid">
+    <ContentView.Resources>
+        <converter:AlbumCoverConverter x:Key="albumConverter" />
+    </ContentView.Resources>
+    <ContentView.Content>
+        <AbsoluteLayout>
+            <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
+                <flv:FlowListView 
+                    FlowColumnCount="3"
+                    SeparatorVisibility="None"
+                    HasUnevenRows="true"
+                    RowHeight="50"
+                    FlowItemsSource="{Binding AlbumItems}" 
+                    FlowItemTappedCommand="{Binding GroupedItemTappedCommand}"
+                >
+                    <flv:FlowListView.FlowColumnTemplate>
+                        <DataTemplate>
+                            <Grid Padding="3">
+                                <Grid.RowDefinitions >
+                                    <RowDefinition Height="100"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Frame CornerRadius="10" Margin="0" Padding="0" IsClippedToBounds="True">
+                                    <Image  Aspect="AspectFill"
+                                            Source="{Binding GroupedItems, Converter={StaticResource albumConverter}}"
+                                            Grid.Row="0"
+                                            Grid.Column="0"/>
+                                </Frame>
+                                <Label  HorizontalOptions="Fill"
+                                        Text="{Binding Key}"
+                                        LineBreakMode="TailTruncation"
+                                        Style="{DynamicResource ListItemTextStyle}"
+                                        Grid.Row="1"
+                                        Grid.Column="0"
+                                        TextColor="#000"
+                                        />
+                                <Label  Text="{Binding ColumnCount}"
+                                        Style="{DynamicResource CaptionStyle}"
+                                        Grid.Row="2"
+                                        Grid.Column="0"
+                                        Margin="0,-10,0,0"/>
+                            </Grid>
+                        </DataTemplate>
+                    </flv:FlowListView.FlowColumnTemplate>
+                </flv:FlowListView>
+            </ScrollView>
+        </AbsoluteLayout>
+    </ContentView.Content>
+</ContentView>

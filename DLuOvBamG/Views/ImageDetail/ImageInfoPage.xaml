@@ -22,14 +22,18 @@
                     <RowDefinition Height="50" />
                     <!--<RowDefinition Height="50"/>-->
                 </Grid.RowDefinitions>
-                <Label Text="Name:" VerticalOptions ="Center" HorizontalOptions="End" Grid.Row="1" Grid.Column="0"></Label>
-                <Label Text="{Binding InfoName}" Grid.Row="1" Grid.Column="1"></Label>
-                <Label Text="Location: " VerticalOptions ="Center" HorizontalOptions="End" Grid.Row="2" Grid.Column="0"></Label>
-                <Label Text="{Binding InfoLocation}" Grid.Row="2" Grid.Column="1"></Label>
-                <Label Text="Date: " VerticalOptions ="Center" HorizontalOptions="End" Grid.Row="3" Grid.Column="0"></Label>
-                <Label Text="{Binding InfoDate}" Grid.Row="3" Grid.Column="1"></Label>
-                <Label Text="Tags:  " VerticalOptions ="Center" HorizontalOptions="End" Grid.Row="4" Grid.Column="0"></Label>
-                <Label Text="{Binding InfoTags}" Grid.Row="4" Grid.Column="1"></Label>
+                <Label Text="Name:" VerticalOptions ="Fill" HorizontalOptions="Start" Grid.Row="1" Grid.Column="0" Padding="10,0,0,0"></Label>
+                <Label Text="{Binding Name}" Grid.Row="1" Grid.Column="1"></Label>
+                <Label Text="Path:" VerticalOptions ="Fill" HorizontalOptions="Start" Grid.Row="2" Grid.Column="0" Padding="10,0,0,0"></Label>
+                <Label Text="{Binding Path}" Grid.Row="2" Grid.Column="1"></Label>
+                <Label Text="Location: " VerticalOptions ="Fill" HorizontalOptions="Start" Grid.Row="3" Grid.Column="0" Padding="10,0,0,0"></Label>
+                <Label Text="{Binding Location}" Grid.Row="3" Grid.Column="1"></Label>
+                <Label Text="Date: " VerticalOptions ="Fill" HorizontalOptions="Start" Grid.Row="4" Grid.Column="0" Padding="10,0,0,0"></Label>
+                <Label Text="{Binding Date}" Grid.Row="4" Grid.Column="1"></Label>
+                <Label Text="Dimensions:  " VerticalOptions ="Fill" HorizontalOptions="Start" Grid.Row="5" Grid.Column="0" Padding="10,0,0,0"></Label>
+                <Label Text="{Binding Dimemsions}" Grid.Row="5" Grid.Column="1"></Label>
+                <Label Text="Size:  " VerticalOptions ="Fill" HorizontalOptions="Start" Grid.Row="6" Grid.Column="0" Padding="10,0,0,0"></Label>
+                <Label Text="{Binding Size}" Grid.Row="6" Grid.Column="1"></Label>
              </Grid>
         </StackLayout>
     </ContentPage.Content>
