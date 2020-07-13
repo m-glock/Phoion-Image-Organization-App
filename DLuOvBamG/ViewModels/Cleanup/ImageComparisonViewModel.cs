@@ -19,7 +19,7 @@ namespace DLuOvBamG.ViewModels
         private int carouselViewPosition { get; set; }
         private List<CarouselViewItem> PicsToDelete { get; set; }
         private ImageComparisonPage ImageComparisonPage;
-        private bool hasTouchStopped;
+        //private bool hasTouchStopped;
         public event PropertyChangedEventHandler PropertyChanged;
         //private double firstPoint = -1;
         //private int pointerCounter;
@@ -70,26 +70,26 @@ namespace DLuOvBamG.ViewModels
             }
         }
         
-        public async Task OnPressedAsync()
+        public async Task OnPressedAsync(CarouselViewItem current)
         {
-            hasTouchStopped = false;
-            await ShowBasePic();
+            current.IsTouched = true;
+            await ShowBasePic(current);
         }
 
-        public void OnReleasedAsync()
+        public void OnReleasedAsync(CarouselViewItem current)
         {
             CarouselViewItem currentItem = (CarouselViewItem)CarouselViewMain.CurrentItem;
             currentItem.ChangeURIBackToOriginal();
-            hasTouchStopped = true;
+            current.IsTouched = false;
         }
 
         /*
          * Displays the comparing image in the background if the touch has been long enough
          */
-        private async Task ShowBasePic()
+        private async Task ShowBasePic(CarouselViewItem current)
         {
             await Task.Delay(1000);
-            if (!hasTouchStopped)
+            if (current.IsTouched)
             {
                 Console.WriteLine("successful long tap");
                 CarouselViewItem currentItem = (CarouselViewItem)CarouselViewMain.CurrentItem;
@@ -101,10 +101,10 @@ namespace DLuOvBamG.ViewModels
             }
         }
 
-        public void stopTouch()
+        /*public void stopTouch()
         {
             hasTouchStopped = true;
-        }
+        }*/
 
         public ICommand MarkPictureAsDeleted
         {

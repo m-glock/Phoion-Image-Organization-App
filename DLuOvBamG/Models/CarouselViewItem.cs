@@ -8,6 +8,7 @@ namespace DLuOvBamG.Models
         public double markedForDeletion { get; set; }
         private string ComparingPictureUri;
         public string currentUri;
+        public bool IsTouched { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
 
         #region property changed

@@ -57,13 +57,13 @@ namespace DLuOvBamG.Views
                 {
                     case TouchActionType.Pressed:
                         //Console.WriteLine("tap started"); 
-                        VM.OnPressedAsync();
+                        VM.OnPressedAsync(currentPictureItem);
                         break;
                     case TouchActionType.Released:
                     case TouchActionType.Cancelled:
                     case TouchActionType.Exited:
                         //Console.WriteLine("tap stopped");
-                        VM.OnReleasedAsync();
+                        VM.OnReleasedAsync(currentPictureItem);
                         break;
                     default:
                         break;
@@ -80,19 +80,23 @@ namespace DLuOvBamG.Views
         private void CurrentItemChanged(object sender, CurrentItemChangedEventArgs e)
         {
             CarouselViewItem previousPicture = (CarouselViewItem)e.PreviousItem;
-            if(previousPicture != null) previousPicture.ChangeURIBackToOriginal();
+            if (previousPicture != null)
+            {
+                previousPicture.ChangeURIBackToOriginal();
+                previousPicture.IsTouched = false;
+            }
 
             CarouselViewItem currentPicture = (CarouselViewItem)e.CurrentItem;
             BinImage.Source = currentPicture.IsMarkedForDeletion() ? "delete_restore_64px.png" : "delete_64px.png";
         }
 
-        private void Tapped(object sender, EventArgs e)
+        /*private void Tapped(object sender, EventArgs e)
         {
             CarouselViewItem currentPictureItem = (CarouselViewItem)ImageMainView.CurrentItem;
 
             if (!currentPictureItem.IsMarkedForDeletion()) {
                 currentPictureItem.ChangeURIs();
             }
-        }
+        }*/
     }
 }
