@@ -61,6 +61,10 @@ namespace DLuOvBamG.Views
 
 			CollectionView colView = new CollectionView();
 			colView.SelectionMode = SelectionMode.Single;
+
+			// initialize image grid depending on the scan option
+			// blurry and dark pictures will be shown in three columns and x rows
+			// similar pictures will be shown with one row and x columns
 			if (Option.Equals(ScanOptionsEnum.similarPics))
 			{
 				colView.ItemsLayout = LinearItemsLayout.Horizontal; 
@@ -73,7 +77,6 @@ namespace DLuOvBamG.Views
 			}
 
 			colView.SetBinding(ItemsView.ItemsSourceProperty, "Pictures[" + groupID + "]");
-
 			colView.ItemTemplate = new DataTemplate(() =>
 			{
 				ContentView contentView = new ContentView();
@@ -98,22 +101,32 @@ namespace DLuOvBamG.Views
 			StackLayout.Children.Add(colView);
 		}
 
+		/*
+		 * If one Image is clicked, either open comparison view or just image detail view
+		 * */
 		void OnCollectionViewSelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			CollectionView view = (CollectionView)sender;
 			string groupID = view.ClassId;
-			Picture selectedPicture = (Picture)e.CurrentSelection[0];
-			//view.SelectedItem = null;
-			if (Option.Equals(ScanOptionsEnum.similarPics))
+
+			if (e.CurrentSelection.Count > 0)
 			{
-				VM.OpenComparisonPage(selectedPicture, groupID);
-			}
-			else
-            {
-				VM.OpenImageDetailViewPage(selectedPicture);
+				Picture selectedPicture = (Picture)e.CurrentSelection[0];
+				view.SelectedItem = null;
+				if (Option.Equals(ScanOptionsEnum.similarPics))
+				{
+					VM.OpenComparisonPage(selectedPicture, groupID);
+				}
+				else
+				{
+					VM.OpenImageDetailViewPage(selectedPicture);
+				}
 			}
 		}
 
+		/*
+		 * reload page if slider value has changed
+		 * */
 		private void ValueChanged(object sender, ValueChangedEventArgs e)
 		{
 			Slider optionElement = sender as Slider;
