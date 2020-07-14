@@ -64,6 +64,12 @@
     <PackageReference Include="glidex.forms">
       <Version>2.0.1.394</Version>
     </PackageReference>
+    <PackageReference Include="MvvmLight">
+      <Version>5.4.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="MvvmLightLibs">
+      <Version>5.4.1.1</Version>
+    </PackageReference>
     <PackageReference Include="TouchView">
       <Version>4.1.77</Version>
     </PackageReference>

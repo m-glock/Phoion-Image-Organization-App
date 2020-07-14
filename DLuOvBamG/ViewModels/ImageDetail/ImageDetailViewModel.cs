@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Input;
+using Android.App;
 using DLuOvBamG.Models;
+using DLuOvBamG.Services;
 using DLuOvBamG.Views;
+using GalaSoft.MvvmLight.Messaging;
 using Xamarin.Forms;
 
 
@@ -13,16 +16,20 @@ namespace DLuOvBamG.ViewModels
 {
     public class ImageDetailViewModel : BaseViewModel, INotifyPropertyChanged
     {
+        readonly ImageFileStorage imageFileStorage = new ImageFileStorage();
         public Picture Image { get; set; }
-        public string debugString { get; set; } = "test";
         public INavigation Navigation;
-
 
         public ImageDetailViewModel(Picture item)
         {
             Image = item;
         }
 
+        private void OnPictureDeleted(int deletedId)
+        {
+            PictureDeletedEvent deletedEvent = new PictureDeletedEvent(deletedId);
+            Messenger.Default.Send(deletedEvent);
+        }
 
         public ICommand GetCategories => new Command(async () => {
             await Navigation.PushAsync(new ImageTagPage(Image.Id), true);
@@ -33,7 +40,9 @@ namespace DLuOvBamG.ViewModels
         });
 
         public ICommand DeleteImage => new Command(async () => {
-
+            int deletedId = await imageFileStorage.DeleteFileAsync(Image);
+            OnPictureDeleted(Image.Id);
+            await Navigation.PopAsync();
         });
 
         public ICommand GetSimilar => new Command(async () =>

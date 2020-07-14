@@ -10,6 +10,7 @@ namespace DLuOvBamG.Services
         DateTime GetDateTaken(string filePath);
         byte[] GetFileBytes(string filePath);
 
+        void DeleteImage(string filePath);
         Picture[] GetAllImagesFromDevice();
     }
 }

@@ -46,6 +46,14 @@ namespace DLuOvBamG.Droid
             return File.ReadAllBytes(filePath);
         }
 
+        public void DeleteImage(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+        }
+
         public Models.Picture[] GetAllImagesFromDevice()
         {
             Models.Picture[] internalPictures = GetImagesFromUri(InternalContentUri);
