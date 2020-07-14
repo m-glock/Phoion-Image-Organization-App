@@ -6,6 +6,8 @@ using System.ComponentModel;
 using System.Windows.Input;
 using Xamarin.Forms;
 using DLuOvBamG.Views;
+using GalaSoft.MvvmLight.Messaging;
+using System.Linq;
 
 namespace DLuOvBamG.ViewModels
 {
@@ -56,6 +58,9 @@ namespace DLuOvBamG.ViewModels
             Option = option;
             Pictures = pictures;
             Navigation = navigation;
+
+            // register for event that picture has been deleted
+            Messenger.Default.Register<PictureDeletedEvent>(this, OnPictureDeleted);
         }
 
 		public ObservableCollection<Picture> GetPictureListForGroup(int groupID)
@@ -84,6 +89,16 @@ namespace DLuOvBamG.ViewModels
         public async void OpenImageDetailViewPage(Picture picture)
         {
             await Navigation.PushAsync(new ImageDetailPage(picture));
+        }
+
+        public void OnPictureDeleted(PictureDeletedEvent e)
+        {
+            int deletedPictureId = e.GetPictureId();
+            foreach(ObservableCollection<Picture> collection in pictures)
+            {
+                List<Picture> deletedPicture = collection.Where(picture => picture.Id == deletedPictureId).ToList();
+                if (deletedPicture.Count > 0) collection.Remove(deletedPicture[0]);
+            }
         }
 
         public ICommand UpdatePicturesAfterValueChange => new Command(async () =>

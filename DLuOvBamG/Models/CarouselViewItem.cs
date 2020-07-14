@@ -4,6 +4,7 @@ namespace DLuOvBamG.Models
 {
     class CarouselViewItem : INotifyPropertyChanged
     {
+        public int Id;
         public string Uri { get; }
         public double markedForDeletion { get; set; }
         public string ComparingPictureUri { get; }
@@ -27,8 +28,9 @@ namespace DLuOvBamG.Models
         }
         #endregion
 
-        public CarouselViewItem(string uri, string comparingUri)
+        public CarouselViewItem(int id, string uri, string comparingUri)
         {
+            Id = id; 
             Uri = uri;
             ComparingPictureUri = comparingUri;
             MarkedForDeletion = 1;
