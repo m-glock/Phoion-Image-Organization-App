@@ -17,8 +17,8 @@ namespace DLuOvBamG.ViewModels
 
         public ImageInfoViewModel(Picture image)
         {
-           
-            Dimensions = image.Width + " x " + image.Height;
+
+            Dimensions = image.Height + " x " + image.Width;
             Path = image.Uri;
             Name = image.Uri.Split('/').Last();
             Date = image.Date.ToString();
