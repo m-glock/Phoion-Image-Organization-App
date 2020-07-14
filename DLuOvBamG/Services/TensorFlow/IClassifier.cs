@@ -11,6 +11,9 @@ namespace DLuOvBamG
         public int ThresholdBlurry { get; set; }
         public int ThresholdSimilar { get; set; }
 
+        public List<double[]> FeatureVectors { get; set; }
+        public Tuple<int, double>[][] FeatureMatrix { get; set; }
+
         event EventHandler<ClassificationEventArgs> ClassificationCompleted;
 
         Task<List<ModelClassification>> ClassifySimilar(byte[] bytes);

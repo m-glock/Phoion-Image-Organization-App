@@ -84,7 +84,7 @@ namespace DLuOvBamG.ViewModels
                 {
                     pictures = await LoadImagesFromDB();
                     var categoryTags = await SaveCategoryTagsInDB();
-                    // var classified = await ClassifyAllPictures(pictures);
+                    var classified = await ClassifyAllPictures(pictures);
                 }
             }
             else
@@ -171,8 +171,8 @@ namespace DLuOvBamG.ViewModels
             if (pictures.Count > 0)
             {
                 var classifyTasks = pictures.Select(picture => ClassifyPicture(picture));
-                await Task.WhenAll(classifyTasks);
-                classifier.FillFeatureVectorMatix();
+                await Task.WhenAll(classifyTasks); // TODO bereits durchgeführte klassifizierungen speichern
+                
                 return true;
             }
             return false;
@@ -190,6 +190,8 @@ namespace DLuOvBamG.ViewModels
             classifier.ChangeModel(ScanOptionsEnum.similarPics);
             // get classifications from classifier
             List<ModelClassification> modelClassifications = await classifier.ClassifySimilar(fileBytes);
+            var currentVector = GetBytes(classifier.FeatureVectors[classifier.FeatureVectors.Count - 1]);
+
 
             // map strings to CategoryTag objects
             modelClassifications.ForEach(classification =>
@@ -208,6 +210,7 @@ namespace DLuOvBamG.ViewModels
             {
                 picture.CategoryTags.Add(categoryTag);
             });
+            picture.FeatureVector = currentVector;
             db.SavePictureAsync(picture);
         }
 
@@ -249,5 +252,10 @@ namespace DLuOvBamG.ViewModels
         {
             await Navigation.PushAsync(new CleanupPage());
         });
+
+        private byte[] GetBytes(double[] values)
+        {
+            return values.SelectMany(value => BitConverter.GetBytes(value)).ToArray();
+        }
     }
 }

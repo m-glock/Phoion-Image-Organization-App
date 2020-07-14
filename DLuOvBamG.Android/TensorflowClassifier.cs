@@ -32,6 +32,8 @@ namespace DLuOvBamG.Droid
 
         int IClassifier.ThresholdBlurry { get => thresholdBlurry; set => thresholdBlurry = value; }
         int IClassifier.ThresholdSimilar { get => thresholdSimilar; set => thresholdSimilar = value; }
+        Tuple<int, double>[][] IClassifier.FeatureMatrix { get => FeatureMatrix; set => FeatureMatrix = value; }
+        List<double[]> IClassifier.FeatureVectors { get => FeatureVectors; set => FeatureVectors = value; }
 
         public event EventHandler<ClassificationEventArgs> ClassificationCompleted;
 
@@ -39,7 +41,11 @@ namespace DLuOvBamG.Droid
         // int -> index; double -> distance
         public Tuple<int, double>[][] FeatureMatrix;
 
+
+        // TODO remove
         Stopwatch stopWatch = new Stopwatch();
+
+
 
         public void ChangeModel(ScanOptionsEnum type)
         {
@@ -233,7 +239,7 @@ namespace DLuOvBamG.Droid
 
             var sortedList = classificationResults.OrderByDescending(x => x.Probability).ToList();
             // only select pictures that are bigger than a given threshold
-            sortedList = sortedList.FindAll(x => System.Math.Round(x.Probability * 100, 2) > thresholdSimilar);
+            sortedList = sortedList.FindAll(x => System.Math.Round(x.Probability * 100, 2) > 40);
 
             // Notify all listeners
             //ClassificationCompleted?.Invoke(this, new ClassificationEventArgs(classificationResults));

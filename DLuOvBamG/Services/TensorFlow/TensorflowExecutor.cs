@@ -88,11 +88,23 @@ namespace DLuOvBamG.Services
 
                     outputList.Add(blurryPics);
                 }
-                else
+                else if (option == ScanOptionsEnum.similarPics)
                 {
+                    classifier.FeatureVectors = pictureList.Select(picture => ByteToDoubleArray(picture.FeatureVector)).ToList();
+                    classifier.FillFeatureVectorMatix();
+                    var matrix = classifier.FeatureMatrix;
+ 
+                    for (int i = 0; i < pictureList.Count; i++)
+                    {
+                        var similarPics = matrix[i].Where(picture => picture.Item2 < 0.5f).Select(picture => pictureList[picture.Item1]).ToList(); // TODO work with threshold
+                        if(similarPics.Count >= 3)
+                        {
+                            outputList.Add(similarPics);
+                        }
+                    }
                     // TODO similar pics
                     // take all pictures, compare them, show the nearest with distance smaller X
-                    // store nearest pictures to each pictures
+                    // store nearest pictures to each picture
                 }
 
                 // TODO Event when one of the scans is ready, for each
@@ -101,9 +113,6 @@ namespace DLuOvBamG.Services
 
                 oldOptions[option] = options[option];
             }
-
-
-
 
         }
 
@@ -140,5 +149,13 @@ namespace DLuOvBamG.Services
 
             return count;
         }
+
+        private double[] ByteToDoubleArray(byte[] byteArr)
+        {
+            double[] values = new double[byteArr.Length / 8];
+            Buffer.BlockCopy(byteArr, 0, values, 0, values.Length * 8);
+            return values;
+        }
+
     }
 }
