@@ -15,10 +15,16 @@ namespace DLuOvBamG.Services
 
         private Dictionary<ScanOptionsEnum, double> oldOptions;
 
-        public string timeOutput = "buh";
+        public event EventHandler<ScanEventArgs> ScanWasFinished;
+
+        //public void EventTest(object sender, ScanEventArgs e)
+        //{
+        //    Console.WriteLine(e.Option.ToString() + " super fancy");
+        //}
 
         public TensorflowExecutor()
         {
+            //ScanWasFinished += EventTest;
             pictures = new Dictionary<ScanOptionsEnum, List<List<Picture>>>();
             classifier = DependencyService.Get<IClassifier>();
             classifier.ThresholdBlurry = ScanOptionsEnum.blurryPics.GetDefaultPresicionValue() * 10;
@@ -70,6 +76,7 @@ namespace DLuOvBamG.Services
                     outputList.Add(darkPictures);
                     outputList.Add(brightPictures);
 
+                    ScanWasFinished?.Invoke(this, new ScanEventArgs(ScanOptionsEnum.darkPics));
                 }
                 else if (option == ScanOptionsEnum.blurryPics)
                 {
@@ -87,24 +94,44 @@ namespace DLuOvBamG.Services
                     }
 
                     outputList.Add(blurryPics);
+
+                    ScanWasFinished?.Invoke(this, new ScanEventArgs(ScanOptionsEnum.blurryPics));
                 }
                 else if (option == ScanOptionsEnum.similarPics)
                 {
                     classifier.FeatureVectors = pictureList.Select(picture => ByteToDoubleArray(picture.FeatureVector)).ToList();
                     classifier.FillFeatureVectorMatix();
                     var matrix = classifier.FeatureMatrix;
- 
+
                     for (int i = 0; i < pictureList.Count; i++)
                     {
                         var similarPics = matrix[i].Where(picture => picture.Item2 < 0.5f).Select(picture => pictureList[picture.Item1]).ToList(); // TODO work with threshold
-                        if(similarPics.Count >= 3)
+                        if (similarPics.Count < 3) continue;
+                        bool addToOutput = true;
+                        for (int j = outputList.Count - 1; j >= 0; j--) // go through all lists in outputlist
+                        {
+                            Console.WriteLine(outputList.Count + " current count");
+                            var list = outputList[j];
+                            var biggerList = list.Count > similarPics.Count ? list : similarPics;
+                            var smallerList = list.Count < similarPics.Count ? list : similarPics;
+                            var exclusiveList = biggerList.Except(smallerList).ToList();
+                            if (exclusiveList.Count <= biggerList.Count * 0.15f) // when both lists are too similar
+                            {
+                                // when output contains the smaller of the similar lists -> remove it 
+                                if (outputList.Contains(smallerList))
+                                    outputList.Remove(smallerList);
+                                else
+                                    addToOutput = false;
+                            }
+                        }
+                        if (addToOutput)
                         {
                             outputList.Add(similarPics);
                         }
+                        addToOutput = true;
                     }
-                    // TODO similar pics
-                    // take all pictures, compare them, show the nearest with distance smaller X
-                    // store nearest pictures to each picture
+
+                    ScanWasFinished?.Invoke(this, new ScanEventArgs(ScanOptionsEnum.similarPics));
                 }
 
                 // TODO Event when one of the scans is ready, for each

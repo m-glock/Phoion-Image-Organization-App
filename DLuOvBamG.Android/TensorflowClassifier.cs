@@ -322,7 +322,7 @@ namespace DLuOvBamG.Droid
             sortedList = sortedList.FindAll(x => System.Math.Round(x.Probability * 100, 2) > thresholdBlurry);
 
             // Notify all listeners
-            //ClassificationCompleted?.Invoke(this, new ClassificationEventArgs(result));
+            ClassificationCompleted?.Invoke(this, new ClassificationEventArgs(result));
 
             return sortedList;
         } 
