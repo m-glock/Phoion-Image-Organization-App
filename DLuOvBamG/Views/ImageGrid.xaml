@@ -20,6 +20,18 @@
                     FlowItemsSource="{Binding GroupedItems}" 
                     IsGroupingEnabled="true"
                     FlowGroupDisplayBinding="{Binding Key}">
+                    <flv:FlowListView.FlowEmptyTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Label  HorizontalTextAlignment="Center"
+                                        VerticalTextAlignment="Center"
+                                        TextColor="Black"
+                                        Style="{DynamicResource SubtitleStyle}"
+                                        Text="No images in this directory"
+                                ></Label>
+                            </ViewCell>
+                        </DataTemplate>
+                    </flv:FlowListView.FlowEmptyTemplate>
                     <flv:FlowListView.FlowColumnTemplate>
                         <DataTemplate>
                             <Grid Padding="3">
