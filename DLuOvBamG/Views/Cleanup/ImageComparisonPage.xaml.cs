@@ -61,7 +61,7 @@ namespace DLuOvBamG.Views
                         break;
                     case TouchActionType.Released:
                     case TouchActionType.Cancelled:
-                    case TouchActionType.Exited:
+                    //case TouchActionType.Exited:
                         //Console.WriteLine("tap stopped");
                         VM.OnReleasedAsync(currentPictureItem);
                         break;

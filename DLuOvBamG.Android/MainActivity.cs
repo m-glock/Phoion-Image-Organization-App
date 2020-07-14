@@ -85,10 +85,12 @@ namespace DLuOvBamG.Droid
 				if (currentpage?.CustomBackButtonAction != null)
 				{
 					currentpage?.CustomBackButtonAction.Invoke();
+				} else
+                {
+					base.OnBackPressed();
 				}
 			}
-			catch (InvalidCastException ex) { }
-			base.OnBackPressed();
+			catch (InvalidCastException ex) { base.OnBackPressed(); }
 		}
 	}
 }
