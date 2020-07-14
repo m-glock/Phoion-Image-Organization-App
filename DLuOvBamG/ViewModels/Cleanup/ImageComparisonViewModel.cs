@@ -15,9 +15,9 @@ namespace DLuOvBamG.ViewModels
     {
         public List<CarouselViewItem> PictureList { get; set; }
         public CarouselView CarouselViewMain { get; set; }
-        public ImageButton BinImage {get; set;}
         private int carouselViewPosition { get; set; }
         private List<CarouselViewItem> PicsToDelete { get; set; }
+        public int amountOfDeletedPics { get; set; }
         private ImageComparisonPage ImageComparisonPage;
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -38,8 +38,23 @@ namespace DLuOvBamG.ViewModels
                 return carouselViewPosition;
             }
         }
-        #endregion
 
+        public int AmountOfDeletedPics
+        {
+            set
+            {
+                if (amountOfDeletedPics != value)
+                {
+                    amountOfDeletedPics = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AmountOfDeletedPics"));
+                }
+            }
+            get
+            {
+                return amountOfDeletedPics;
+            }
+        }
+        #endregion
         public ImageComparisonViewModel(ImageComparisonPage page, List<CarouselViewItem> picsForCarousel)
         {
             ImageComparisonPage = page;
@@ -98,14 +113,9 @@ namespace DLuOvBamG.ViewModels
 
         public void AddMarkedPictureToDeleteList(CarouselViewItem item)
         {
-            if (PicsToDelete.Contains(item))
-            {
-                PicsToDelete.Remove(item);
-            }
-            else
-            {
-                PicsToDelete.Add(item);
-            }
+            if (PicsToDelete.Contains(item)) PicsToDelete.Remove(item);
+            else PicsToDelete.Add(item);
+            AmountOfDeletedPics = PicsToDelete.Count;
         }
 
         public ICommand DeletePictures

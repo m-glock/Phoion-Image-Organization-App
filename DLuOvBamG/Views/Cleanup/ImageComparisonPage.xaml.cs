@@ -35,7 +35,6 @@ namespace DLuOvBamG.Views
             ImageCarouselView.PeekAreaInsets = width < 350 ? 100 : 135;
 
             VM.CarouselViewMain = ImageMainView;
-            VM.BinImage = BinImage;
 
             // show safety alert when clicking the navigation back button
             if (EnableBackButtonOverride)
@@ -71,7 +70,6 @@ namespace DLuOvBamG.Views
             }
         }
 
-
         /**
          * always revert from comparing picture back to actual image when swiping to the next element
          * change trash icon depending on whether the current image is marked to be deleted or not
@@ -86,25 +84,13 @@ namespace DLuOvBamG.Views
                 previousPicture.ChangeURIBackToOriginal();
                 previousPicture.IsTouched = false;
             }
-
-            CarouselViewItem currentPicture = (CarouselViewItem)e.CurrentItem;
-            BinImage.Source = currentPicture.IsMarkedForDeletion() ? "delete_restore_64px.png" : "delete_64px.png";
         }
 
-        private void CheckedChanged(object sender, CheckedChangedEventArgs e)
+        private void DeleteTapped(object sender, EventArgs e)
         {
             CarouselViewItem currentPicture = (CarouselViewItem)ImageMainView.CurrentItem;
             currentPicture.MarkForDeletion();
             VM.AddMarkedPictureToDeleteList(currentPicture);
         }
-
-        /*private void Tapped(object sender, EventArgs e)
-        {
-            CarouselViewItem currentPictureItem = (CarouselViewItem)ImageMainView.CurrentItem;
-
-            if (!currentPictureItem.IsMarkedForDeletion()) {
-                currentPictureItem.ChangeURIs();
-            }
-        }*/
     }
 }

@@ -17,10 +17,14 @@
             <RowDefinition Height="7*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="43*"></ColumnDefinition>
+            <ColumnDefinition Width="10*"></ColumnDefinition>
+            <ColumnDefinition Width="4*"></ColumnDefinition>
+            <ColumnDefinition Width="43*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <CarouselView x:Name="ImageCarouselView" ItemsSource="{Binding PictureList}" Position="{Binding CarouselViewPosition}" Grid.Row="0">
+        <CarouselView x:Name="ImageCarouselView" ItemsSource="{Binding PictureList}" Position="{Binding CarouselViewPosition}" 
+                      Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4">
             <CarouselView.ItemTemplate>
                 <DataTemplate>
                     <Image Source="{Binding Uri}" Opacity="{Binding MarkedForDeletion}"></Image>
@@ -28,17 +32,18 @@
             </CarouselView.ItemTemplate>
         </CarouselView>
 
-        <CarouselView x:Name="ImageMainView" ItemsSource="{Binding PictureList}" Position="{Binding CarouselViewPosition}" CurrentItemChanged="CurrentItemChanged" Grid.Row="1">
+        <CarouselView x:Name="ImageMainView" ItemsSource="{Binding PictureList}" Position="{Binding CarouselViewPosition}" CurrentItemChanged="CurrentItemChanged" 
+                      Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4">
             <CarouselView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="15*"></RowDefinition>
-                            <RowDefinition Height="85*"></RowDefinition>
+                            <RowDefinition Height="7*"></RowDefinition>
+                            <RowDefinition Height="93*"></RowDefinition>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="85*"></ColumnDefinition>
-                            <ColumnDefinition Width="15*"></ColumnDefinition>
+                            <ColumnDefinition Width="93*"></ColumnDefinition>
+                            <ColumnDefinition Width="7*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <Image Source="{Binding CurrentUri}" Opacity="{Binding MarkedForDeletion}"
                                Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2">
@@ -50,13 +55,18 @@
                                 </gestures:TouchEffect>
                             </Image.Effects>
                         </Image>
-                        <CheckBox Grid.Row="0" Grid.Column="1" Color="#00695C" CheckedChanged="CheckedChanged"></CheckBox>
+                        <Image Grid.Row="0" Grid.Column="1" Source="{Binding DeleteIcon}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="DeleteTapped"></TapGestureRecognizer>
+                            </Image.GestureRecognizers>
+                        </Image>
                     </Grid>
                 </DataTemplate>
             </CarouselView.ItemTemplate>
         </CarouselView>
 
-        <ImageButton x:Name="BinImage" Command="{Binding DeletePictures}"
-                     Source="delete_64px.png" BackgroundColor="White" Grid.Row="2"></ImageButton>
+        <ImageButton Command="{Binding DeletePictures}" Source="delete_64px.png" BackgroundColor="#F5F5F5" 
+                     Grid.Row="2" Grid.Column="1" Aspect="AspectFill"></ImageButton>
+        <Label Text="{Binding AmountOfDeletedPics}" Grid.Row="2" Grid.Column="2" VerticalTextAlignment="End" FontAttributes="Bold"></Label>
     </Grid>
 </views:CustomBackButtonPage>
