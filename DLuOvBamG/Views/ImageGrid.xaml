@@ -1,46 +1,52 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"
-             xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
-             xmlns:vm="clr-namespace:DLuOvBamG.ViewModels"
-             x:Class="DLuOvBamG.Views.ImageGrid"
-             Title="Application">
-
-    <ContentPage.BindingContext>
-        <vm:ImageGalleryViewModel />
-    </ContentPage.BindingContext>
-
-
-    <AbsoluteLayout>
-        <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
-            <flv:FlowListView FlowColumnCount="4" SeparatorVisibility="None" HasUnevenRows="true"
-        FlowItemTappedCommand="{Binding ItemTappedCommand}" RowHeight="50" FlowItemsSource="{Binding GroupedItems}" 
-                              IsGroupingEnabled="true" FlowGroupDisplayBinding="{Binding Key}">
-                <flv:FlowListView.FlowColumnTemplate>
-                    <DataTemplate>
-                        <Grid Padding="3">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="100" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Image Aspect="AspectFill" Source="{Binding ImageSource, Mode=OneTime}"/>
-                        </Grid>
-                    </DataTemplate>
-                </flv:FlowListView.FlowColumnTemplate>
-            </flv:FlowListView>
-        </ScrollView>
-
-        <Frame Padding="15,15,15,15" BackgroundColor="Ivory" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds=".95,.95,70,70" CornerRadius="50">
-            <!-- From https://icons8.com/icons/set/broom-->
-            <ImageButton Source="broom_icon.png" BackgroundColor="Ivory"
-                     Command="{Binding OpenCleanupPage}" />
-        </Frame>
-
-    </AbsoluteLayout>
-
+<ContentPage 
+    xmlns="http://xamarin.com/schemas/2014/forms" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    x:Name="this"
+    xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
+    x:Class="DLuOvBamG.Views.ImageGrid">
+    <ContentPage.Content>
+        <AbsoluteLayout>
+            <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
+                <flv:FlowListView 
+                    FlowColumnCount="4"
+                    SeparatorVisibility="None"
+                    HasUnevenRows="true"
+                    FlowItemTappedCommand="{Binding ItemTappedCommand}"
+                    RowHeight="50"
+                    FlowItemsSource="{Binding GroupedItems}" 
+                    IsGroupingEnabled="true"
+                    FlowGroupDisplayBinding="{Binding Key}">
+                    <flv:FlowListView.FlowEmptyTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Label  HorizontalTextAlignment="Center"
+                                        VerticalTextAlignment="Center"
+                                        TextColor="Black"
+                                        Style="{DynamicResource SubtitleStyle}"
+                                        Text="No images in this directory"
+                                ></Label>
+                            </ViewCell>
+                        </DataTemplate>
+                    </flv:FlowListView.FlowEmptyTemplate>
+                    <flv:FlowListView.FlowColumnTemplate>
+                        <DataTemplate>
+                            <Grid Padding="3">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="100" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Image Aspect="AspectFill" Source="{Binding ImageSource, Mode=OneTime}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </flv:FlowListView.FlowColumnTemplate>
+                </flv:FlowListView>
+            </ScrollView>
+        </AbsoluteLayout>
+    </ContentPage.Content>
 </ContentPage>

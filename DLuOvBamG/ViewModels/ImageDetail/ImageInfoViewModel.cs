@@ -1,29 +1,40 @@
 ﻿using DLuOvBamG.Models;
+using System;
 using System.ComponentModel;
+using System.Linq;
 
 namespace DLuOvBamG.ViewModels
 {
     class ImageInfoViewModel : BaseViewModel
     {
-        public string InfoName { get; }
-        public string InfoLocation { get; }
-        public string[] InfoTagsArray { get; }
-        public string InfoTags { get; }
-        public string InfoDate { get; }
+        public string Name { get; }
+        public string Location { get; }
+        public string Dimensions { get; }
+        public string Date { get; }
+        public string Path { get;  }
+
+        public string Size { get; }
 
         public ImageInfoViewModel(Picture image)
         {
-            //TODO: read out info from DB
 
+            Dimensions = image.Height + " x " + image.Width;
+            Path = image.Uri;
+            Name = image.Uri.Split('/').Last();
+            Date = image.Date.ToString();
+            Location = image.Latitude + " - " + image.Longitude;
+            Size = calcSizeInMB(image.Size);
+        }
 
-            /* = "test";
-            infoLocation = "Berlin";
-            _infoTags = new string[] { "Hund", "Berlin", "Urlaub" };
-            for (int i = 0; i < _infoTags.Length; i++)
+        private string calcSizeInMB(string size)
+        {
+            if(String.IsNullOrEmpty(size))
             {
-                infoTags = infoTags + _infoTags[i] + ", ";
+                return "";
             }
-            infoDate = "01.02.2010";*/
+
+            double sizeInMB = (Convert.ToDouble(size) / 1000000);
+            return sizeInMB.ToString("0.##") + " MB";
         }
     }
 }

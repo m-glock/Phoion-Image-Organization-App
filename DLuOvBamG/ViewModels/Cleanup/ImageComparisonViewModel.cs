@@ -1,8 +1,10 @@
 ﻿using DLuOvBamG.Models;
+using DLuOvBamG.Services.Gestures;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -11,49 +13,18 @@ namespace DLuOvBamG.ViewModels
     class ImageComparisonViewModel : BaseViewModel, INotifyPropertyChanged
     {
         public List<CarouselViewItem> PictureList { get; set; }
-        public string currentPictureUri { get; set; }
-        public string comparingPictureUri { get; set; }
-        //public CarouselView CarouselView { get; set; }
-        public int carouselViewPosition { get; set; }
-        public List<Picture> PicsToDelete { get; set; }
-        public event PropertyChangedEventHandler PropertyChanged;
-        private double firstPoint = -1;
-        private int pointerCounter;
+        public CarouselView CarouselViewMain { get; set; }
+        private int carouselViewPosition { get; set; }
+        private List<CarouselViewItem> PicsToDelete { get; set; }
+        private INavigation Navigation;
         private bool stop;
+        public event PropertyChangedEventHandler PropertyChanged;
+        //private double firstPoint = -1;
+        //private int pointerCounter;
+
+        //private bool pauseSwiping;
 
         #region PropertyChanged
-        public string CurrentPictureUri
-        {
-            set
-            {
-                if (currentPictureUri != value)
-                {
-                    currentPictureUri = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CurrentPictureUri"));
-                }
-            }
-            get
-            {
-                return currentPictureUri;
-            }
-        }
-
-        public string ComparingPictureUri
-        {
-            set
-            {
-                if (comparingPictureUri != value)
-                {
-                    comparingPictureUri = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ComparingPictureUri"));
-                }
-            }
-            get
-            {
-                return comparingPictureUri;
-            }
-        }
-
         public int CarouselViewPosition
         {
             set
@@ -71,9 +42,23 @@ namespace DLuOvBamG.ViewModels
         }
         #endregion
 
-        public ImageComparisonViewModel()
+        public ImageComparisonViewModel(INavigation navigation, List<CarouselViewItem> picsForCarousel)
         {
-            PicsToDelete = new List<Picture>();
+            Navigation = navigation;
+            PictureList = picsForCarousel;
+            PicsToDelete = new List<CarouselViewItem>();
+        }
+
+        public async void ShowAlertSelectionLost(Page imageComparionPage)
+        {
+            bool result = await imageComparionPage.DisplayAlert("Careful",
+                "If you go back now without deleting the selected pictures, your selection will be lost.",
+                "Go back", "Stay here");
+
+            if (result)
+            {
+                await Navigation.PopAsync(true);
+            }
         }
 
         public async Task OnPressedAsync(Image currentPicture)
@@ -82,15 +67,50 @@ namespace DLuOvBamG.ViewModels
             await ShowBasePic(currentPicture);
         }
 
-        public async Task OnReleasedAsync(Image currentPicture)
+        public void OnReleasedAsync(Image currentPicture)
         {
-            await Task.Delay(500); 
-            currentPicture.Source = CurrentPictureUri;
+            CarouselViewItem currentItem = (CarouselViewItem)CarouselViewMain.CurrentItem;
+            currentPicture.Source = currentItem.Uri;
             stop = true;
         }
 
+        private async Task ShowBasePic(Image currentPicture)
+        {
+            await Task.Delay(1000);
+            if (!stop)
+            {
+                Console.WriteLine("successful long tap");
+                CarouselViewItem currentItem = (CarouselViewItem)CarouselViewMain.CurrentItem;
+                currentPicture.Source = currentItem.ComparingPictureUri;
+            } else
+            {
+                Console.WriteLine("unsuccessful long tap");
+            }
+                
+        }
+
+        public ICommand MarkPictureAsDeleted
+        {
+            get
+            {
+                return new Command(() =>
+                {
+                    CarouselViewItem currentPicture = (CarouselViewItem)CarouselViewMain.CurrentItem;
+                    currentPicture.MarkForDeletion();
+                    if (!PicsToDelete.Contains(currentPicture))
+                    {
+                        PicsToDelete.Add(currentPicture);
+                    }
+
+                });
+            }
+        }
+
+
+
         /*public async void OnSwiped(TouchActionEventArgs args)
         {
+            if (pauseSwiping) return;
             pointerCounter++;
             Console.WriteLine(pointerCounter);
             if (firstPoint == -1)
@@ -107,18 +127,14 @@ namespace DLuOvBamG.ViewModels
                 {
                     if (diff > 0) SwipeRight();
                     else SwipeLeft();
+                    pauseSwiping = true;
+                    await Task.Delay(1000);
+                    pauseSwiping = false;
                     await Task.Delay(1000);
                 }
                 firstPoint = -1;
                 pointerCounter = 0;
             }
-        }*/
-
-        private async Task ShowBasePic(Image currentPicture)
-        {
-            await Task.Delay(1000);
-            if (!stop)
-                currentPicture.Source = ComparingPictureUri;
         }
 
         private void SwipeRight()
@@ -142,9 +158,9 @@ namespace DLuOvBamG.ViewModels
         private void SwipeDown()
         {
             // Handle the swipe
-            CarouselViewItem picToDelete = PictureList.Find(pic => pic.Uri == CurrentPictureUri);
+            //CarouselViewItem picToDelete = PictureList.Find(pic => pic.Uri == CurrentPictureUri);
             //PicsToDelete.Add(picToDelete);
             //picToDelete.Id;
-        }
+        }*/
     }
 }

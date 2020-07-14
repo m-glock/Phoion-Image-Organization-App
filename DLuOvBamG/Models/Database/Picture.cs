@@ -20,6 +20,18 @@ namespace DLuOvBamG.Models
         
         public DateTime Date { get; set; }
 
+        public String Longitude { get; set; }
+
+        public String Latitude { get; set; }
+
+        public String Size { get; set; }
+
+        public String Height { get; set; }
+
+        public String Width { get; set; }
+
+        public String DirectoryName { get; set; }
+
         [ManyToMany(typeof(PictureTags))]
         public List<CategoryTag> CategoryTags { get; set; }
         
@@ -31,7 +43,7 @@ namespace DLuOvBamG.Models
         public Picture(string Uri)
         {
             this.Uri = Uri;
-            this.Date = GetDate(Uri);
+            // this.Date = GetDate(Uri);
             this.CategoryTags = new List<CategoryTag>();
         }
 

@@ -12,27 +12,31 @@ using System.IO;
 using System.Linq;
 using DLToolkit.Forms.Controls;
 using System.Threading.Tasks;
+using GalaSoft.MvvmLight.Messaging;
+using System.Text.RegularExpressions;
+using Xamarin.Forms.Internals;
 
 namespace DLuOvBamG.ViewModels
 {
+    public delegate void PictureDeletedEventHandler(object source, PictureDeletedEvent e);
     public class ImageGalleryViewModel : INotifyPropertyChanged
     {
-        static string CAMERA_PATH = "/Camera";
-        IImageService imageService = DependencyService.Get<IImageService>();
-        IClassifier classifier = App.Classifier;
-        ImageOrganizationDatabase db = App.Database;
+        readonly IImageService imageService = DependencyService.Get<IImageService>();
+        readonly ImageFileStorage imageFileStorage = new ImageFileStorage();
+        readonly IClassifier classifier = App.Classifier;
+        readonly ImageOrganizationDatabase db = App.Database;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        FlowObservableCollection<Grouping<string, Picture>> groupedItems;
+        private FlowObservableCollection<Grouping<string, Picture>> albumItems;
+        private FlowObservableCollection<Grouping<string, Picture>> groupedItems;
+        private string SelectedGroup { get; set; }
 
         public FlowObservableCollection<Grouping<string, Picture>> GroupedItems
         {
             set
             {
-
                 groupedItems = value;
-
                 if (PropertyChanged != null)
                 {
                     PropertyChanged(this, new PropertyChangedEventArgs("GroupedItems"));
@@ -45,16 +49,34 @@ namespace DLuOvBamG.ViewModels
             }
         }
 
+        public FlowObservableCollection<Grouping<string, Picture>> AlbumItems
+        {
+            set
+            {
+                albumItems = value;
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("AlbumItems"));
+                }
+            }
+
+            get
+            {
+                return albumItems;
+            }
+        }
+
         public List<Picture> Items { get; set; }
         public INavigation Navigation;
-
 
         public ImageGalleryViewModel()
         {
             Items = new List<Picture>();
             GroupedItems = new FlowObservableCollection<Grouping<string, Picture>>();
+            AlbumItems = new FlowObservableCollection<Grouping<string, Picture>>();
+            SelectedGroup = "";
+            Messenger.Default.Register<PictureDeletedEvent>(this, OnPictureDeleted);
         }
-
 
         public async void GetPictures()
         {
@@ -63,35 +85,19 @@ namespace DLuOvBamG.ViewModels
 
             if (pictures.Count == 0)
             {
-                var storageImages = await LoadImagesFromStorage();
-                var saved = await SavePicturesInDB(storageImages);
+                Picture[] devicePictures = await imageFileStorage.GetPicturesFromDevice();
+                var saved = await SavePicturesInDB(devicePictures);
                 if (saved)
                 {
                     pictures = await LoadImagesFromDB();
                     var categoryTags = await SaveCategoryTagsInDB();
-                    var classified = await ClassifyAllPictures(pictures);
+                    // var classified = await ClassifyAllPictures(pictures);
                 }
             }
             Items = pictures;
             pictures = SetImageSources(pictures);
-            GroupPicturesByDate(pictures);
-        }
-
-        async Task<List<Picture>> LoadImagesFromStorage()
-        {
-            IPathService pathService = DependencyService.Get<IPathService>();
-            string dcimFolder = pathService.DcimFolder;
-            dcimFolder += CAMERA_PATH;
-            ImageFileStorage imageFileStorage = new ImageFileStorage();
-            string[] imagePaths = await imageFileStorage.GetFilesFromDirectory(dcimFolder);
-
-            var pictureList = new List<Picture>();
-            for (int i = 0; i < imagePaths.Length; i++)
-            {
-                Picture picture = new Picture(imagePaths[i]);
-                pictureList.Add(picture);
-            }
-            return pictureList;
+            // GroupPicturesByDate(pictures);
+            GroupPicturesByDirectory(pictures);
         }
 
         Task<List<Picture>> LoadImagesFromDB()
@@ -120,9 +126,20 @@ namespace DLuOvBamG.ViewModels
             GroupedItems = new FlowObservableCollection<Grouping<string, Picture>>(sorted);
         }
 
-        async Task<bool> SavePicturesInDB(List<Picture> pictures)
+        void GroupPicturesByDirectory(List<Picture> pictures)
         {
-            if (pictures.Count > 0)
+            var sorted = pictures
+                .OrderByDescending(item => item.Date)
+                .GroupBy(item => item.DirectoryName)
+                .Select(itemGroup => new Grouping<string, Picture>(itemGroup.Key, itemGroup, itemGroup.Count()))
+                .OrderByDescending(item => item.ColumnCount)
+                .ToList();
+            AlbumItems = new FlowObservableCollection<Grouping<string, Picture>>(sorted);
+        }
+
+        async Task<bool> SavePicturesInDB(Picture[] pictures)
+        {
+            if (pictures.Length > 0)
             {
                 var tasks = pictures.Select(picture => db.SavePictureAsync(picture));
                 await Task.WhenAll(tasks);
@@ -216,9 +233,43 @@ namespace DLuOvBamG.ViewModels
             }
         }
 
+        public ICommand GroupedItemTappedCommand
+        {
+            get
+            {
+                return new Command(async (sender) =>
+                {
+                    Grouping<string, Picture> selectedGroup = sender as Grouping<string,Picture>;
+                    GroupPicturesByDate(selectedGroup.ToList());
+                    SelectedGroup = selectedGroup.Key;
+                    await Navigation.PushAsync(new ImageGrid(selectedGroup.Key), true);
+                 
+                });
+            }
+        }
         public ICommand OpenCleanupPage => new Command(async () =>
         {
             await Navigation.PushAsync(new CleanupPage());
         });
+
+        public void OnPictureDeleted(PictureDeletedEvent e)
+        {
+            int deletedPictureId = e.GetPictureId();
+            // find picture
+            int pictureIndex = Items.FindIndex(pic => pic.Id == deletedPictureId);
+            Picture picture = Items[pictureIndex];
+            // delte picture from album
+            string albumKey = picture.DirectoryName;
+            AlbumItems.ForEach(group =>
+            {
+                if (group.Key == albumKey)
+                {
+                    int groupIndex = group.ToList().FindIndex(pic => pic.Id == deletedPictureId);
+                    group.RemoveAt(groupIndex);
+                    // re-group pictures from album
+                    GroupPicturesByDate(group.ToList());
+                }
+            });
+        }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using DLToolkit.Forms.Controls;
 using DLuOvBamG.Models;
-using DLuOvBamG.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,15 +12,12 @@ using Xamarin.Forms.Xaml;
 namespace DLuOvBamG.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ImageGrid : ContentPage
+    public partial class AlbumGrid : ContentView
     {
-        ImageGalleryViewModel vm { get; set; }
-        public ImageGrid(string Title)
+        public AlbumGrid()
         {
+            Console.WriteLine("init Album Grid");
             InitializeComponent();
-            vm = App.ViewModelLocator.ImageGalleryViewModel;
-            BindingContext = vm;
-            this.Title = Title;
         }
     }
 }

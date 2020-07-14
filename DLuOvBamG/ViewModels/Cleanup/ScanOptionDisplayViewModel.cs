@@ -1,9 +1,11 @@
+using System;
 ﻿using DLuOvBamG.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
 using Xamarin.Forms;
+using DLuOvBamG.Views;
 
 namespace DLuOvBamG.ViewModels
 {
@@ -11,6 +13,8 @@ namespace DLuOvBamG.ViewModels
 	{
         public ObservableCollection<ObservableCollection<Picture>> pictures;
 		public double precision;
+		public INavigation Navigation;
+		public Image SelectedImage;
 		public event PropertyChangedEventHandler PropertyChanged;
         private ScanOptionsEnum Option;
 
@@ -48,7 +52,7 @@ namespace DLuOvBamG.ViewModels
 
         public ScanOptionDisplayViewModel(ScanOptionsEnum option, ObservableCollection<ObservableCollection<Picture>> pictures)
         {
-			Title = "Aufräumergebnisse";
+			Title = "Cleanup Results";
             Option = option;
             Pictures = pictures;
         }
@@ -72,7 +76,6 @@ namespace DLuOvBamG.ViewModels
                 obsvPictures.Add(new ObservableCollection<Picture>(picturesList));
             }
             Pictures = obsvPictures;
-            //Pictures = pictures;
         });
     }
 }

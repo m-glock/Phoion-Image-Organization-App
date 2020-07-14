@@ -19,7 +19,7 @@ namespace DLuOvBamG.Views
 			InitializeComponent();
 			Option = option;
 
-			// change list ton collection view so that it gets updated when a pictures is deleted
+			// change list to collection view so that it gets updated when a pictures is deleted
 			List<List<Picture>> pictures = App.tf.GetAllPicturesForOption(option);
 			ObservableCollection<ObservableCollection<Picture>> obsvPictures = new ObservableCollection<ObservableCollection<Picture>>();
 			foreach (List<Picture> picturesList in pictures)
@@ -88,12 +88,21 @@ namespace DLuOvBamG.Views
 
 				}
 				image.SetBinding(Image.SourceProperty, "Uri");
-
 				contentView.Content = image;
+
 				return contentView;
 			});
+			colView.SelectionChanged += OnCollectionViewSelectionChanged;
 
 			StackLayout.Children.Add(colView);
+		}
+
+		void OnCollectionViewSelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			CollectionView view = (CollectionView)sender;
+			string groupID = view.ClassId;
+			Picture selectedPicture = (Picture)e.CurrentSelection[0];
+			VM.OpenComparisonPage(selectedPicture, groupID);
 		}
 
 		private void ValueChanged(object sender, ValueChangedEventArgs e)
