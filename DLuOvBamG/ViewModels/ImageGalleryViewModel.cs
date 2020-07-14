@@ -12,9 +12,13 @@ using System.IO;
 using System.Linq;
 using DLToolkit.Forms.Controls;
 using System.Threading.Tasks;
+using GalaSoft.MvvmLight.Messaging;
+using System.Text.RegularExpressions;
+using Xamarin.Forms.Internals;
 
 namespace DLuOvBamG.ViewModels
 {
+    public delegate void PictureDeletedEventHandler(object source, PictureDeletedEvent e);
     public class ImageGalleryViewModel : INotifyPropertyChanged
     {
         readonly IImageService imageService = DependencyService.Get<IImageService>();
@@ -26,6 +30,7 @@ namespace DLuOvBamG.ViewModels
 
         private FlowObservableCollection<Grouping<string, Picture>> albumItems;
         private FlowObservableCollection<Grouping<string, Picture>> groupedItems;
+        private string SelectedGroup { get; set; }
 
         public FlowObservableCollection<Grouping<string, Picture>> GroupedItems
         {
@@ -69,6 +74,8 @@ namespace DLuOvBamG.ViewModels
             Items = new List<Picture>();
             GroupedItems = new FlowObservableCollection<Grouping<string, Picture>>();
             AlbumItems = new FlowObservableCollection<Grouping<string, Picture>>();
+            SelectedGroup = "";
+            Messenger.Default.Register<PictureDeletedEvent>(this, OnPictureDeleted);
         }
 
         public async void GetPictures()
@@ -234,6 +241,7 @@ namespace DLuOvBamG.ViewModels
                 {
                     Grouping<string, Picture> selectedGroup = sender as Grouping<string,Picture>;
                     GroupPicturesByDate(selectedGroup.ToList());
+                    SelectedGroup = selectedGroup.Key;
                     await Navigation.PushAsync(new ImageGrid(selectedGroup.Key), true);
                  
                 });
@@ -243,5 +251,25 @@ namespace DLuOvBamG.ViewModels
         {
             await Navigation.PushAsync(new CleanupPage());
         });
+
+        public void OnPictureDeleted(PictureDeletedEvent e)
+        {
+            int deletedPictureId = e.GetPictureId();
+            // find picture
+            int pictureIndex = Items.FindIndex(pic => pic.Id == deletedPictureId);
+            Picture picture = Items[pictureIndex];
+            // delte picture from album
+            string albumKey = picture.DirectoryName;
+            AlbumItems.ForEach(group =>
+            {
+                if (group.Key == albumKey)
+                {
+                    int groupIndex = group.ToList().FindIndex(pic => pic.Id == deletedPictureId);
+                    group.RemoveAt(groupIndex);
+                    // re-group pictures from album
+                    GroupPicturesByDate(group.ToList());
+                }
+            });
+        }
     }
 }
