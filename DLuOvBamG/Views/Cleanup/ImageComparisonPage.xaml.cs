@@ -21,7 +21,7 @@ namespace DLuOvBamG.Views
             List<CarouselViewItem> picsForCarousel = new List<CarouselViewItem>();
             foreach (Picture pic in pictures)
             {
-                if (!pic.Equals(mainPic)) picsForCarousel.Add(new CarouselViewItem(pic.Uri, comparingPicture.Uri));
+                if (!pic.Equals(mainPic)) picsForCarousel.Add(new CarouselViewItem(pic.Id, pic.Uri, comparingPicture.Uri));
             }
 
             VM = new ImageComparisonViewModel(this, picsForCarousel);
