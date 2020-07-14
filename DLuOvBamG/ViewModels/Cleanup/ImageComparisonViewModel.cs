@@ -19,12 +19,7 @@ namespace DLuOvBamG.ViewModels
         private int carouselViewPosition { get; set; }
         private List<CarouselViewItem> PicsToDelete { get; set; }
         private ImageComparisonPage ImageComparisonPage;
-        //private bool hasTouchStopped;
         public event PropertyChangedEventHandler PropertyChanged;
-        //private double firstPoint = -1;
-        //private int pointerCounter;
-
-        //private bool pauseSwiping;
 
         #region PropertyChanged
         // update carousel view position for both carousel views at the same time
@@ -101,36 +96,6 @@ namespace DLuOvBamG.ViewModels
             }
         }
 
-        /*public void stopTouch()
-        {
-            hasTouchStopped = true;
-        }*/
-
-        /*
-        public ICommand MarkPictureAsDeleted
-        {
-            get
-            {
-                return new Command(() =>
-                {
-                    // (un)mark current picture to be deleted and update the list of pictures to be deleted
-                    CarouselViewItem currentPicture = (CarouselViewItem)CarouselViewMain.CurrentItem;
-                    currentPicture.MarkForDeletion();
-                    if (PicsToDelete.Contains(currentPicture))
-                    {
-                        PicsToDelete.Remove(currentPicture);
-                    } 
-                    else
-                    {
-                        PicsToDelete.Add(currentPicture);
-                    }
-                    //update the icon
-                    BinImage.Source = currentPicture.IsMarkedForDeletion() ? "delete_restore_64px.png" : "delete_64px.png";
-                });
-            }
-        }
-        */
-
         public void AddMarkedPictureToDeleteList(CarouselViewItem item)
         {
             if (PicsToDelete.Contains(item))
@@ -141,7 +106,6 @@ namespace DLuOvBamG.ViewModels
             {
                 PicsToDelete.Add(item);
             }
-            
         }
 
         public ICommand DeletePictures
@@ -175,59 +139,5 @@ namespace DLuOvBamG.ViewModels
                 });
             }
         }
-
-        /*public async void OnSwiped(TouchActionEventArgs args)
-        {
-            //if (pauseSwiping) return;
-            pointerCounter++;
-            Console.WriteLine(pointerCounter);
-            if (firstPoint == -1)
-                firstPoint = args.Location.Y;
-            if (pointerCounter >= 7)
-            {
-                double diff = firstPoint - args.Location.Y;
-                double devicewidth = DeviceDisplay.MainDisplayInfo.Width;
-                //Console.WriteLine(devicewidth + "device width");
-                bool enoughDiff = diff < -30;
-                Console.WriteLine(diff + " diff");
-                if (enoughDiff) 
-                {
-                    Console.WriteLine("enough difference");
-                    SwipeDown();
-                    pauseSwiping = true;
-                    await Task.Delay(1000);
-                    pauseSwiping = false;
-                    await Task.Delay(1000);
-                }
-                firstPoint = -1;
-                pointerCounter = 0;
-            }
-        }*/
-
-        /*private void SwipeRight()
-        {
-            Console.WriteLine("swipe left " + CarouselViewPosition);
-            if (CarouselViewPosition < PictureList.Count - 1)
-            {
-                CarouselViewPosition += 1;
-            }
-        }
-        private void SwipeLeft()
-        {
-            Console.WriteLine("swipe right " + CarouselViewPosition);
-            if (CarouselViewPosition > 0)
-            {
-                CarouselViewPosition -= 1;
-            }
-        }*/
-
-        /*private void SwipeDown()
-        {
-            // Handle the swipe
-            //CarouselViewItem picToDelete = PictureList.Find(pic => pic.Uri == CurrentPictureUri);
-            //PicsToDelete.Add(picToDelete);
-            //picToDelete.Id;
-            Console.WriteLine("swiped down.");
-        }*/
     }
 }
