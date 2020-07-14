@@ -6,8 +6,11 @@ namespace DLuOvBamG.Models
     {
         public int Id;
         public string Uri { get; }
+        // double value for opacity of image in UI
         public double markedForDeletion { get; set; }
-        public string ComparingPictureUri { get; }
+        private string ComparingPictureUri;
+        public string currentUri;
+        public bool IsTouched { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
 
         #region property changed
@@ -26,29 +29,63 @@ namespace DLuOvBamG.Models
                 return markedForDeletion;
             }
         }
+
+        public string CurrentUri
+        {
+            set
+            {
+                if (currentUri != value)
+                {
+                    currentUri = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CurrentUri"));
+                }
+            }
+            get
+            {
+                return currentUri;
+            }
+        }
         #endregion
 
         public CarouselViewItem(int id, string uri, string comparingUri)
         {
-            Id = id; 
+            Id = id;
             Uri = uri;
+            CurrentUri = Uri;
             ComparingPictureUri = comparingUri;
             MarkedForDeletion = 1;
         }
 
         public void MarkForDeletion()
         {
-            MarkedForDeletion = 0.6;
-        }
-
-        public void UnmarkForDeletion()
-        {
-            MarkedForDeletion = 1;
+            MarkedForDeletion = MarkedForDeletion == 1 ? 0.6 : 1;
         }
 
         public bool IsMarkedForDeletion()
         {
             return MarkedForDeletion != 1;
+        }
+
+        public void ChangeURIs()
+        {
+            if (CurrentUri.Equals(Uri))
+            {
+                ChangeURIToComparingPicture();
+            }
+            else
+            {
+                ChangeURIBackToOriginal();
+            }
+        }
+
+        public void ChangeURIBackToOriginal()
+        {
+            CurrentUri = Uri;
+        }
+
+        public void ChangeURIToComparingPicture()
+        {
+            CurrentUri = ComparingPictureUri;
         }
     }
 }
