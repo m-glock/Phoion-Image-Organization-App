@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Android.Graphics;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
+using Xamarin.Forms;
 
 namespace DLuOvBamG.Services
 {
@@ -24,6 +26,21 @@ namespace DLuOvBamG.Services
 
             string[] filePaths = Directory.GetFiles(folderPath, "*.jpg");
             return filePaths;
+        }
+
+        public async Task<Models.Picture[]> GetPicturesFromDevice()
+        {
+            var status = await CheckAndRequestExternalStoragePermissionAsync();
+            if (status != PermissionStatus.Granted)
+            {
+                // Notify user permission was denied
+                Models.Picture[] empty = new Models.Picture[] { };
+                return empty;
+            }
+
+            IImageService imageService = DependencyService.Get<IImageService>();
+            Models.Picture[] pictures = imageService.GetAllImagesFromDevice();
+            return pictures;
         }
 
         public Task<string> ReadFileAsync(string filePath)

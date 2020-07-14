@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DLuOvBamG.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,5 +9,7 @@ namespace DLuOvBamG.Services
     {
         DateTime GetDateTaken(string filePath);
         byte[] GetFileBytes(string filePath);
+
+        Picture[] GetAllImagesFromDevice();
     }
 }
