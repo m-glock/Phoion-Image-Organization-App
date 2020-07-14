@@ -30,7 +30,7 @@ namespace DLuOvBamG.Services
         {
 
             // TODO make it asynchronous
-            List<Picture> pictureList = DatabaseImageRetriever.GetImagesFromDatabase().Result;
+            List<Picture> pictureList = App.Database.GetPicturesAsync().Result;
 
             foreach (ScanOptionsEnum option in options.Keys.ToList())
             {
