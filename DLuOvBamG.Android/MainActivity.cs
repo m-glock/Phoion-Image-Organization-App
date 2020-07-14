@@ -75,19 +75,20 @@ namespace DLuOvBamG.Droid
 			// physical back button its safe 
 			// to cover the both events
 
-			// retrieve the current xamarin forms page instance
-			var currentpage = (CustomBackButtonPage)Xamarin.Forms.Application.Current.MainPage.Navigation.NavigationStack.LastOrDefault();
+			try
+			{
+				// retrieve the current xamarin forms page instance
+				var currentpage = (CustomBackButtonPage)Xamarin.Forms.Application.Current.MainPage.Navigation.NavigationStack.LastOrDefault();
 
-			// check if the page has subscribed to 
-			// the custom back button event
-			if (currentpage?.CustomBackButtonAction != null)
-			{
-				currentpage?.CustomBackButtonAction.Invoke();
+				// check if the page has subscribed to 
+				// the custom back button event
+				if (currentpage?.CustomBackButtonAction != null)
+				{
+					currentpage?.CustomBackButtonAction.Invoke();
+				}
 			}
-			else
-			{
-				base.OnBackPressed();
-			}
+			catch (InvalidCastException ex) { }
+			base.OnBackPressed();
 		}
 	}
 }
