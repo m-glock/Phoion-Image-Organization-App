@@ -75,18 +75,19 @@ namespace DLuOvBamG.Droid
             // to cover the both events
 
             // retrieve the current xamarin forms page instance
-            var currentpage = (CustomBackButtonPage)Xamarin.Forms.Application.Current.MainPage.Navigation.NavigationStack.LastOrDefault();
+            try
+            {
+                var currentpage = (CustomBackButtonPage)Xamarin.Forms.Application.Current.MainPage.Navigation.NavigationStack.LastOrDefault();
 
-            // check if the page has subscribed to 
-            // the custom back button event
-            if (currentpage?.CustomBackButtonAction != null)
-            {
-                currentpage?.CustomBackButtonAction.Invoke();
-            }
-            else
-            {
-                base.OnBackPressed();
-            }
+                // check if the page has subscribed to 
+                // the custom back button event
+                if (currentpage?.CustomBackButtonAction != null)
+                {
+                    currentpage?.CustomBackButtonAction.Invoke();
+                }
+            } catch (InvalidCastException ex) { }
+
+            base.OnBackPressed();
         }
     }
 }
