@@ -5,9 +5,9 @@ namespace DLuOvBamG.Models
     class CarouselViewItem : INotifyPropertyChanged
     {
         public string Uri { get; }
+        // double value for opacity of image in UI
         public double markedForDeletion { get; set; }
         private string ComparingPictureUri;
-        public string deleteIcon { get; set; }
         public string currentUri;
         public bool IsTouched { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
@@ -26,22 +26,6 @@ namespace DLuOvBamG.Models
             get
             {
                 return markedForDeletion;
-            }
-        }
-
-        public string DeleteIcon
-        {
-            set
-            {
-                if (deleteIcon != value)
-                {
-                    deleteIcon = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("DeleteIcon"));
-                }
-            }
-            get
-            {
-                return deleteIcon;
             }
         }
 
@@ -68,13 +52,11 @@ namespace DLuOvBamG.Models
             CurrentUri = Uri;
             ComparingPictureUri = comparingUri;
             MarkedForDeletion = 1;
-            DeleteIcon = "delete_64px.png";
         }
 
         public void MarkForDeletion()
         {
             MarkedForDeletion = MarkedForDeletion == 1 ? 0.6 : 1;
-            DeleteIcon = MarkedForDeletion == 1 ? "delete_64px.png" : "delete_restore_64px.png";
         }
 
         public bool IsMarkedForDeletion()
@@ -86,11 +68,11 @@ namespace DLuOvBamG.Models
         {
             if (CurrentUri.Equals(Uri))
             {
-                CurrentUri = ComparingPictureUri;
+                ChangeURIToComparingPicture();
             }
             else
             {
-                CurrentUri = Uri;
+                ChangeURIBackToOriginal();
             }
         }
 

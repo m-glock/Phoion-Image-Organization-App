@@ -62,9 +62,12 @@ namespace DLuOvBamG.ViewModels
             PicsToDelete = new List<CarouselViewItem>();
         }
 
+        /*
+         * show popup before going clicking back button
+         */
         public async void ShowAlertSelectionLost()
         {
-            // if there are pictures to be deleted, make sure to let the user know his selection willbe lost if they leave the site
+            // if there are pictures to be deleted, make sure to let the user know his selection will be lost if they leave the site
             if (PicsToDelete.Count > 0) {
                 bool result = await ImageComparisonPage.DisplayAlert("Careful",
                     "If you go back now without deleting the selected pictures, your selection will be lost.",
@@ -80,12 +83,18 @@ namespace DLuOvBamG.ViewModels
             }
         }
         
+        /*
+         * started touching the screen
+         */
         public async Task OnPressedAsync(CarouselViewItem current)
         {
             current.IsTouched = true;
             await ShowBasePic(current);
         }
 
+        /*
+         * finished touching the screen
+         */
         public void OnReleasedAsync(CarouselViewItem current)
         {
             CarouselViewItem currentItem = (CarouselViewItem)CarouselViewMain.CurrentItem;
@@ -111,6 +120,9 @@ namespace DLuOvBamG.ViewModels
             }
         }
 
+        /*
+         * add or remove pictures from list of pictures to be removed
+         */
         public void AddMarkedPictureToDeleteList(CarouselViewItem item)
         {
             if (PicsToDelete.Contains(item)) PicsToDelete.Remove(item);
@@ -118,6 +130,11 @@ namespace DLuOvBamG.ViewModels
             AmountOfDeletedPics = PicsToDelete.Count;
         }
 
+        /*
+         * check in with user to be sure to delete the selected pictures
+         * remove picture in ScanOptionDetailViewPage
+         * remove the whole set if there are less than three pictures left
+         * */
         public ICommand DeletePictures
         {
             get

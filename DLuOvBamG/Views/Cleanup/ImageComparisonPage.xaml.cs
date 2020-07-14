@@ -46,6 +46,9 @@ namespace DLuOvBamG.Views
             }
         }
 
+        /*
+         * check what kind of touch has been registered and call the right method in ViewModel
+         */
         public void ImageTouched(object sender, TouchActionEventArgs args)
         {
             CarouselViewItem currentPictureItem = (CarouselViewItem)ImageMainView.CurrentItem;
@@ -55,13 +58,10 @@ namespace DLuOvBamG.Views
                 switch (args.Type)
                 {
                     case TouchActionType.Pressed:
-                        //Console.WriteLine("tap started"); 
                         VM.OnPressedAsync(currentPictureItem);
                         break;
                     case TouchActionType.Released:
                     case TouchActionType.Cancelled:
-                    //case TouchActionType.Exited:
-                        //Console.WriteLine("tap stopped");
                         VM.OnReleasedAsync(currentPictureItem);
                         break;
                     default:
@@ -70,7 +70,7 @@ namespace DLuOvBamG.Views
             }
         }
 
-        /**
+        /*
          * always revert from comparing picture back to actual image when swiping to the next element
          * change trash icon depending on whether the current image is marked to be deleted or not
          * delete_64px.png: 
@@ -78,15 +78,26 @@ namespace DLuOvBamG.Views
          */
         private void CurrentItemChanged(object sender, CurrentItemChangedEventArgs e)
         {
+            // make sure that picture from set is displayed after swipe
             CarouselViewItem previousPicture = (CarouselViewItem)e.PreviousItem;
             if (previousPicture != null)
             {
                 previousPicture.ChangeURIBackToOriginal();
                 previousPicture.IsTouched = false;
             }
+
+            // decide whether to show checkbox for deletion as amrked or unmarked
+            CarouselViewItem currentItem = (CarouselViewItem)e.CurrentItem;
+            DeleteCheckbox.CheckedChanged -= DeleteCheckboxChecked;
+            DeleteCheckbox.IsChecked = currentItem.IsMarkedForDeletion();
+            DeleteCheckbox.CheckedChanged += DeleteCheckboxChecked;
+            
         }
 
-        private void DeleteTapped(object sender, EventArgs e)
+        /*
+         * mark or unmark the picture for deletion
+         */
+        private void DeleteCheckboxChecked(object sender, EventArgs e)
         {
             CarouselViewItem currentPicture = (CarouselViewItem)ImageMainView.CurrentItem;
             currentPicture.MarkForDeletion();
