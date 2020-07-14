@@ -27,12 +27,13 @@ namespace DLuOvBamG.Views
 				obsvPictures.Add(new ObservableCollection<Picture>(picturesList));
 			}
 
-			VM = new ScanOptionDisplayViewModel(option, obsvPictures);
+			VM = new ScanOptionDisplayViewModel(option, obsvPictures, Navigation);
 			BindingContext = VM;
 
 			Slider.Value = optionValue;
 			Title = option.GetTextForDisplay();
 
+			// add an image grid or image slider for each collection
 			for (int i = 0; i < pictures.Count; i++)
 			{
 				AddCollectionViewToPage(i);
@@ -59,6 +60,7 @@ namespace DLuOvBamG.Views
 			}
 
 			CollectionView colView = new CollectionView();
+			colView.SelectionMode = SelectionMode.Single;
 			if (Option.Equals(ScanOptionsEnum.similarPics))
 			{
 				colView.ItemsLayout = LinearItemsLayout.Horizontal; 
@@ -85,7 +87,6 @@ namespace DLuOvBamG.Views
 				else
                 {
 					image.HeightRequest = 100;
-
 				}
 				image.SetBinding(Image.SourceProperty, "Uri");
 				contentView.Content = image;
@@ -102,7 +103,15 @@ namespace DLuOvBamG.Views
 			CollectionView view = (CollectionView)sender;
 			string groupID = view.ClassId;
 			Picture selectedPicture = (Picture)e.CurrentSelection[0];
-			VM.OpenComparisonPage(selectedPicture, groupID);
+			//view.SelectedItem = null;
+			if (Option.Equals(ScanOptionsEnum.similarPics))
+			{
+				VM.OpenComparisonPage(selectedPicture, groupID);
+			}
+			else
+            {
+				VM.OpenImageDetailViewPage(selectedPicture);
+			}
 		}
 
 		private void ValueChanged(object sender, ValueChangedEventArgs e)

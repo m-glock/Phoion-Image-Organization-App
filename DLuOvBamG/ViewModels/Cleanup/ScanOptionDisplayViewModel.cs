@@ -50,11 +50,12 @@ namespace DLuOvBamG.ViewModels
             }
         }
 
-        public ScanOptionDisplayViewModel(ScanOptionsEnum option, ObservableCollection<ObservableCollection<Picture>> pictures)
+        public ScanOptionDisplayViewModel(ScanOptionsEnum option, ObservableCollection<ObservableCollection<Picture>> pictures, INavigation navigation)
         {
 			Title = "Cleanup Results";
             Option = option;
             Pictures = pictures;
+            Navigation = navigation;
         }
 
 		public ObservableCollection<Picture> GetPictureListForGroup(int groupID)
@@ -62,6 +63,28 @@ namespace DLuOvBamG.ViewModels
 			if (groupID > Pictures.Count) return null;
 			return Pictures[groupID];
 		}
+
+        public async void OpenComparisonPage(Picture comparingPicture, string groupID)
+        {
+            try
+            {
+                int id = int.Parse(groupID);
+                List<Picture> pictures = new List<Picture>(Pictures[id]);
+                //List<List<Picture>> allPictures = App.tf.GetAllPicturesForOption(Option);
+                //List<Picture> pictures = allPictures[id];
+                await Navigation.PushAsync(new ImageComparisonPage(pictures, comparingPicture));
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine($"Unable to parse '{groupID}'");
+            }
+
+        }
+
+        public async void OpenImageDetailViewPage(Picture picture)
+        {
+            await Navigation.PushAsync(new ImageDetailPage(picture));
+        }
 
         public ICommand UpdatePicturesAfterValueChange => new Command(async () =>
         {
