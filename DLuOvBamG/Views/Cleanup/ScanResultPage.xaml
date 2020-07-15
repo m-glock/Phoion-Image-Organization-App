@@ -18,7 +18,7 @@
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
-            <StackLayout x:Name="StackLayout" Margin="0,20,0,0">
+            <StackLayout x:Name="StackLayout" Padding="10,50,0,10">
         <!-- Inhalt wird dynamisch erzeugt und eigefügt -->
         
         

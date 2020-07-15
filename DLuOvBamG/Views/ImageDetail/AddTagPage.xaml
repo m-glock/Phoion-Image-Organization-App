@@ -11,6 +11,7 @@
         </OnPlatform>
     </ContentPage.Padding>
     <ContentPage.Content>
+        <Grid>
         <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
             <Picker 
                 x:Name="picker"
@@ -23,5 +24,6 @@
             <Button Text="Save" Command="{Binding SaveNewTag}" />
             <Button Text="Dismiss" Command="{Binding CloseEditPage}" />
         </StackLayout>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

@@ -19,11 +19,14 @@
 
             <Style TargetType="Label">
                 <Setter Property="TextColor" Value="{StaticResource PrimeColor}"/>
+                <Setter Property="FontFamily" Value ="Roboto"/>
             </Style>
             <Style TargetType="Slider">
                 <Setter Property="ThumbColor" Value="{StaticResource PrimeColor}"/>
                 <Setter Property="MinimumTrackColor" Value="{StaticResource secondColor}"/>
-                
+            </Style>
+            <Style TargetType="Entry">
+                <Setter Property="BackgroundColor" Value="{StaticResource bgColor}"/>
             </Style>
             <Style TargetType="ContentView">
                 <Setter Property="BackgroundColor" Value="{StaticResource bgColor}"/>

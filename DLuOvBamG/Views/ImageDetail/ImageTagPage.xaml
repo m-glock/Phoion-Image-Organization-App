@@ -24,8 +24,8 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Frame Padding="15,15,15,15" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds=".95,.95,70,70" CornerRadius="50">
-            <ImageButton Source="@drawable/edit_icon.png" BackgroundColor="White" Command="{Binding OpenEditPage}"/>
+        <Frame Padding="15,15,15,15" AbsoluteLayout.LayoutFlags="PositionProportional" BackgroundColor="{StaticResource PrimeColor}"  AbsoluteLayout.LayoutBounds=".95,.95,70,70" CornerRadius="50">
+            <ImageButton Source="@drawable/edit_icon.png" BackgroundColor="{StaticResource PrimeColor}" Command="{Binding OpenEditPage}"/>
         </Frame>
     </AbsoluteLayout>
 </ContentPage>
