@@ -97,6 +97,7 @@
     <Compile Include="PathService.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SplashActivity.cs" />
     <Compile Include="TensorflowClassifier.cs" />
     <Compile Include="TouchEffect.cs" />
   </ItemGroup>
@@ -105,7 +106,13 @@
     <AndroidAsset Include="Assets\converted_model.tflite" />
     <AndroidAsset Include="Assets\modelBlur.tflite" />
     <AndroidAsset Include="Assets\converted_modelTroelf.tflite" />
-    <AndroidAsset Include="Assets\converted_modelKuhmuhMilch.tflite" />
+    <EmbeddedResource Include="Assets\Roboto-Regular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Roboto-Bold.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+     <AndroidAsset Include="Assets\converted_modelKuhmuhMilch.tflite" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />
@@ -145,16 +152,6 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\stockImages\sloth.jpg" />
-    <AndroidResource Include="Resources\drawable\categories_64px.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable\delete_64px.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable\Info_64px.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable\similar_pictures_64px.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\labelsSqueezenet.txt" />
@@ -181,7 +178,46 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\cleanup_64px.png" />
+    <AndroidResource Include="Resources\drawable\cleanup_64px.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\cleanup_64_px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\similar_pictures_64_px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\categories_64_px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\delete_64_px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\Info_64_px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\edit_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\SPLASHSCREEN_3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\Logo_2_512_px.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\splash_screen.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\SPLASHSCREEN_small.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\SPLASHSCREEN_small_transperency.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\delete_restore_64px.png" />

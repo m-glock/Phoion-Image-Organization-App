@@ -13,7 +13,7 @@
     </ContentView.Resources>
     <ContentView.Content>
         <AbsoluteLayout>
-            <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
+            <ScrollView Margin="5,5,5,5"  AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
                 <flv:FlowListView 
                     FlowColumnCount="3"
                     SeparatorVisibility="None"

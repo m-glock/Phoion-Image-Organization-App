@@ -61,8 +61,7 @@ namespace DLuOvBamG.Views
 
             BoxView bv = new BoxView
             {
-                BackgroundColor = Color.AntiqueWhite,
-                Opacity = 0.8
+                 Opacity = 0.8
             };
             grid.Children.Add(bv);
             Grid.SetRow(bv, 0);
@@ -97,7 +96,6 @@ namespace DLuOvBamG.Views
             Frame imageFrame = new Frame
             {
                 Padding = new Thickness(5, 5, 5, 5),
-                BackgroundColor = Color.AntiqueWhite,
                 Opacity = 0.8,
                 HasShadow = false
             };

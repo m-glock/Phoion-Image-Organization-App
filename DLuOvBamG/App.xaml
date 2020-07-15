@@ -10,8 +10,51 @@
         <ResourceDictionary>
             <!--Global Styles-->
             <Color x:Key="NavigationPrimary">#009900</Color>
+            <Color x:Key="PrimeColor">#003d33</Color>
+            <Color x:Key="secondColor">#00695c</Color>
+            <Color x:Key="bgColor">#d2d5d5</Color>
+            <!--<Color x:Key="LightTextColor">#003d3</Color>
+            <Color x:Key="Primary">#2196F3</Color>
+            <Color x:Key="Accent">#96d1ff</Color>-->
+
+            <Style TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource PrimeColor}"/>
+                <Setter Property="FontFamily" Value ="Roboto"/>
+            </Style>
+            <Style TargetType="Slider">
+                <Setter Property="ThumbColor" Value="{StaticResource PrimeColor}"/>
+                <Setter Property="MinimumTrackColor" Value="{StaticResource secondColor}"/>
+            </Style>
+            <Style TargetType="Entry">
+                <Setter Property="BackgroundColor" Value="{StaticResource bgColor}"/>
+            </Style>
+            <Style TargetType="ContentView">
+                <Setter Property="BackgroundColor" Value="{StaticResource bgColor}"/>
+            </Style>
+            <Style TargetType="BoxView">
+                <Setter Property="BackgroundColor" Value="{StaticResource PrimeColor}"/>
+            </Style>
+            <Style TargetType="AbsoluteLayout">
+                <Setter Property="BackgroundColor" Value="{StaticResource bgColor}"/>
+            </Style>
+            <Style TargetType="StackLayout">
+                <Setter Property="BackgroundColor" Value="{StaticResource bgColor}"/>
+            </Style>
+            <Style TargetType="Switch">
+               <Setter Property="OnColor" Value="{StaticResource secondColor}"/>
+                <Setter Property="ThumbColor" Value="{StaticResource PrimeColor}"/>
+            </Style>
+            <Style TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="{StaticResource bgColor}"/>
+            </Style>
+            <Style TargetType="Frame">
+                <Setter Property="BackgroundColor" Value="{StaticResource bgColor}"/>
+            </Style>
+            <Style TargetType="ContentPage">
+                <Setter Property="BackgroundColor" Value="{StaticResource bgColor}"/>
+            </Style>
             <Style TargetType="NavigationPage">
-                <Setter Property="BarBackgroundColor" Value="{StaticResource NavigationPrimary}" />
+                <Setter Property="BarBackgroundColor" Value="{StaticResource secondColor}" />
                 <Setter Property="BarTextColor" Value="White" />
             </Style>
         </ResourceDictionary>
