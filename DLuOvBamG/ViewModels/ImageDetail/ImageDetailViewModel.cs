@@ -42,7 +42,7 @@ namespace DLuOvBamG.ViewModels
 
         public ICommand DeleteImage => new Command(async () => {
             int deletedId = await imageFileStorage.DeleteFileAsync(Image);
-            if(deletedId == -1)
+            if(deletedId != -1)
             {
                 OnPictureDeleted(Image.Id);
                 await Page.Navigation.PopAsync();
