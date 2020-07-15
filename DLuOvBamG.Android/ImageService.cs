@@ -107,8 +107,8 @@ namespace DLuOvBamG.Droid
             if (dateFilter.HasValue)
             {
                 DateTimeOffset dateTimeOffset = new DateTimeOffset(dateFilter.Value);
-                selection = ImageColumns.DateAdded + ">? ";
-                selectionArgs = new string[] { "" + dateTimeOffset.ToUnixTimeMilliseconds() };
+                selection = ImageColumns.DateAdded + ">?";
+                selectionArgs = new string[] { "" + dateTimeOffset.ToUnixTimeSeconds() };
             }
             //Stores all the images from the gallery in Cursor
             ICursor cursor = CurrentContext.ContentResolver.Query(uri, projection, selection, selectionArgs, orderBy);
@@ -125,6 +125,7 @@ namespace DLuOvBamG.Droid
             int isPrivateIndex = cursor.GetColumnIndex(ImageColumns.IsPrivate);
             int sizeIndex = cursor.GetColumnIndex(ImageColumns.Size);
             int dateTakenIndex = cursor.GetColumnIndex(ImageColumns.DateTaken);
+            int dateAddedIndex = cursor.GetColumnIndex(ImageColumns.DateAdded);
 
             for (int i = 0; i < count; i++)
             {
@@ -137,7 +138,10 @@ namespace DLuOvBamG.Droid
                 string isPrivate = cursor.GetString(isPrivateIndex);
                 string size = cursor.GetString(sizeIndex);
                 string dateTaken = cursor.GetString(dateTakenIndex);
+                string dateAdded = cursor.GetString(dateAddedIndex);
                 DateTime datetimeTaken = ConvertFromUnixTimestamp(Convert.ToDouble(dateTaken) / 1000);
+                DateTime datetimeAdded = ConvertFromUnixTimestamp(Convert.ToDouble(dateAdded));
+
                 Point geoLocation = GeoService.GetGeoLocations(path);
 
                 Models.Picture newPicture = new Models.Picture
