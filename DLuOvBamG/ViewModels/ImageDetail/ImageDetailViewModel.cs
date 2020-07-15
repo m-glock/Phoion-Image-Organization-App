@@ -18,11 +18,12 @@ namespace DLuOvBamG.ViewModels
     {
         readonly ImageFileStorage imageFileStorage = new ImageFileStorage();
         public Picture Image { get; set; }
-        public INavigation Navigation;
+        private ImageDetailPage Page;
 
-        public ImageDetailViewModel(Picture item)
+        public ImageDetailViewModel(Picture item, ImageDetailPage page)
         {
             Image = item;
+            Page = page;
         }
 
         private void OnPictureDeleted(int deletedId)
@@ -32,17 +33,24 @@ namespace DLuOvBamG.ViewModels
         }
 
         public ICommand GetCategories => new Command(async () => {
-            await Navigation.PushAsync(new ImageTagPage(Image.Id), true);
+            await Page.Navigation.PushAsync(new ImageTagPage(Image.Id), true);
         });
 
         public ICommand GetInfo => new Command(async () => {
-            await Navigation.PushAsync(new InfoPage(Image), true);
+            await Page.Navigation.PushAsync(new InfoPage(Image), true);
         });
 
         public ICommand DeleteImage => new Command(async () => {
             int deletedId = await imageFileStorage.DeleteFileAsync(Image);
-            OnPictureDeleted(Image.Id);
-            await Navigation.PopAsync();
+            if(deletedId == -1)
+            {
+                OnPictureDeleted(Image.Id);
+                await Page.Navigation.PopAsync();
+            } else
+            {
+                await Page.DisplayAlert("Not possible", "Image cannot be deleted. It might be read only.", "Okay");
+            }
+            
         });
 
         public ICommand GetSimilar => new Command(async () =>
