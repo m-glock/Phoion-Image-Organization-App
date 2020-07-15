@@ -13,10 +13,10 @@
     </ContentPage.BindingContext>
     <AbsoluteLayout>
         <views:AlbumGrid/>
-        <Frame Padding="15,15,15,15" BackgroundColor="#F5F5F5" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds=".95,.95,70,70" CornerRadius="50">
+        <Frame Padding="15,15,15,15" BackgroundColor="{StaticResource PrimeColor}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds=".95,.95,70,70" CornerRadius="50">
             <!-- From https://icons8.com/icons/set/broom-->
-            <ImageButton Source="cleanup_64px.png" BackgroundColor="#F5F5F5"
-                     Command="{Binding OpenCleanupPage}" />
+            <ImageButton Source="cleanup_64_px.png" BackgroundColor="{StaticResource PrimeColor}"
+                     Command="{Binding OpenCleanupPage}"/>
         </Frame>
     </AbsoluteLayout>
 </ContentPage>

@@ -10,7 +10,7 @@
     x:Class="DLuOvBamG.Views.ImageGrid">
     <ContentPage.Content>
         <AbsoluteLayout>
-            <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
+            <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1" Margin="5,0,5,0" AbsoluteLayout.LayoutFlags="All">
                 <flv:FlowListView 
                     FlowColumnCount="4"
                     SeparatorVisibility="None"
@@ -22,9 +22,9 @@
                     FlowGroupDisplayBinding="{Binding Key}">
                     <flv:FlowListView.FlowColumnTemplate>
                         <DataTemplate>
-                            <Grid Padding="3">
+                            <Grid Padding="5">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="100" />
+                                    <RowDefinition Height="80" />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />

@@ -27,17 +27,17 @@
                 <Image HeightRequest="100" Aspect="AspectFill" Source="{Binding Image.Uri}"/>
              </ctrl:PinchAndPanContainer.Content>
         </ctrl:PinchAndPanContainer>
-        <Grid  BackgroundColor="White" Grid.Row="1" Grid.Column="0">
-            <ImageButton x:Name ="categories" Source="categories_64px.png" WidthRequest="32" HeightRequest="32" VerticalOptions="Center" HorizontalOptions="Center" Command="{Binding GetCategories}"></ImageButton>
+        <Grid  BackgroundColor="{StaticResource PrimeColor}" Grid.Row="1" Grid.Column="0">
+            <ImageButton BackgroundColor="Transparent" x:Name ="categories" Source="categories_64_px.png" WidthRequest="32" HeightRequest="32" VerticalOptions="Center" HorizontalOptions="Center" Command="{Binding GetCategories}"></ImageButton>
         </Grid>
-        <Grid  BackgroundColor="White" Grid.Row="1" Grid.Column="1">
-            <ImageButton x:Name ="info" Source="Info_64px.png" WidthRequest="32" HeightRequest="32" VerticalOptions="Center" HorizontalOptions="Center" Command="{Binding GetInfo}"></ImageButton>
+        <Grid  Grid.Row="1" Grid.Column="1" BackgroundColor="{StaticResource PrimeColor}">
+            <ImageButton BackgroundColor="Transparent" x:Name ="info" Source="Info_64_px.png" WidthRequest="32" HeightRequest="32" VerticalOptions="Center" HorizontalOptions="Center" Command="{Binding GetInfo}"></ImageButton>
         </Grid>
-        <Grid  BackgroundColor="White" Grid.Row="1" Grid.Column="2">
-            <ImageButton  x:Name="delete" Source="delete_64px.png" WidthRequest="32" HeightRequest="32" VerticalOptions="Center" HorizontalOptions="Center" Command="{Binding DeleteImage}" ></ImageButton>
-        </Grid>   
-        <Grid  BackgroundColor="White" Grid.Row="1" Grid.Column="3"  >
-            <ImageButton x:Name="similar" Source="similar_pictures_64px.png" WidthRequest="32" HeightRequest="32" VerticalOptions="Center" HorizontalOptions="Center" Command="{Binding GetSimilar}" ></ImageButton>
+        <Grid  Grid.Row="1" Grid.Column="2" BackgroundColor="{StaticResource PrimeColor}">
+            <ImageButton BackgroundColor="Transparent" x:Name="delete" Source="delete_64_px.png" WidthRequest="32" HeightRequest="32" VerticalOptions="Center" HorizontalOptions="Center" Command="{Binding DeleteImage}" ></ImageButton>
+        </Grid>
+        <Grid  Grid.Row="1" Grid.Column="3" BackgroundColor="{StaticResource PrimeColor}" >
+            <ImageButton BackgroundColor="Transparent" x:Name="similar" Source="similar_pictures_64_px.png" WidthRequest="32" HeightRequest="32" VerticalOptions="Center" HorizontalOptions="Center" Command="{Binding GetSimilar}" ></ImageButton>
         </Grid>
         <!--<Label x:Name="debugTestString" BackgroundColor="White" Text="{Binding debugString}"  Grid.Row="2" Grid.ColumnSpan="4"/>-->
     </Grid>    

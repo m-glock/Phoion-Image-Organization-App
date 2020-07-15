@@ -11,8 +11,14 @@
     <ContentPage.BindingContext>
         <vm:ScanResultViewModel />
     </ContentPage.BindingContext>
-
-    <StackLayout x:Name="StackLayout" Margin="0,20,0,0">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource bgColor}"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+            <StackLayout x:Name="StackLayout" Margin="0,20,0,0">
         <!-- Inhalt wird dynamisch erzeugt und eigefügt -->
         
         
