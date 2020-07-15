@@ -278,7 +278,7 @@ namespace DLuOvBamG.Droid
 
         public void FillFeatureVectorMatix()
         {
-            if (FeatureMatrix.Length < 0) return;
+            if (FeatureMatrix != null) return;
 
             FeatureMatrix = new Tuple<int, double>[FeatureVectors.Count][];
 
