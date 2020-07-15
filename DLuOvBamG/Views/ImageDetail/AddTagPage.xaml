@@ -8,20 +8,55 @@
     <ContentPage.Padding>
         <OnPlatform x:TypeArguments="Thickness">
             <On Platform="iOS" Value="0,40,0,0" />
+            <On Platform="Android" Value="40" />
         </OnPlatform>
     </ContentPage.Padding>
     <ContentPage.Content>
-        <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-            <Picker 
-                x:Name="picker"
-                Title="Select a tag"
-                ItemsSource="{Binding CustomTags}"
-                ItemDisplayBinding="{Binding Name}"
-                SelectedItem="{Binding SelectedCustomTag}"
-            />
-            <Entry Text="{Binding CustomTagInput}"/>
-            <Button Text="Save" Command="{Binding SaveNewTag}" />
-            <Button Text="Dismiss" Command="{Binding CloseEditPage}" />
+        <StackLayout HorizontalOptions="Fill" VerticalOptions="Center">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label
+                    Text="Add new tag"
+                    Style="{DynamicResource SubtitleStyle}"
+                    VerticalOptions ="Fill"
+                    HorizontalOptions="Center"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                ></Label>
+                <Picker 
+                    x:Name="picker"
+                    Title="Select a tag"
+                    HorizontalOptions="FillAndExpand"
+                    ItemsSource="{Binding SelectOptions}"
+                    ItemDisplayBinding="{Binding Name}"
+                    SelectedItem="{Binding SelectedCustomTag}"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                />
+                <Entry
+                    Placeholder="Enter new tag"
+                    Text="{Binding CustomTagInput}"
+                    HorizontalOptions="FillAndExpand"
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                />
+                <Button Text="Save" Command="{Binding SaveNewTag}" Grid.Row="5" Grid.Column="1" />
+                <Button Text="Dismiss" Command="{Binding CloseEditPage}" Grid.Row="5" Grid.Column="0" BackgroundColor="Transparent"/>
+            </Grid>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
