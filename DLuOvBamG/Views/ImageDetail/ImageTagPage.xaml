@@ -7,17 +7,19 @@
              x:Class="DLuOvBamG.Views.ImageTagPage"
              Title="Kategorie Tags">
     <AbsoluteLayout>
-        <ListView  x:Name="lstView" RowHeight="60" ItemsSource="{Binding Tags}"  AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
+        <ListView  x:Name="tagList" RowHeight="60" ItemsSource="{Binding Tags}"  AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <StackLayout Orientation="Horizontal" HorizontalOptions="Fill">
+                        <StackLayout x:Name="Item" Orientation="Horizontal" HorizontalOptions="Fill">
                             <Label Text = "{Binding Name}" FontSize="24" VerticalOptions="Center"  HorizontalOptions="StartAndExpand" Padding="10, 0, 0, 0"/>
                             <Button 
                                 Text="Delete"
                                 VerticalOptions="Center"
                                 HorizontalOptions="End"
+                                BindingContext="{Binding Source={x:Reference tagList}, Path=BindingContext}"
                                 Command="{Binding DeleteButtonClicked}"
+                                CommandParameter="{Binding Source={x:Reference Item}, Path=BindingContext}"
                             />
                         </StackLayout>
                     </ViewCell>
@@ -25,7 +27,7 @@
             </ListView.ItemTemplate>
         </ListView>
         <Frame Padding="15,15,15,15" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds=".95,.95,70,70" CornerRadius="50">
-            <ImageButton Source="@drawable/edit_icon.png" BackgroundColor="White" Command="{Binding OpenEditPage}"/>
+            <ImageButton Source="edit_72px.png" WidthRequest="64" HeightRequest="64" BackgroundColor="White" Command="{Binding OpenEditPage}"/>
         </Frame>
     </AbsoluteLayout>
 </ContentPage>
