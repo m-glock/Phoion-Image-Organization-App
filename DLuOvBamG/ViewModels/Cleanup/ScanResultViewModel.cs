@@ -13,15 +13,15 @@ namespace DLuOvBamG.ViewModels
 
         public ScanResultViewModel()
         {
-             
+
         }
 
-        public void FillPictureListsTF()
-        {
-            App.tf.FillPictureLists(OptionValues);//TODO async
-        }
+        //public async void FillPictureListsTF()
+        //{
+        //    await App.tf.FillPictureLists(OptionValues);//TODO async
+        //}
 
-        public ICommand OpenScanOptionDisplayPage => new Command(async (object option) =>
+        public ICommand openBlurryPicsPage => new Command(async () =>
         {
             ScanOptionsEnum chosenOption = (ScanOptionsEnum)option;
             int amountOfPictures = App.tf.GetAmountOfPicturesForOption(chosenOption);

@@ -11,15 +11,20 @@ namespace DLuOvBamG
         public int ThresholdBlurry { get; set; }
         public int ThresholdSimilar { get; set; }
 
+        public List<double[]> FeatureVectors { get; set; }
+        public Tuple<int, double>[][] FeatureMatrix { get; set; }
+
         event EventHandler<ClassificationEventArgs> ClassificationCompleted;
 
-        List<ModelClassification> ClassifySimilar(byte[] bytes);
+        Task<List<ModelClassification>> ClassifySimilar(byte[] bytes);
         List<ModelClassification> ClassifyBlurry(byte[] bytes);
+
+        void FillFeatureVectorMatix();
 
         byte[] GetImageBytes(string path);
 
         void ChangeModel(ScanOptionsEnum type);
-        //void test();
+        Task<string> testAsync();
     }
 
     public class ClassificationEventArgs : EventArgs

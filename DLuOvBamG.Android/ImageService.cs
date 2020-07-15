@@ -12,13 +12,16 @@ using System.Text.RegularExpressions;
 using Xamarin.Forms;
 using static Android.Provider.MediaStore.Images;
 using System.Collections.Generic;
+using DLToolkit.Forms.Controls;
+using DLuOvBamG.Models;
+using System.Linq;
 
 [assembly: Dependency(typeof(ImageService))]
 namespace DLuOvBamG.Droid
 {
     class ImageService : IImageService
     {
-        private static Android.Net.Uri InternalContentUri  = MediaStore.Images.Media.InternalContentUri;
+        private static Android.Net.Uri InternalContentUri = MediaStore.Images.Media.InternalContentUri;
         private static Android.Net.Uri ExternalContentUri = MediaStore.Images.Media.ExternalContentUri;
         private Context CurrentContext = Android.App.Application.Context;
         private static readonly Regex r = new Regex(":");
@@ -36,7 +39,7 @@ namespace DLuOvBamG.Droid
 
         public byte[] GetFileBytes(string filePath)
         {
-            
+
 
             if (!File.Exists(filePath))
             {
@@ -54,32 +57,34 @@ namespace DLuOvBamG.Droid
             }
         }
 
-        public Models.Picture[] GetAllImagesFromDevice()
+        public Models.Picture[] GetAllImagesFromDevice(FlowObservableCollection<Grouping<string, Models.Picture>> collection)
         {
-            Models.Picture[] internalPictures = GetImagesFromUri(InternalContentUri);
+            Models.Picture[] internalPictures = GetImagesFromUri(InternalContentUri, collection);
 
             Models.Picture[] externalPictures = new Models.Picture[0];
             Boolean isSDPresent = Android.OS.Environment.ExternalStorageState.Equals(Android.OS.Environment.MediaMounted);
-            if (isSDPresent) {
-                externalPictures = GetImagesFromUri(ExternalContentUri);
+            if (isSDPresent)
+            {
+                externalPictures = GetImagesFromUri(ExternalContentUri, collection);
             }
 
-            if(externalPictures.Length != 0)
+            if (externalPictures.Length != 0)
             {
                 Models.Picture[] result = new Models.Picture[internalPictures.Length + externalPictures.Length];
                 internalPictures.CopyTo(result, 0);
                 externalPictures.CopyTo(result, internalPictures.Length);
                 return result;
-            } else
+            }
+            else
             {
                 return internalPictures;
             }
         }
 
-        private Models.Picture[] GetImagesFromUri(Android.Net.Uri uri)
+        private Models.Picture[] GetImagesFromUri(Android.Net.Uri uri, FlowObservableCollection<Grouping<string, Models.Picture>> collection)
         {
             // A list of which columns to return. Passing null will return all columns, which is inefficient.
-            string[] projection = { 
+            string[] projection = {
                 ImageColumns.Data,
                 ImageColumns.BucketDisplayName,
                 ImageColumns.Id,
@@ -137,15 +142,35 @@ namespace DLuOvBamG.Droid
                     Size = size,
                     Height = height,
                     Width = width,
-                    DirectoryName = bucketName
+                    DirectoryName = bucketName,
+                    ImageSource = ImageSource.FromFile(path),
                 };
                 arrPictures[i] = newPicture;
-
+                AddPictureToGroup(collection, newPicture);
             }
             // The cursor should be freed up after use with close()
             cursor.Close();
+            Console.WriteLine("all pictures done");
             return arrPictures;
         }
+
+        private void AddPictureToGroup(FlowObservableCollection<Grouping<string, Models.Picture>> collection, Models.Picture picture)
+        {
+            foreach (var group in collection)
+            {
+                if (group.Key == picture.DirectoryName)
+                {
+                    group.Add(picture);
+                    group.ColumnCount++;
+                    collection.OrderByDescending(item => item.ColumnCount);
+                    return;
+                }
+            }
+            Grouping<string, Models.Picture> newGroup = new Grouping<string, Models.Picture>(picture.DirectoryName);
+            newGroup.Add(picture);
+            collection.Add(newGroup);
+        }
+
         private static DateTime ConvertFromUnixTimestamp(double timestamp)
         {
             DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
@@ -153,8 +178,7 @@ namespace DLuOvBamG.Droid
         }
     }
 
-    
+
 }
 
 
-                

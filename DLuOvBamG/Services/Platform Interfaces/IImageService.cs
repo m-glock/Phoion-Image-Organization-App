@@ -1,7 +1,7 @@
-﻿using DLuOvBamG.Models;
+﻿using DLToolkit.Forms.Controls;
+using DLuOvBamG.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
+
 
 namespace DLuOvBamG.Services
 {
@@ -11,6 +11,6 @@ namespace DLuOvBamG.Services
         byte[] GetFileBytes(string filePath);
 
         void DeleteImage(string filePath);
-        Picture[] GetAllImagesFromDevice();
+        Picture[] GetAllImagesFromDevice(FlowObservableCollection<Grouping<string, Models.Picture>> collection);
     }
 }
