@@ -42,7 +42,11 @@ namespace DLuOvBamG.Services
             {
                 // when there is already an entry && the entry has the same slider value
                 if (pictures.ContainsKey(option) && oldOptions[option].Equals(options[option]))
+                {
+                    ScanWasFinished?.Invoke(this, new ScanEventArgs(option));
                     continue;
+                }
+
                 else
                 {
                     // when there is already a value for the 'option key' -> empty it
@@ -82,12 +86,30 @@ namespace DLuOvBamG.Services
                     List<Picture> blurryPics = new List<Picture>();
                     foreach (var picture in pictureList)
                     {
+                        // when picture was scanned already
+                        if (picture.BlurryPrecision != 0)
+                        {
+                            if (picture.BlurryPrecision > 0.5f) // TODO work with threshold
+                                blurryPics.Add(picture);
+                            continue;
+                        }
+
                         byte[] byteArray = classifier.GetImageBytes(picture.Uri);
                         List<ModelClassification> modelClassificaton = classifier.ClassifyBlurry(byteArray);
                         if (modelClassificaton.Count > 0 && modelClassificaton[0].TagName == "Blurry")
                         {
-                            blurryPics.Add(picture);
+                            picture.BlurryPrecision = modelClassificaton[0].Probability;
+                            // TODO work with threshold
+                            if (modelClassificaton[0].Probability > 0.5f)
+                            {
+                                blurryPics.Add(picture);
+                            }
                         }
+                        else
+                        {
+                            picture.BlurryPrecision = -1;
+                        }
+                        App.Database.SavePictureAsync(picture);
                     }
 
                     outputList.Add(blurryPics);
@@ -141,8 +163,9 @@ namespace DLuOvBamG.Services
         public Picture[] GetImagesForDisplay(ScanOptionsEnum option)
         {
             List<List<Picture>> picturesList = pictures[option];
-            if (picturesList[0] == null || picturesList[0].Count < 1) {
-                return new Picture[]{ new Picture()}; //TODO: return default image
+            if (picturesList[0] == null || picturesList[0].Count < 1)
+            {
+                return new Picture[] { new Picture() }; //TODO: return default image
             }
 
             int picAmount = picturesList[0].Count > 2 ? 3 : picturesList[0].Count;

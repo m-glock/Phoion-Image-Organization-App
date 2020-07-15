@@ -35,6 +35,8 @@ namespace DLuOvBamG.Models
         [ManyToMany(typeof(PictureTags))]
         public List<CategoryTag> CategoryTags { get; set; }
 
+        public double BlurryPrecision { get; set; }
+
         public Byte[] FeatureVector { get; set; }
         
         public Picture()

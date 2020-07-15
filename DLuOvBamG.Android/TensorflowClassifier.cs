@@ -279,7 +279,7 @@ namespace DLuOvBamG.Droid
         public void FillFeatureVectorMatix()
         {
             if (FeatureMatrix.Length < 0) return;
-            stopWatch.Start();
+
             FeatureMatrix = new Tuple<int, double>[FeatureVectors.Count][];
 
             for (int i = 0; i < FeatureVectors.Count; i++)
@@ -293,11 +293,7 @@ namespace DLuOvBamG.Droid
                 }
             }
 
-            print(stopWatch.ElapsedMilliseconds + " time matrix");
-
-
             StoreFeatureMatrix();
-
 
             //List<List<Tuple<int, double>>> allNeighbours = new List<List<Tuple<int, double>>>();
             //for (int i = 0; i < featureMatrix.Length; i++)
@@ -317,7 +313,6 @@ namespace DLuOvBamG.Droid
             {
                 strm.Write(json);
             }
-
         }
 
         public void ReadFeatureMatrix()
@@ -327,7 +322,6 @@ namespace DLuOvBamG.Droid
                 string content = streamReader.ReadToEnd();
                 MatrixModel loadedModel = JsonConvert.DeserializeObject<MatrixModel>(content);
                 FeatureMatrix = loadedModel.FeatureMatrix;
-                System.Diagnostics.Debug.WriteLine(content + "hexenwerk");
             }
         }
 
@@ -358,7 +352,7 @@ namespace DLuOvBamG.Droid
             }
 
             var sortedList = result.OrderByDescending(x => x.Probability).ToList();
-            sortedList = sortedList.FindAll(x => System.Math.Round(x.Probability * 100, 2) > thresholdBlurry);
+            //sortedList = sortedList.FindAll(x => System.Math.Round(x.Probability * 100, 2) > thresholdBlurry);
 
             // Notify all listeners
             ClassificationCompleted?.Invoke(this, new ClassificationEventArgs(result));
