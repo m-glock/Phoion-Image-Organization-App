@@ -99,7 +99,7 @@ namespace DLuOvBamG.ViewModels
             {
                 pictures = SetImageSources(pictures);
                 GroupPicturesByDirectory(pictures);
-                // TODO update database with missing pictures
+                // TODO update database with missing picturesc
             }
 
             Items = pictures;

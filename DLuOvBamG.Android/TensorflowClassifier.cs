@@ -12,6 +12,7 @@ using Java.IO;
 using Java.Nio;
 using Java.Nio.Channels;
 using MathNet.Numerics;
+using Newtonsoft.Json;
 using Org.Tensorflow.Lite;
 using Xamarin.Forms;
 
@@ -41,11 +42,19 @@ namespace DLuOvBamG.Droid
         // int -> index; double -> distance
         public Tuple<int, double>[][] FeatureMatrix;
 
+        private string filePath;
 
         // TODO remove
         Stopwatch stopWatch = new Stopwatch();
 
-
+        public TensorflowClassifier()
+        {
+            filePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "matrix.txt");
+            if (System.IO.File.Exists(filePath))
+            {
+                ReadFeatureMatrix();
+            }
+        }
 
         public void ChangeModel(ScanOptionsEnum type)
         {
@@ -233,7 +242,7 @@ namespace DLuOvBamG.Droid
             float[] featureVector = featureVectorResult[0][0][0];
             // conversion, because doubles are needed later on
             double[] featureVectorDouble = Array.ConvertAll(featureVector, x => (double)x);
-            featureVectorDouble = normalizeVector(featureVectorDouble);
+            featureVectorDouble = NormalizeVector(featureVectorDouble);
             FeatureVectors.Add(featureVectorDouble);
 
 
@@ -253,7 +262,7 @@ namespace DLuOvBamG.Droid
             return sortedList;
         }
 
-        private double[] normalizeVector(double[] vector)
+        private double[] NormalizeVector(double[] vector)
         {
             // Calculate magnitude
             double magnitude = 0;
@@ -269,6 +278,7 @@ namespace DLuOvBamG.Droid
 
         public void FillFeatureVectorMatix()
         {
+            if (FeatureMatrix.Length < 0) return;
             stopWatch.Start();
             FeatureMatrix = new Tuple<int, double>[FeatureVectors.Count][];
 
@@ -285,11 +295,40 @@ namespace DLuOvBamG.Droid
 
             print(stopWatch.ElapsedMilliseconds + " time matrix");
 
+
+            StoreFeatureMatrix();
+
+
             //List<List<Tuple<int, double>>> allNeighbours = new List<List<Tuple<int, double>>>();
             //for (int i = 0; i < featureMatrix.Length; i++)
             //{
             //    allNeighbours.Add(featureMatrix[i].OrderBy(tupel => tupel.Item2).Take(10).ToList());
             //}
+        }
+
+        public void StoreFeatureMatrix()
+        {
+            MatrixModel matrixToSave = new MatrixModel();
+            matrixToSave.InitializeArray(FeatureVectors.Count);
+            matrixToSave.FillArray(FeatureMatrix);
+            string json = JsonConvert.SerializeObject(matrixToSave);
+            using (var file = System.IO.File.Open(filePath, FileMode.Create, FileAccess.Write))
+            using (var strm = new StreamWriter(file))
+            {
+                strm.Write(json);
+            }
+
+        }
+
+        public void ReadFeatureMatrix()
+        {
+            using (var streamReader = new StreamReader(filePath))
+            {
+                string content = streamReader.ReadToEnd();
+                MatrixModel loadedModel = JsonConvert.DeserializeObject<MatrixModel>(content);
+                FeatureMatrix = loadedModel.FeatureMatrix;
+                System.Diagnostics.Debug.WriteLine(content + "hexenwerk");
+            }
         }
 
         public List<ModelClassification> ClassifyBlurry(byte[] bytes)
