@@ -130,8 +130,7 @@ namespace DLuOvBamG.Views
 		 * */
 		private void ValueChanged(object sender, ValueChangedEventArgs e)
 		{
-			Slider optionElement = sender as Slider;
-			VM.Precision = e.NewValue;
+			VM.Precision = Math.Round(e.NewValue);
 		}
 	}
 }
