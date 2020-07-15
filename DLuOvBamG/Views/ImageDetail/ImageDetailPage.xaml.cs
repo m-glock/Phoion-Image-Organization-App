@@ -1,11 +1,8 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 using DLuOvBamG.Models;
 using DLuOvBamG.ViewModels;
-using System.Windows.Input;
 
 namespace DLuOvBamG.Views
 {
@@ -19,9 +16,8 @@ namespace DLuOvBamG.Views
         public ImageDetailPage(Picture image)
         {
             InitializeComponent();
-            DV = new ViewModels.ImageDetailViewModel(image);
+            DV = new ViewModels.ImageDetailViewModel(image, this);
             BindingContext = DV;
-            DV.Navigation = Navigation;
         }
     }
 }
