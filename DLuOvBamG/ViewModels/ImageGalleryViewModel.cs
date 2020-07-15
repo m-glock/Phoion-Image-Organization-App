@@ -92,14 +92,14 @@ namespace DLuOvBamG.ViewModels
                     pictures = await LoadImagesFromDB();
                     var categoryTags = await SaveCategoryTagsInDB();
                     var classified = await ClassifyAllPictures(pictures);
-
+                    Console.WriteLine("classify ready");
                 }
             }
             else
             {
                 pictures = SetImageSources(pictures);
                 GroupPicturesByDirectory(pictures);
-                // TODO update database with missing pictures
+                // TODO update database with missing picturesc
             }
 
             Items = pictures;
