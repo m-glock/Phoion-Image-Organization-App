@@ -33,9 +33,8 @@ namespace DLuOvBamG.Services
             oldOptions = new Dictionary<ScanOptionsEnum, double>();
         }
 
-        public void FillPictureLists(Dictionary<ScanOptionsEnum, double> options)
+        public async Task FillPictureLists(Dictionary<ScanOptionsEnum, double> options)
         {
-
             // TODO make it asynchronous
             List<Picture> pictureList = App.Database.GetPicturesAsync().Result;
 
@@ -75,8 +74,6 @@ namespace DLuOvBamG.Services
 
                     outputList.Add(darkPictures);
                     outputList.Add(brightPictures);
-
-                    ScanWasFinished?.Invoke(this, new ScanEventArgs(ScanOptionsEnum.darkPics));
                 }
                 else if (option == ScanOptionsEnum.blurryPics)
                 {
@@ -95,7 +92,7 @@ namespace DLuOvBamG.Services
 
                     outputList.Add(blurryPics);
 
-                    ScanWasFinished?.Invoke(this, new ScanEventArgs(ScanOptionsEnum.blurryPics));
+
                 }
                 else if (option == ScanOptionsEnum.similarPics)
                 {
@@ -105,12 +102,11 @@ namespace DLuOvBamG.Services
 
                     for (int i = 0; i < pictureList.Count; i++)
                     {
-                        var similarPics = matrix[i].Where(picture => picture.Item2 < 0.5f).Select(picture => pictureList[picture.Item1]).ToList(); // TODO work with threshold
+                        var similarPics = matrix[i].Where(picture => picture.Item2 < 0.58f).Select(picture => pictureList[picture.Item1]).ToList(); // TODO work with threshold
                         if (similarPics.Count < 3) continue;
                         bool addToOutput = true;
                         for (int j = outputList.Count - 1; j >= 0; j--) // go through all lists in outputlist
                         {
-                            Console.WriteLine(outputList.Count + " current count");
                             var list = outputList[j];
                             var biggerList = list.Count > similarPics.Count ? list : similarPics;
                             var smallerList = list.Count < similarPics.Count ? list : similarPics;
@@ -131,13 +127,12 @@ namespace DLuOvBamG.Services
                         addToOutput = true;
                     }
 
-                    ScanWasFinished?.Invoke(this, new ScanEventArgs(ScanOptionsEnum.similarPics));
                 }
 
                 // TODO Event when one of the scans is ready, for each
 
                 pictures[option] = outputList;
-
+                ScanWasFinished?.Invoke(this, new ScanEventArgs(option));
                 oldOptions[option] = options[option];
             }
 

@@ -123,6 +123,7 @@ namespace DLuOvBamG.ViewModels
 
         public ICommand StartScan => new Command(async () => {
             await Navigation.PushAsync(new ScanResultPage(ScanOptions));
+            await App.tf.FillPictureLists(ScanOptions);
         });
 
     }

@@ -85,6 +85,7 @@ namespace DLuOvBamG.ViewModels
                     pictures = await LoadImagesFromDB();
                     var categoryTags = await SaveCategoryTagsInDB();
                     var classified = await ClassifyAllPictures(pictures);
+
                 }
             }
             else
