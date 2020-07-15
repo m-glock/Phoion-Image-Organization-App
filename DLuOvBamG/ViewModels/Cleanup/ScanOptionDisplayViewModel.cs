@@ -75,8 +75,6 @@ namespace DLuOvBamG.ViewModels
             {
                 int id = int.Parse(groupID);
                 List<Picture> pictures = new List<Picture>(Pictures[id]);
-                //List<List<Picture>> allPictures = App.tf.GetAllPicturesForOption(Option);
-                //List<Picture> pictures = allPictures[id];
                 await Navigation.PushAsync(new ImageComparisonPage(pictures, comparingPicture));
             }
             catch (FormatException)
@@ -94,13 +92,13 @@ namespace DLuOvBamG.ViewModels
         public void OnPictureDeleted(PictureDeletedEvent e)
         {
             int deletedPictureId = e.GetPictureId();
-            foreach(ObservableCollection<Picture> collection in pictures)
+            for(int i = 0; i < Pictures.Count; ++i)
             {
+                ObservableCollection<Picture> collection = Pictures[i];
                 List<Picture> deletedPicture = collection.Where(picture => picture.Id == deletedPictureId).ToList();
                 if (deletedPicture.Count > 0) collection.Remove(deletedPicture[0]);
+                if (collection.Count < 3) Pictures.Remove(collection);
             }
-
-            // TODO: if pics have been removed and set is too small, do something
         }
 
         public ICommand UpdatePicturesAfterValueChange => new Command(async () =>

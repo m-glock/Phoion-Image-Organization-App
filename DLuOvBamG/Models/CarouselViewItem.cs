@@ -4,7 +4,7 @@ namespace DLuOvBamG.Models
 {
     class CarouselViewItem : INotifyPropertyChanged
     {
-        public int Id;
+        public Picture Picture { get; }
         public string Uri { get; }
         // double value for opacity of image in UI
         public double markedForDeletion { get; set; }
@@ -47,10 +47,10 @@ namespace DLuOvBamG.Models
         }
         #endregion
 
-        public CarouselViewItem(int id, string uri, string comparingUri)
+        public CarouselViewItem(Picture picture, string comparingUri)
         {
-            Id = id;
-            Uri = uri;
+            Picture = picture;
+            Uri = picture.Uri;
             CurrentUri = Uri;
             ComparingPictureUri = comparingUri;
             MarkedForDeletion = 1;

@@ -1,8 +1,10 @@
 ﻿using DLuOvBamG.Models;
-using DLuOvBamG.Services.Gestures;
+using DLuOvBamG.Services;
 using DLuOvBamG.Views;
+using GalaSoft.MvvmLight.Messaging;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -13,7 +15,8 @@ namespace DLuOvBamG.ViewModels
 {
     class ImageComparisonViewModel : BaseViewModel, INotifyPropertyChanged
     {
-        public List<CarouselViewItem> PictureList { get; set; }
+        private readonly ImageFileStorage imageFileStorage = new ImageFileStorage();
+        public ObservableCollection<CarouselViewItem> pictureList { get; set; }
         public CarouselView CarouselViewMain { get; set; }
         private int carouselViewPosition { get; set; }
         private List<CarouselViewItem> PicsToDelete { get; set; }
@@ -54,11 +57,25 @@ namespace DLuOvBamG.ViewModels
                 return amountOfDeletedPics;
             }
         }
+
+        public ObservableCollection<CarouselViewItem> PictureList
+        {
+            set
+            {
+                pictureList = value;
+
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("PictureList"));
+            }
+            get
+            {
+                return pictureList;
+            }
+        }
         #endregion
         public ImageComparisonViewModel(ImageComparisonPage page, List<CarouselViewItem> picsForCarousel)
         {
             ImageComparisonPage = page;
-            PictureList = picsForCarousel;
+            PictureList = new ObservableCollection<CarouselViewItem>(picsForCarousel);
             PicsToDelete = new List<CarouselViewItem>();
         }
 
@@ -135,9 +152,12 @@ namespace DLuOvBamG.ViewModels
 
                         if (result)
                         {
-                            // TODO Delete Pictures (-> Picture, not CarouselViewItem)
-
-                            PictureList.RemoveAll(item => PicsToDelete.Contains(item));
+                            // Delete Pictures from picturelist and sen event to other pages
+                            foreach (CarouselViewItem item in PicsToDelete)
+                            {
+                                PictureList.Remove(item);
+                                DeleteImage(item.Picture);
+                            }
                             PicsToDelete.Clear();
 
                             // if set has now less than 2 pictures (+ comparison picture), go back to previous page
@@ -150,6 +170,18 @@ namespace DLuOvBamG.ViewModels
                     }
                 });
             }
+        }
+
+        private void OnPictureDeleted(int deletedId)
+        {
+            //picture id
+            PictureDeletedEvent deletedEvent = new PictureDeletedEvent(deletedId);
+            Messenger.Default.Send(deletedEvent);
+        }
+
+        public async void DeleteImage(Picture picture){
+            int deletedId = await imageFileStorage.DeleteFileAsync(picture);
+            OnPictureDeleted(picture.Id);
         }
     }
 }
