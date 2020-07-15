@@ -56,8 +56,18 @@ namespace DLuOvBamG.Droid
             if (File.Exists(filePath))
             {
                 File.Delete(filePath);
-
+                CallBroadCast(filePath);
             }
+        }
+
+        public void CallBroadCast(string filepath)
+        {
+            MediaScannerConnection.ScanFile(
+                CurrentContext,
+                new String[] { filepath },
+                null,
+                null
+            );
         }
 
         public Models.Picture[] GetAllImagesFromDevice(FlowObservableCollection<Grouping<string, Models.Picture>> collection, DateTime? dateFilter)

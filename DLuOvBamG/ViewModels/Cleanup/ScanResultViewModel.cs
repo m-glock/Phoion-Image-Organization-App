@@ -1,6 +1,7 @@
 ﻿using DLuOvBamG.Models;
 using DLuOvBamG.Views;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -11,7 +12,9 @@ namespace DLuOvBamG.ViewModels
         public INavigation Navigation;
         public Dictionary<ScanOptionsEnum, double> OptionValues;
 
-        public ScanResultViewModel() { }
+        public ScanResultViewModel() {
+            Title = "Scan Results";
+        }
 
         public ICommand OpenScanOptionDisplayPage => new Command(async (object option) =>
         {
@@ -20,7 +23,8 @@ namespace DLuOvBamG.ViewModels
             if (amountOfPictures > 0)
             {
                 double value = OptionValues[chosenOption];
-                await Navigation.PushAsync(new ScanOptionDisplayPage(value, chosenOption));
+                if (Navigation.NavigationStack.Last().GetType() != typeof(ScanOptionDisplayPage))
+                    await Navigation.PushAsync(new ScanOptionDisplayPage(value, chosenOption));
             }
         });
     }

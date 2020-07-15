@@ -22,8 +22,16 @@ namespace DLuOvBamG.Services
             {
                 return -1;
             }
-            imageService.DeleteImage(picture.Uri);
-            return await db.DeletePictureAsync(picture);
+
+            try 
+            {
+                imageService.DeleteImage(picture.Uri);
+                return await db.DeletePictureAsync(picture);
+            }
+            catch (Exception ex)
+            {
+                return -1;
+            }
         }
 
         public async Task<string[]> GetFilesFromDirectory(string folderPath)

@@ -137,40 +137,45 @@ namespace DLuOvBamG.ViewModels
             AmountOfDeletedPics = PicsToDelete.Count;
         }
 
-        public ICommand DeletePictures
-        {
-            get
+        public ICommand DeletePictures => new Command(async() => {
+            if (PicsToDelete.Count > 0)
             {
-                return new Command(async () =>
+                // ask user whether they are sure to delete all the images
+                bool result = await ImageComparisonPage.DisplayAlert("Are you sure?",
+                    "Do you really want to delete " + PicsToDelete.Count + " pictures?",
+                        "Delete", "Go Back");
+
+                if (result)
                 {
-                    if (PicsToDelete.Count > 0)
+                    // Delete Pictures from picturelist and sen event to other pages
+                    bool canAllPicturesBeDeleted = true;
+                    foreach (CarouselViewItem item in PicsToDelete)
                     {
-                        // ask user whether they are sure to delete all the images
-                        bool result = await ImageComparisonPage.DisplayAlert("Are you sure?",
-                            "Do you really want to delete " + PicsToDelete.Count + " pictures?",
-                                "Delete", "Go Back");
-
-                        if (result)
+                        bool picDeleted = await DeleteImage(item.Picture);
+                        if (!picDeleted)
                         {
-                            // Delete Pictures from picturelist and sen event to other pages
-                            foreach (CarouselViewItem item in PicsToDelete)
-                            {
-                                PictureList.Remove(item);
-                                DeleteImage(item.Picture);
-                            }
-                            PicsToDelete.Clear();
-
-                            // if set has now less than 2 pictures (+ comparison picture), go back to previous page
-                            if (PictureList.Count < 2)
-                            {
-                                // TODO: remove this set 
-                                await ImageComparisonPage.Navigation.PopAsync();
-                            }
+                            canAllPicturesBeDeleted = false;
+                        }
+                        else
+                        {
+                            PictureList.Remove(item);
                         }
                     }
-                });
+                    PicsToDelete.Clear();
+
+                    if (!canAllPicturesBeDeleted)
+                    {
+                        await ImageComparisonPage.DisplayAlert("Not possible", "Image cannot be deleted. It might be read only.", "Okay");
+                    }
+
+                    // if set has now less than 2 pictures (+ comparison picture), go back to previous page
+                    if (PictureList.Count < 2)
+                    {
+                        await ImageComparisonPage.Navigation.PopAsync();
+                    }
+                }
             }
-        }
+        });
 
         private void OnPictureDeleted(int deletedId)
         {
@@ -179,9 +184,14 @@ namespace DLuOvBamG.ViewModels
             Messenger.Default.Send(deletedEvent);
         }
 
-        public async void DeleteImage(Picture picture){
+        public async Task<bool> DeleteImage(Picture picture){
             int deletedId = await imageFileStorage.DeleteFileAsync(picture);
-            OnPictureDeleted(picture.Id);
+            if (deletedId != -1)
+            {
+                OnPictureDeleted(picture.Id);
+                return true;
+            }
+            return false;
         }
     }
 }
