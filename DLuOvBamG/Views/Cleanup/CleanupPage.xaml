@@ -35,7 +35,7 @@
             <ColumnDefinition Width="30" />
         </Grid.ColumnDefinitions>
 
-        <Label Padding="0, 40, 0, 40" x:Name="ChooseOptions" Text="Wählen Sie eine oder mehrere Optionen um ihre Gallerie zu optimieren." Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"></Label>
+        <Label Padding="0, 40, 0, 40" x:Name="ChooseOptions" Text="Choose one or more options to optimize your gallery." Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"></Label>
 
 
         <Expander Margin="0,0,0,30" Tapped="OptionTapped" ClassId="similarPics" x:Name="similarExpander" Grid.Row="1" Grid.Column="1">
