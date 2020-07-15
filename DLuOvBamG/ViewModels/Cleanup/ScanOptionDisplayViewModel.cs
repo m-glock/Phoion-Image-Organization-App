@@ -99,6 +99,8 @@ namespace DLuOvBamG.ViewModels
                 List<Picture> deletedPicture = collection.Where(picture => picture.Id == deletedPictureId).ToList();
                 if (deletedPicture.Count > 0) collection.Remove(deletedPicture[0]);
             }
+
+            // TODO: if pics have been removed and set is too small, do something
         }
 
         public ICommand UpdatePicturesAfterValueChange => new Command(async () =>
