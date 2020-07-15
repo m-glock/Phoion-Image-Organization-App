@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Android.Graphics;
+using DLToolkit.Forms.Controls;
+using DLuOvBamG.Models;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
@@ -8,14 +11,24 @@ namespace DLuOvBamG.Services
 {
     public class ImageFileStorage
     {
-        public Task DeleteFileAsync(string filePath)
+        // returns id of deleted files if this fails returns -1
+        public async Task<int> DeleteFileAsync(Models.Picture picture)
         {
-            throw new NotImplementedException();
+            ImageOrganizationDatabase db = App.Database;
+            IImageService imageService = DependencyService.Get<IImageService>();
+
+            var status = await CheckAndRequestExternalStorageWritePermissionAsync();
+            if (status != PermissionStatus.Granted)
+            {
+                return -1;
+            }
+            imageService.DeleteImage(picture.Uri);
+            return await db.DeletePictureAsync(picture);
         }
 
         public async Task<string[]> GetFilesFromDirectory(string folderPath)
         {
-            var status = await CheckAndRequestExternalStoragePermissionAsync();
+            var status = await CheckAndRequestExternalStorageReadPermissionAsync();
             if (status != PermissionStatus.Granted)
             {
                 // Notify user permission was denied
@@ -27,9 +40,9 @@ namespace DLuOvBamG.Services
             return filePaths;
         }
 
-        public async Task<Models.Picture[]> GetPicturesFromDevice()
+        public async Task<Models.Picture[]> GetPicturesFromDevice(FlowObservableCollection<Grouping<string, Models.Picture>> collection)
         {
-            var status = await CheckAndRequestExternalStoragePermissionAsync();
+            var status = await CheckAndRequestExternalStorageReadPermissionAsync();
             if (status != PermissionStatus.Granted)
             {
                 // Notify user permission was denied
@@ -38,7 +51,7 @@ namespace DLuOvBamG.Services
             }
 
             IImageService imageService = DependencyService.Get<IImageService>();
-            Models.Picture[] pictures = imageService.GetAllImagesFromDevice();
+            Models.Picture[] pictures = imageService.GetAllImagesFromDevice(collection);
             return pictures;
         }
 
@@ -47,12 +60,23 @@ namespace DLuOvBamG.Services
             throw new NotImplementedException();
         }
 
-        private async Task<PermissionStatus> CheckAndRequestExternalStoragePermissionAsync()
+        private async Task<PermissionStatus> CheckAndRequestExternalStorageReadPermissionAsync()
         {
             var status = await Permissions.CheckStatusAsync<Permissions.StorageRead>();
             if (status != PermissionStatus.Granted)
             {
                 status = await Permissions.RequestAsync<Permissions.StorageRead>();
+            }
+
+            return status;
+        }
+
+        private async Task<PermissionStatus> CheckAndRequestExternalStorageWritePermissionAsync()
+        {
+            var status = await Permissions.CheckStatusAsync<Permissions.StorageWrite>();
+            if (status != PermissionStatus.Granted)
+            {
+                status = await Permissions.RequestAsync<Permissions.StorageWrite>();
             }
 
             return status;

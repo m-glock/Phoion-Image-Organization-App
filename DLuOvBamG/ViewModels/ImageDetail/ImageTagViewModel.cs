@@ -15,17 +15,50 @@ namespace DLuOvBamG.ViewModels
 {
     public class ImageTagViewModel : INotifyPropertyChanged
     {
+        private ImageOrganizationDatabase database = App.Database;
         public INavigation Navigation;
-
         private Picture Picture;
-
         public string CustomTagInput { get; set; }
         public CategoryTag SelectedCustomTag { get; set; }
 
-        public IList CustomTags { get; set; }
+        private ObservableCollection<CategoryTag> customTags { get; set; }
+        private ObservableCollection<CategoryTag> selectOptions { get; set; }
 
-        private ImageOrganizationDatabase database = App.Database;
+        public ObservableCollection<CategoryTag> SelectOptions
+        {
+            set
+            {
 
+                selectOptions = value;
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("SelectOptions"));
+                }
+            }
+
+            get
+            {
+                return selectOptions;
+            }
+        } 
+        public ObservableCollection<CategoryTag> CustomTags
+        {
+            set
+            {
+
+                customTags = value;
+
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("CustomTags"));
+                }
+            }
+
+            get
+            {
+                return customTags;
+            }
+        }
         private ObservableCollection<CategoryTag> tags { get; set; }
 
         public ObservableCollection<CategoryTag> Tags
@@ -63,16 +96,30 @@ namespace DLuOvBamG.ViewModels
         async void GetCustomCategoryTags()
         {
             List<CategoryTag> customTags = await database.GetCustomCategoryTagsAsync();
-            CustomTags = customTags;
+            CustomTags = new ObservableCollection<CategoryTag>(customTags);
+            SetSelectionOptions();
+        }
+
+        void SetSelectionOptions()
+        {
+            // remove tags of picture from custom tags
+            List<CategoryTag> customTags = CustomTags.ToList();
+            List<CategoryTag> pictureTags = Tags.ToList();
+            // TODO: create comparer
+            List<CategoryTag> options = customTags.Except(pictureTags).ToList();
+            SelectOptions = new ObservableCollection<CategoryTag>(options);
         }
 
         public ICommand DeleteButtonClicked
         {
             get
             {
-                return new Command((sender) =>
+                return new Command(async (sender) =>
                 {
                     var Item = sender as CategoryTag;
+                    Tags.Remove(Item);
+                    Picture.CategoryTags.Remove(Item);
+                    await database.SavePictureAsync(Picture);
                 });
             }
         }

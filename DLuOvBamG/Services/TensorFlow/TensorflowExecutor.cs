@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace DLuOvBamG.Services
@@ -14,21 +15,26 @@ namespace DLuOvBamG.Services
 
         private Dictionary<ScanOptionsEnum, double> oldOptions;
 
+        public event EventHandler<ScanEventArgs> ScanWasFinished;
+
+        //public void EventTest(object sender, ScanEventArgs e)
+        //{
+        //    Console.WriteLine(e.Option.ToString() + " super fancy");
+        //}
+
         public TensorflowExecutor()
         {
+            //ScanWasFinished += EventTest;
             pictures = new Dictionary<ScanOptionsEnum, List<List<Picture>>>();
             classifier = DependencyService.Get<IClassifier>();
             classifier.ThresholdBlurry = ScanOptionsEnum.blurryPics.GetDefaultPresicionValue() * 10;
             classifier.ThresholdSimilar = ScanOptionsEnum.similarPics.GetDefaultPresicionValue() * 10;
             brightnessClassifier = new BrightnessClassifier();
             oldOptions = new Dictionary<ScanOptionsEnum, double>();
-            // Debug
-            //classifier.test();
         }
 
-        public void FillPictureLists(Dictionary<ScanOptionsEnum, double> options)
+        public async Task FillPictureLists(Dictionary<ScanOptionsEnum, double> options)
         {
-
             // TODO make it asynchronous
             List<Picture> pictureList = App.Database.GetPicturesAsync().Result;
 
@@ -68,7 +74,6 @@ namespace DLuOvBamG.Services
 
                     outputList.Add(darkPictures);
                     outputList.Add(brightPictures);
-
                 }
                 else if (option == ScanOptionsEnum.blurryPics)
                 {
@@ -86,26 +91,59 @@ namespace DLuOvBamG.Services
                     }
 
                     outputList.Add(blurryPics);
+
+
                 }
-                else
+                else if (option == ScanOptionsEnum.similarPics)
                 {
-                    // TODO similar pics
+                    classifier.FeatureVectors = pictureList.Select(picture => ByteToDoubleArray(picture.FeatureVector)).ToList();
+                    classifier.FillFeatureVectorMatix();
+                    var matrix = classifier.FeatureMatrix;
+
+                    for (int i = 0; i < pictureList.Count; i++)
+                    {
+                        var similarPics = matrix[i].Where(picture => picture.Item2 < 0.58f).Select(picture => pictureList[picture.Item1]).ToList(); // TODO work with threshold
+                        if (similarPics.Count < 3) continue;
+                        bool addToOutput = true;
+                        for (int j = outputList.Count - 1; j >= 0; j--) // go through all lists in outputlist
+                        {
+                            var list = outputList[j];
+                            var biggerList = list.Count > similarPics.Count ? list : similarPics;
+                            var smallerList = list.Count < similarPics.Count ? list : similarPics;
+                            var exclusiveList = biggerList.Except(smallerList).ToList();
+                            if (exclusiveList.Count <= biggerList.Count * 0.15f) // when both lists are too similar
+                            {
+                                // when output contains the smaller of the similar lists -> remove it 
+                                if (outputList.Contains(smallerList))
+                                    outputList.Remove(smallerList);
+                                else
+                                    addToOutput = false;
+                            }
+                        }
+                        if (addToOutput)
+                        {
+                            outputList.Add(similarPics);
+                        }
+                        addToOutput = true;
+                    }
+
                 }
+
+                // TODO Event when one of the scans is ready, for each
 
                 pictures[option] = outputList;
-
+                ScanWasFinished?.Invoke(this, new ScanEventArgs(option));
                 oldOptions[option] = options[option];
             }
-
-
-
 
         }
 
         public Picture[] GetImagesForDisplay(ScanOptionsEnum option)
         {
             List<List<Picture>> picturesList = pictures[option];
-            if (picturesList[0] == null) return null;
+            if (picturesList[0] == null || picturesList[0].Count < 1) {
+                return new Picture[]{ new Picture()}; //TODO: return default image
+            }
 
             int picAmount = picturesList[0].Count > 2 ? 3 : picturesList[0].Count;
             Picture[] displayImages = new Picture[picAmount];
@@ -135,5 +173,13 @@ namespace DLuOvBamG.Services
 
             return count;
         }
+
+        private double[] ByteToDoubleArray(byte[] byteArr)
+        {
+            double[] values = new double[byteArr.Length / 8];
+            Buffer.BlockCopy(byteArr, 0, values, 0, values.Length * 8);
+            return values;
+        }
+
     }
 }

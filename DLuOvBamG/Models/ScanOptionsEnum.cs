@@ -12,17 +12,16 @@ namespace DLuOvBamG.Models
 
     static class ScanOptionsMethods
     {
-
         public static String GetTextForDisplay(this ScanOptionsEnum s1)
         {
             switch (s1)
             {
                 case ScanOptionsEnum.blurryPics:
-                    return "Unscharfe Bilder";
+                    return "Blurry Pictures";
                 case ScanOptionsEnum.darkPics:
-                    return "Dunkle Bilder";
+                    return "Dark Pictures";
                 case ScanOptionsEnum.similarPics:
-                    return "Ähnliche Bilder";
+                    return "Similar Pictures";
                 default:
                     return null;
             }

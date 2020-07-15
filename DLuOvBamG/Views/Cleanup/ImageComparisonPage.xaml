@@ -5,7 +5,6 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:gestures="clr-namespace:DLuOvBamG.Services.Gestures"
-             xmlns:touch="clr-namespace:TouchEffect;assembly=TouchEffect"
              EnableBackButtonOverride="True"
              mc:Ignorable="d"
              x:Name="root"
@@ -14,14 +13,19 @@
     <Grid x:Name="Grid" Margin="10,10,10,10">
         <Grid.RowDefinitions>
             <RowDefinition Height="10*"></RowDefinition>
-            <RowDefinition Height="83*"></RowDefinition>
+            <RowDefinition Height="3*"></RowDefinition>
+            <RowDefinition Height="80*"></RowDefinition>
             <RowDefinition Height="7*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="43*"></ColumnDefinition>
+            <ColumnDefinition Width="10*"></ColumnDefinition>
+            <ColumnDefinition Width="40*"></ColumnDefinition>
+            <ColumnDefinition Width="7*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <CarouselView x:Name="ImageCarouselView" ItemsSource="{Binding PictureList}" Position="{Binding CarouselViewPosition}" PeekAreaInsets="150" Grid.Row="0">
+        <CarouselView x:Name="ImageCarouselView" ItemsSource="{Binding PictureList}" Position="{Binding CarouselViewPosition}" 
+                      Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4">
             <CarouselView.ItemTemplate>
                 <DataTemplate>
                     <Image Source="{Binding Uri}" Opacity="{Binding MarkedForDeletion}"></Image>
@@ -29,20 +33,37 @@
             </CarouselView.ItemTemplate>
         </CarouselView>
 
-        <CarouselView x:Name="ImageMainView" ItemsSource="{Binding PictureList}" Position="{Binding CarouselViewPosition}" Grid.Row="1">
+        <CheckBox x:Name="DeleteCheckbox" Grid.Row="1" Grid.Column="3" CheckedChanged="DeleteCheckboxChecked">
+        </CheckBox>
+
+        <CarouselView x:Name="ImageMainView" ItemsSource="{Binding PictureList}" Position="{Binding CarouselViewPosition}" CurrentItemChanged="CurrentItemChanged" 
+                      Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4">
             <CarouselView.ItemTemplate>
                 <DataTemplate>
-                    <Image Source="{Binding Uri}" Opacity="{Binding MarkedForDeletion}">
-                        <Image.Effects>
-                            <gestures:TouchEffect TouchAction="ImageTouched">
-                            </gestures:TouchEffect>
-                        </Image.Effects>
-                    </Image>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="7*"></RowDefinition>
+                            <RowDefinition Height="93*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="93*"></ColumnDefinition>
+                            <ColumnDefinition Width="7*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="{Binding CurrentUri}" Opacity="{Binding MarkedForDeletion}"
+                               Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2">
+                            <Image.Effects>
+                                <gestures:TouchEffect TouchAction="ImageTouched">
+                                </gestures:TouchEffect>
+                            </Image.Effects>
+                        </Image>
+                        
+                    </Grid>
                 </DataTemplate>
             </CarouselView.ItemTemplate>
         </CarouselView>
 
-        <ImageButton Command="{Binding MarkPictureAsDeleted}" Source="delete_64px.png" Grid.Row="2"></ImageButton>
-        <!--<Image Source="delete_64px.png" Grid.Row="2"></Image>-->
+        <ImageButton Command="{Binding DeletePictures}" Source="delete_64px.png" BackgroundColor="#F5F5F5" 
+                     Grid.Row="3" Grid.Column="1" Aspect="AspectFill"></ImageButton>
+        <Label Text="{Binding AmountOfDeletedPics}" Grid.Row="3" Grid.Column="2" VerticalTextAlignment="End" FontAttributes="Bold"></Label>
     </Grid>
 </views:CustomBackButtonPage>

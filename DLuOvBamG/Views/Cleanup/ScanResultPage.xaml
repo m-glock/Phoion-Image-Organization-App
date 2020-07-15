@@ -8,6 +8,8 @@
              x:Class="DLuOvBamG.Views.ScanResultPage"
              Title="{Binding Title}">
 
+    <StackLayout x:Name="StackLayout" Margin="0,20,0,0">
+        <!-- content is dynamically generated and inserted -->
     <ContentPage.BindingContext>
         <vm:ScanResultViewModel />
     </ContentPage.BindingContext>

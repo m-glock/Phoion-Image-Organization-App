@@ -12,9 +12,13 @@ using System.IO;
 using System.Linq;
 using DLToolkit.Forms.Controls;
 using System.Threading.Tasks;
+using GalaSoft.MvvmLight.Messaging;
+using System.Text.RegularExpressions;
+using Xamarin.Forms.Internals;
 
 namespace DLuOvBamG.ViewModels
 {
+    public delegate void PictureDeletedEventHandler(object source, PictureDeletedEvent e);
     public class ImageGalleryViewModel : INotifyPropertyChanged
     {
         readonly IImageService imageService = DependencyService.Get<IImageService>();
@@ -26,6 +30,7 @@ namespace DLuOvBamG.ViewModels
 
         private FlowObservableCollection<Grouping<string, Picture>> albumItems;
         private FlowObservableCollection<Grouping<string, Picture>> groupedItems;
+        private string SelectedGroup { get; set; }
 
         public FlowObservableCollection<Grouping<string, Picture>> GroupedItems
         {
@@ -69,6 +74,8 @@ namespace DLuOvBamG.ViewModels
             Items = new List<Picture>();
             GroupedItems = new FlowObservableCollection<Grouping<string, Picture>>();
             AlbumItems = new FlowObservableCollection<Grouping<string, Picture>>();
+            SelectedGroup = "";
+            Messenger.Default.Register<PictureDeletedEvent>(this, OnPictureDeleted);
         }
 
         public async void GetPictures()
@@ -78,19 +85,27 @@ namespace DLuOvBamG.ViewModels
 
             if (pictures.Count == 0)
             {
-                Picture[] devicePictures = await imageFileStorage.GetPicturesFromDevice();
+                Picture[] devicePictures = await imageFileStorage.GetPicturesFromDevice(AlbumItems);
                 var saved = await SavePicturesInDB(devicePictures);
                 if (saved)
                 {
                     pictures = await LoadImagesFromDB();
                     var categoryTags = await SaveCategoryTagsInDB();
-                    // var classified = await ClassifyAllPictures(pictures);
+                    var classified = await ClassifyAllPictures(pictures);
+
                 }
             }
+            else
+            {
+                pictures = SetImageSources(pictures);
+                GroupPicturesByDirectory(pictures);
+                // TODO update database with missing pictures
+            }
+
             Items = pictures;
-            pictures = SetImageSources(pictures);
+            //pictures = SetImageSources(pictures);
             // GroupPicturesByDate(pictures);
-            GroupPicturesByDirectory(pictures);
+            //GroupPicturesByDirectory(pictures);
         }
 
         Task<List<Picture>> LoadImagesFromDB()
@@ -148,7 +163,7 @@ namespace DLuOvBamG.ViewModels
             List<CategoryTag> categoryTags = labels.Select(label =>
                 {
                     return new CategoryTag()
-                    { 
+                    {
                         Name = label,
                         IsCustom = false
                     };
@@ -164,7 +179,8 @@ namespace DLuOvBamG.ViewModels
             if (pictures.Count > 0)
             {
                 var classifyTasks = pictures.Select(picture => ClassifyPicture(picture));
-                await Task.WhenAll(classifyTasks);
+                await Task.WhenAll(classifyTasks); // TODO bereits durchgeführte klassifizierungen speichern
+
                 return true;
             }
             return false;
@@ -179,14 +195,14 @@ namespace DLuOvBamG.ViewModels
                 picture.CategoryTags = new List<CategoryTag>();
             }
             byte[] fileBytes = imageService.GetFileBytes(picture.Uri);
-
+            classifier.ChangeModel(ScanOptionsEnum.similarPics);
             // get classifications from classifier
-            List<ModelClassification> modelClassifications = classifier.ClassifySimilar(fileBytes);
-            // filter classifications, to get only above 10% probability
-            List<ModelClassification> topClassifications = modelClassifications.Where(classification => classification.Probability > 0.1f).ToList();
+            List<ModelClassification> modelClassifications = await classifier.ClassifySimilar(fileBytes);
+            var currentVector = GetBytes(classifier.FeatureVectors[classifier.FeatureVectors.Count - 1]);
+
 
             // map strings to CategoryTag objects
-            topClassifications.ForEach(classification =>
+            modelClassifications.ForEach(classification =>
             {
                 CategoryTag categoryTag = new CategoryTag
                 {
@@ -202,6 +218,7 @@ namespace DLuOvBamG.ViewModels
             {
                 picture.CategoryTags.Add(categoryTag);
             });
+            picture.FeatureVector = currentVector;
             db.SavePictureAsync(picture);
         }
 
@@ -232,10 +249,11 @@ namespace DLuOvBamG.ViewModels
             {
                 return new Command(async (sender) =>
                 {
-                    Grouping<string, Picture> selectedGroup = sender as Grouping<string,Picture>;
+                    Grouping<string, Picture> selectedGroup = sender as Grouping<string, Picture>;
                     GroupPicturesByDate(selectedGroup.ToList());
+                    SelectedGroup = selectedGroup.Key;
                     await Navigation.PushAsync(new ImageGrid(selectedGroup.Key), true);
-                 
+
                 });
             }
         }
@@ -243,5 +261,30 @@ namespace DLuOvBamG.ViewModels
         {
             await Navigation.PushAsync(new CleanupPage());
         });
+
+        public void OnPictureDeleted(PictureDeletedEvent e)
+        {
+            int deletedPictureId = e.GetPictureId();
+            // find picture
+            int pictureIndex = Items.FindIndex(pic => pic.Id == deletedPictureId);
+            Picture picture = Items[pictureIndex];
+            // delte picture from album
+            string albumKey = picture.DirectoryName;
+            AlbumItems.ForEach(group =>
+            {
+                if (group.Key == albumKey)
+                {
+                    int groupIndex = group.ToList().FindIndex(pic => pic.Id == deletedPictureId);
+                    group.RemoveAt(groupIndex);
+                    // re-group pictures from album
+                    GroupPicturesByDate(group.ToList());
+                }
+            });
+        }
+
+        private byte[] GetBytes(double[] values)
+        {
+            return values.SelectMany(value => BitConverter.GetBytes(value)).ToArray();
+        }
     }
 }

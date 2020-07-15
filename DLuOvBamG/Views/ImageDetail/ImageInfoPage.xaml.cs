@@ -18,5 +18,11 @@ namespace DLuOvBamG.Views
             IV = new ImageInfoViewModel(image);
             BindingContext = IV;
         }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            IV.GetPlacemarkAsync();
+        }
     }
 }

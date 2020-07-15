@@ -1,9 +1,6 @@
 ﻿using DLuOvBamG.Models;
-using DLuOvBamG.Services;
 using DLuOvBamG.Views;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -14,35 +11,17 @@ namespace DLuOvBamG.ViewModels
         public INavigation Navigation;
         public Dictionary<ScanOptionsEnum, double> OptionValues;
 
-        public ScanResultViewModel()
-        {
-             
-        }
+        public ScanResultViewModel() { }
 
-        public void FillPictureListsTF()
+        public ICommand OpenScanOptionDisplayPage => new Command(async (object option) =>
         {
-            App.tf.FillPictureLists(OptionValues);//TODO async
-        }
-
-        public ICommand openBlurryPicsPage => new Command(async () =>
-        {
-            ScanOptionsEnum option = ScanOptionsEnum.blurryPics;
-            double value = OptionValues[option];
-            await Navigation.PushAsync(new ScanOptionDisplayPage(value, option));
-        });
-
-        public ICommand openDarkPicsPage => new Command(async () =>
-        {
-            ScanOptionsEnum option = ScanOptionsEnum.darkPics;
-            double value = OptionValues[option];
-            await Navigation.PushAsync(new ScanOptionDisplayPage(value, option));
-        });
-
-        public ICommand openSimilarPicsPage => new Command(async () =>
-        {
-            ScanOptionsEnum option = ScanOptionsEnum.similarPics;
-            double value = OptionValues[option];
-            await Navigation.PushAsync(new ScanOptionDisplayPage(value, option));
+            ScanOptionsEnum chosenOption = (ScanOptionsEnum)option;
+            int amountOfPictures = App.tf.GetAmountOfPicturesForOption(chosenOption);
+            if (amountOfPictures > 0)
+            {
+                double value = OptionValues[chosenOption];
+                await Navigation.PushAsync(new ScanOptionDisplayPage(value, chosenOption));
+            }
         });
     }
 }
