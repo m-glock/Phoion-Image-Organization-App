@@ -7,9 +7,6 @@
              mc:Ignorable="d"
              x:Class="DLuOvBamG.Views.ScanResultPage"
              Title="{Binding Title}">
-
-    <StackLayout x:Name="StackLayout" Margin="0,20,0,0">
-        <!-- content is dynamically generated and inserted -->
     <ContentPage.BindingContext>
         <vm:ScanResultViewModel />
     </ContentPage.BindingContext>
@@ -20,9 +17,8 @@
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
-            <StackLayout x:Name="StackLayout" Padding="10,50,0,10">
-        <!-- Inhalt wird dynamisch erzeugt und eigefügt -->
-        
+    <StackLayout x:Name="StackLayout" Padding="10,50,0,10">
+        <!-- content is dynamically generated and inserted -->
         
         <!-- TODO: zum testen erst einmal dalassen-->
         <!--<Grid Margin="0,0,0,20">

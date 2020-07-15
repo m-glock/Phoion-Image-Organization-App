@@ -58,6 +58,5 @@
                 <Button Text="Dismiss" Command="{Binding CloseEditPage}" Grid.Row="5" Grid.Column="0" BackgroundColor="Transparent"/>
             </Grid>
         </StackLayout>
-        </Grid>
     </ContentPage.Content>
 </ContentPage>
