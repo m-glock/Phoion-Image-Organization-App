@@ -1,5 +1,6 @@
 ﻿using DLuOvBamG.Models;
 using DLuOvBamG.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xamarin.Forms;
@@ -7,33 +8,33 @@ using Xamarin.Forms.Xaml;
 
 namespace DLuOvBamG.Views
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class ScanResultPage : ContentPage
-	{
-		private ScanResultViewModel VM;
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class ScanResultPage : ContentPage
+    {
+        private ScanResultViewModel VM;
+        private Dictionary<ScanOptionsEnum, Tuple<Grid, ActivityIndicator>> IndicatorDict;
 
         public ScanResultPage(Dictionary<ScanOptionsEnum, double> optionValues)
-		{
-			Title = "Scanergebnisse";
-			InitializeComponent();
-			VM = BindingContext as ScanResultViewModel;
-			VM.Navigation = Navigation;
-			VM.OptionValues = optionValues;
-            VM.FillPictureListsTF();
+        {
+            IndicatorDict = new Dictionary<ScanOptionsEnum, Tuple<Grid, ActivityIndicator>>();
 
+            Title = "Scan results";
+            InitializeComponent();
+            VM = new ScanResultViewModel();
+            VM.Navigation = Navigation;
+            VM.OptionValues = optionValues;
+            BindingContext = VM;
 
-            foreach(ScanOptionsEnum option in optionValues.Keys)
+            foreach (ScanOptionsEnum option in optionValues.Keys)
             {
                 ShowImageGroups(option);
             }
+
+            App.tf.ScanWasFinished += UpdateGrid;
         }
 
         private void ShowImageGroups(ScanOptionsEnum option)
         {
-            Picture[] displayImages = App.tf.GetImagesForDisplay(option);
-            if (displayImages == null) { /*TODO: handle*/ }
-            
-           
             Grid grid = new Grid
             {
                 RowDefinitions =
@@ -51,10 +52,12 @@ namespace DLuOvBamG.Views
                 }
             };
             grid.Margin = new Thickness(0, 0, 0, 20);
-            TapGestureRecognizer tapGestureRecognizer = new TapGestureRecognizer();
-            tapGestureRecognizer.SetBinding(TapGestureRecognizer.CommandProperty, option.GetNameForGalleryPage());
+            TapGestureRecognizer tapGestureRecognizer = new TapGestureRecognizer()
+            {
+                Command = VM.OpenScanOptionDisplayPage,
+                CommandParameter = option,
+            };
             grid.GestureRecognizers.Add(tapGestureRecognizer);
-
 
             BoxView bv = new BoxView
             {
@@ -67,11 +70,16 @@ namespace DLuOvBamG.Views
             Grid.SetColumnSpan(bv, 3);
 
 
-            Grid imageGrid = CreateImageGrid(displayImages.ToList());
-            grid.Children.Add(imageGrid);
-            Grid.SetRow(imageGrid, 0);
-            Grid.SetColumn(imageGrid, 1);
-            Grid.SetColumnSpan(imageGrid, 1);
+            ActivityIndicator indicator = new ActivityIndicator();
+            indicator.IsRunning = true;
+            indicator.Color = Color.FromHex("#00695C");
+            grid.Children.Add(indicator);
+            Grid.SetRow(indicator, 0);
+            Grid.SetColumn(indicator, 1);
+            Grid.SetColumnSpan(indicator, 1);
+
+            IndicatorDict.Add(option, Tuple.Create(grid, indicator));
+
 
             Label optionName = new Label
             {
@@ -94,23 +102,12 @@ namespace DLuOvBamG.Views
                 HasShadow = false
             };
 
-            Image arrow = new Image { Source = "arrow.png"};
+            Image arrow = new Image { Source = "arrow.png" };
             imageFrame.Content = arrow;
 
             grid.Children.Add(imageFrame);
             Grid.SetRow(imageFrame, 0);
             Grid.SetColumn(imageFrame, 3);
-
-
-            int setAmount = App.tf.GetAmountOfSetsForOption(option);
-            int pictureAmount = App.tf.GetAmountOfPicturesForOption(option);
-            Label setsAndPics = new Label
-            {
-                Text = setAmount + " Sets, " + pictureAmount + " Bilder"
-            };
-            grid.Children.Add(setsAndPics);
-            Grid.SetRow(setsAndPics, 1);
-            Grid.SetColumn(setsAndPics, 1);
 
             StackLayout.Children.Add(grid);
         }
@@ -120,7 +117,6 @@ namespace DLuOvBamG.Views
         {
             int[] spaceDistribution;
 
-            //TODO: empty list? Default
             switch (displayImages.Count)
             {
                 case 1:
@@ -139,14 +135,14 @@ namespace DLuOvBamG.Views
 
             Grid grid = new Grid
             {
-                RowDefinitions = { new RowDefinition { Height = GridLength.Star }}
+                RowDefinitions = { new RowDefinition { Height = GridLength.Star } }
             };
 
             foreach (int dist in spaceDistribution)
             {
                 grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(dist, GridUnitType.Star) });
             }
-            
+
             for (int columnNumber = displayImages.Count - 1; columnNumber >= 0; --columnNumber)
             {
                 Frame frame = new Frame();
@@ -171,5 +167,33 @@ namespace DLuOvBamG.Views
 
             return grid;
         }
-	}
+
+        public void UpdateGrid(object sender, ScanEventArgs e)
+        {
+            Console.WriteLine(e.Option.ToString() + " super fancy");
+            Picture[] displayImages = App.tf.GetImagesForDisplay(e.Option);
+            if (displayImages == null) { /*TODO: handle*/ }
+
+            Tuple<Grid, ActivityIndicator> tuple = IndicatorDict[e.Option];
+
+            tuple.Item1.Children.Remove(tuple.Item2);
+
+            Grid imageGrid = CreateImageGrid(displayImages.ToList());
+            tuple.Item1.Children.Add(imageGrid);
+            Grid.SetRow(imageGrid, 0);
+            Grid.SetColumn(imageGrid, 1);
+            Grid.SetColumnSpan(imageGrid, 1);
+
+            int setAmount = App.tf.GetAmountOfSetsForOption(e.Option);
+            int pictureAmount = App.tf.GetAmountOfPicturesForOption(e.Option);
+            Label setsAndPics = new Label
+            {
+                Text = setAmount + " Sets, " + pictureAmount + " Images"
+            };
+            tuple.Item1.Children.Add(setsAndPics);
+            Grid.SetRow(setsAndPics, 1);
+            Grid.SetColumn(setsAndPics, 1);
+        }
+
+    }
 }

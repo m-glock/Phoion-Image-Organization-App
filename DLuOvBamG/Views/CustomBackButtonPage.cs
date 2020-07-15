@@ -23,7 +23,7 @@ namespace DLuOvBamG.Views
         public bool EnableBackButtonOverride
         {
             get
-            { 
+            {
                 return (bool)GetValue(EnableBackButtonOverrideProperty);
             }
             set
