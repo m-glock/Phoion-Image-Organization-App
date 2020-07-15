@@ -12,5 +12,6 @@ namespace DLuOvBamG.Services
 
         void DeleteImage(string filePath);
         Picture[] GetAllImagesFromDevice(FlowObservableCollection<Grouping<string, Models.Picture>> collection);
+        void CallBroadCast(string filepath);
     }
 }

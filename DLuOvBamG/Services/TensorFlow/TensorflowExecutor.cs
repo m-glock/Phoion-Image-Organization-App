@@ -159,11 +159,13 @@ namespace DLuOvBamG.Services
 
         public int GetAmountOfSetsForOption(ScanOptionsEnum option)
         {
+            if (!pictures.ContainsKey(option) || pictures[option] == null) return 0;
             return pictures[option].Count;
         }
 
         public int GetAmountOfPicturesForOption(ScanOptionsEnum option)
         {
+            if (!pictures.ContainsKey(option) || pictures[option] == null) return 0;
             List<List<Picture>> localPics = pictures[option];
             int count = 0;
             foreach (List<Picture> list in localPics)

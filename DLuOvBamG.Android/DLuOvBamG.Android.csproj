@@ -112,7 +112,7 @@
     <EmbeddedResource Include="Assets\Roboto-Bold.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-     <AndroidAsset Include="Assets\converted_modelKuhmuhMilch.tflite" />
+    <AndroidAsset Include="Assets\converted_modelKuhmuhMilch.tflite" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />
@@ -218,9 +218,6 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\SPLASHSCREEN_small_transperency.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable\delete_restore_64px.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\edit_72px.png" />
