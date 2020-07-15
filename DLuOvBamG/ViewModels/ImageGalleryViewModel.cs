@@ -280,6 +280,7 @@ namespace DLuOvBamG.ViewModels
                     GroupPicturesByDate(group.ToList());
                 }
             });
+        }
 
         private byte[] GetBytes(double[] values)
         {

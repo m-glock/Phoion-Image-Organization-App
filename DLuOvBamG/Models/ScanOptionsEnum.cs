@@ -17,11 +17,11 @@ namespace DLuOvBamG.Models
             switch (s1)
             {
                 case ScanOptionsEnum.blurryPics:
-                    return "Unscharfe Bilder";
+                    return "Blurry Pictures";
                 case ScanOptionsEnum.darkPics:
-                    return "Dunkle Bilder";
+                    return "Dark Pictures";
                 case ScanOptionsEnum.similarPics:
-                    return "Ähnliche Bilder";
+                    return "Similar Pictures";
                 default:
                     return null;
             }
@@ -40,6 +40,21 @@ namespace DLuOvBamG.Models
                     return 3;
                 default:
                     return 0;
+            }
+        }
+
+        public static String GetNameForGalleryPage(this ScanOptionsEnum s1)
+        {
+            switch (s1)
+            {
+                case ScanOptionsEnum.blurryPics:
+                    return "openBlurryPicsPage";
+                case ScanOptionsEnum.darkPics:
+                    return "openDarkPicsPage";
+                case ScanOptionsEnum.similarPics:
+                    return "openSimilarPicsPage";
+                default:
+                    return null;
             }
         }
     }

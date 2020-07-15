@@ -61,6 +61,7 @@ namespace DLuOvBamG.Views
 
 			CollectionView colView = new CollectionView();
 			colView.SelectionMode = SelectionMode.Single;
+			colView.ClassId = groupID.ToString();
 
 			// initialize image grid depending on the scan option
 			// blurry and dark pictures will be shown in three columns and x rows

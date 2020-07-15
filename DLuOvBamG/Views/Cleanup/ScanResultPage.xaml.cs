@@ -12,7 +12,6 @@ namespace DLuOvBamG.Views
     public partial class ScanResultPage : ContentPage
     {
         private ScanResultViewModel VM;
-
         private Dictionary<ScanOptionsEnum, Tuple<Grid, ActivityIndicator>> IndicatorDict;
 
         public ScanResultPage(Dictionary<ScanOptionsEnum, double> optionValues)
@@ -21,9 +20,10 @@ namespace DLuOvBamG.Views
 
             Title = "Scan results";
             InitializeComponent();
-            VM = BindingContext as ScanResultViewModel;
+            VM = new ScanResultViewModel();
             VM.Navigation = Navigation;
             VM.OptionValues = optionValues;
+            BindingContext = VM;
 
             foreach (ScanOptionsEnum option in optionValues.Keys)
             {
@@ -31,8 +31,6 @@ namespace DLuOvBamG.Views
             }
 
             App.tf.ScanWasFinished += UpdateGrid;
-            //VM.FillPictureListsTF();
-
         }
 
         private void ShowImageGroups(ScanOptionsEnum option)
