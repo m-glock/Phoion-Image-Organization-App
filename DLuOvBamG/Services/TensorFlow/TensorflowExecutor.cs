@@ -58,19 +58,39 @@ namespace DLuOvBamG.Services
 
                 if (option == ScanOptionsEnum.darkPics)
                 {
-                    brightnessClassifier.Threshold = (int)options[option] * 10;
+                    //brightnessClassifier.Threshold = (int)options[option] * 10; 
                     List<Picture> darkPictures = new List<Picture>();
                     List<Picture> brightPictures = new List<Picture>();
 
                     foreach (var picture in pictureList)
                     {
-                        byte[] byteArray = classifier.GetImageBytes(picture.Uri);
-                        bool[] result = brightnessClassifier.Classify(byteArray);
-                        if (result[0])
+                        double darkPixelsPercent = 0;
+                        double brightPixelsPercent = 0;
+                        if (picture.DarkPixelsPercent > 0)
+                        {
+                            darkPixelsPercent = picture.DarkPixelsPercent;
+                            brightPixelsPercent = picture.BrightPixelsPercent;
+                        }
+                        else
+                        {
+                            byte[] byteArray = classifier.GetImageBytes(picture.Uri);
+                            // 0 = dark, 1 = bright
+                            double[] result = brightnessClassifier.Classify(byteArray);
+                            picture.DarkPixelsPercent = result[0];
+                            picture.BrightPixelsPercent = result[1];
+                            App.Database.SavePictureAsync(picture);
+
+                            darkPixelsPercent = result[0];
+                            brightPixelsPercent = result[1];
+                        }
+                        
+
+                        // TODO check if the threshold works
+                        if (darkPixelsPercent > (int)options[option] * 10)
                         {
                             darkPictures.Add(picture);
                         }
-                        if (result[1])
+                        if (brightPixelsPercent > (int)options[option] * 10)
                         {
                             brightPictures.Add(picture);
                         }
