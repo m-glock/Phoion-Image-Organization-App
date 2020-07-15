@@ -40,7 +40,7 @@ namespace DLuOvBamG.Services
             return filePaths;
         }
 
-        public async Task<Models.Picture[]> GetPicturesFromDevice(FlowObservableCollection<Grouping<string, Models.Picture>> collection)
+        public async Task<Models.Picture[]> GetPicturesFromDevice(FlowObservableCollection<Grouping<string, Models.Picture>> collection, DateTime? dateFilter)
         {
             var status = await CheckAndRequestExternalStorageReadPermissionAsync();
             if (status != PermissionStatus.Granted)
@@ -51,7 +51,7 @@ namespace DLuOvBamG.Services
             }
 
             IImageService imageService = DependencyService.Get<IImageService>();
-            Models.Picture[] pictures = imageService.GetAllImagesFromDevice(collection);
+            Models.Picture[] pictures = imageService.GetAllImagesFromDevice(collection, dateFilter);
             return pictures;
         }
 

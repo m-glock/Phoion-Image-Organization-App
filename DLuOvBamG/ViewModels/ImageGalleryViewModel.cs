@@ -85,7 +85,7 @@ namespace DLuOvBamG.ViewModels
 
             if (pictures.Count == 0)
             {
-                Picture[] devicePictures = await imageFileStorage.GetPicturesFromDevice(AlbumItems);
+                Picture[] devicePictures = await imageFileStorage.GetPicturesFromDevice(AlbumItems, null);
                 var saved = await SavePicturesInDB(devicePictures);
                 if (saved)
                 {
@@ -97,9 +97,13 @@ namespace DLuOvBamG.ViewModels
             }
             else
             {
+                // Picture[] newDevicePictures = await imageFileStorage.GetPicturesFromDevice(AlbumItems, null);
+
+                // set image sources and remove non exist pictures
                 pictures = SetImageSources(pictures);
+                // set album items
                 GroupPicturesByDirectory(pictures);
-                // TODO update database with missing pictures
+                
             }
 
             Items = pictures;
@@ -115,13 +119,22 @@ namespace DLuOvBamG.ViewModels
 
         List<Picture> SetImageSources(List<Picture> pictures)
         {
-            return pictures.Select(picture =>
+            List<Picture> picturesWithSource = new List<Picture>();
+            pictures.ForEach(async picture =>
             {
                 // if file exists
-                picture.ImageSource = ImageSource.FromFile(picture.Uri);
-                // else delete image from db
-                return picture;
-            }).ToList();
+                if (File.Exists(picture.Uri))
+                {
+                    picture.ImageSource = ImageSource.FromFile(picture.Uri);
+                    picturesWithSource.Add(picture);
+                }
+                else
+                {
+                    // else delete image from db
+                    int deletedPicture = await imageFileStorage.DeleteFileAsync(picture);
+                }
+            });
+            return picturesWithSource;
         }
 
         void GroupPicturesByDate(List<Picture> pictures)

@@ -56,18 +56,19 @@ namespace DLuOvBamG.Droid
             if (File.Exists(filePath))
             {
                 File.Delete(filePath);
+
             }
         }
 
-        public Models.Picture[] GetAllImagesFromDevice(FlowObservableCollection<Grouping<string, Models.Picture>> collection)
+        public Models.Picture[] GetAllImagesFromDevice(FlowObservableCollection<Grouping<string, Models.Picture>> collection, DateTime? dateFilter)
         {
-            Models.Picture[] internalPictures = GetImagesFromUri(InternalContentUri, collection);
+            Models.Picture[] internalPictures = GetImagesFromUri(InternalContentUri, collection, dateFilter);
 
             Models.Picture[] externalPictures = new Models.Picture[0];
             Boolean isSDPresent = Android.OS.Environment.ExternalStorageState.Equals(Android.OS.Environment.MediaMounted);
             if (isSDPresent)
             {
-                externalPictures = GetImagesFromUri(ExternalContentUri, collection);
+                externalPictures = GetImagesFromUri(ExternalContentUri, collection, dateFilter);
             }
 
             if (externalPictures.Length != 0)
@@ -83,7 +84,7 @@ namespace DLuOvBamG.Droid
             }
         }
 
-        private Models.Picture[] GetImagesFromUri(Android.Net.Uri uri, FlowObservableCollection<Grouping<string, Models.Picture>> collection)
+        private Models.Picture[] GetImagesFromUri(Android.Net.Uri uri, FlowObservableCollection<Grouping<string, Models.Picture>> collection, DateTime? dateFilter)
         {
             // A list of which columns to return. Passing null will return all columns, which is inefficient.
             string[] projection = {
@@ -100,8 +101,17 @@ namespace DLuOvBamG.Droid
             // How to order the rows, formatted as an SQL ORDER BY clause
             string orderBy = ImageColumns.Id;
 
+            string selection = null;
+            string[] selectionArgs = null;
+
+            if (dateFilter.HasValue)
+            {
+                DateTimeOffset dateTimeOffset = new DateTimeOffset(dateFilter.Value);
+                selection = ImageColumns.DateAdded + ">? ";
+                selectionArgs = new string[] { "" + dateTimeOffset.ToUnixTimeMilliseconds() };
+            }
             //Stores all the images from the gallery in Cursor
-            ICursor cursor = CurrentContext.ContentResolver.Query(uri, projection, null, null, orderBy);
+            ICursor cursor = CurrentContext.ContentResolver.Query(uri, projection, selection, selectionArgs, orderBy);
             //Total number of images
             int count = cursor.Count;
 

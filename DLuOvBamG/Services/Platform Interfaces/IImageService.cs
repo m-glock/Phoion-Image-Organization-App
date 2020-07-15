@@ -11,6 +11,6 @@ namespace DLuOvBamG.Services
         byte[] GetFileBytes(string filePath);
 
         void DeleteImage(string filePath);
-        Picture[] GetAllImagesFromDevice(FlowObservableCollection<Grouping<string, Models.Picture>> collection);
+        Picture[] GetAllImagesFromDevice(FlowObservableCollection<Grouping<string, Models.Picture>> collection, DateTime? dateFilter);
     }
 }
