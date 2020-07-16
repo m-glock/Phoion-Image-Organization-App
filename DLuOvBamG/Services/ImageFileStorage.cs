@@ -22,8 +22,16 @@ namespace DLuOvBamG.Services
             {
                 return -1;
             }
-            imageService.DeleteImage(picture.Uri);
-            return await db.DeletePictureAsync(picture);
+
+            try 
+            {
+                imageService.DeleteImage(picture.Uri);
+                return await db.DeletePictureAsync(picture);
+            }
+            catch (Exception ex)
+            {
+                return -1;
+            }
         }
 
         public async Task<string[]> GetFilesFromDirectory(string folderPath)
@@ -40,7 +48,7 @@ namespace DLuOvBamG.Services
             return filePaths;
         }
 
-        public async Task<Models.Picture[]> GetPicturesFromDevice(FlowObservableCollection<Grouping<string, Models.Picture>> collection)
+        public async Task<Models.Picture[]> GetPicturesFromDevice(FlowObservableCollection<Grouping<string, Models.Picture>> collection, DateTime? dateFilter)
         {
             var status = await CheckAndRequestExternalStorageReadPermissionAsync();
             if (status != PermissionStatus.Granted)
@@ -51,7 +59,9 @@ namespace DLuOvBamG.Services
             }
 
             IImageService imageService = DependencyService.Get<IImageService>();
-            Models.Picture[] pictures = imageService.GetAllImagesFromDevice(collection);
+            Models.Picture[] pictures = imageService.GetAllImagesFromDevice(collection, dateFilter);
+            SetAppPropertyReadingDate();
+
             return pictures;
         }
 
@@ -80,6 +90,36 @@ namespace DLuOvBamG.Services
             }
 
             return status;
+        }
+
+        private void SetAppPropertyReadingDate ()
+        {
+            DateTimeOffset now = new DateTimeOffset(DateTime.Now);
+            string nowString = now.ToUnixTimeSeconds().ToString();
+
+            // set readout date to app properties
+            if (App.Current.Properties.ContainsKey("reading_date"))
+            {
+                App.Current.Properties["reading_date"] = nowString;
+            }
+            else
+            {
+                App.Current.Properties.Add("reading_date", nowString);
+            }
+            App.Current.SavePropertiesAsync();
+        }
+
+        public DateTime GetAppPropertyReadingDate ()
+        {
+            DateTime readingDate = new DateTime();
+            if (App.Current.Properties.ContainsKey("reading_date"))
+            {
+                string dateString = App.Current.Properties["reading_date"] as string;
+                DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                return origin.AddSeconds(Convert.ToDouble(dateString));
+            }
+            return readingDate;
+
         }
     }
 }

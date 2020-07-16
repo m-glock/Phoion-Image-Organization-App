@@ -15,7 +15,7 @@ namespace DLuOvBamG
         private int height = 128;
 
 
-        public bool[] Classify(byte[] bytes)
+        public double[] Classify(byte[] bytes)
         {
 
             Bitmap bitmap = BitmapFactory.DecodeByteArray(bytes, 0, bytes.Length);
@@ -46,10 +46,11 @@ namespace DLuOvBamG
                 }
             }
 
-            bool tooDark = (float)darkPixels / (width * height) * 100 > Threshold;
-            bool tooBright = (float)brightPixels / (width * height) * 100 > Threshold;
+            double darkPercentage = (float)darkPixels / (width * height) * 100;
+            double brightPercentage = (float)brightPixels / (width * height) * 100;
 
-            return new bool[] { tooDark, tooBright }; 
+
+            return new double[] { darkPercentage, brightPercentage }; 
 
         }
 

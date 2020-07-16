@@ -9,8 +9,8 @@ namespace DLuOvBamG.Services
     {
         DateTime GetDateTaken(string filePath);
         byte[] GetFileBytes(string filePath);
-
         void DeleteImage(string filePath);
-        Picture[] GetAllImagesFromDevice(FlowObservableCollection<Grouping<string, Models.Picture>> collection);
+        Picture[] GetAllImagesFromDevice(FlowObservableCollection<Grouping<string, Models.Picture>> collection, DateTime? dateFilter);
+        void CallBroadCast(string filepath);
     }
 }

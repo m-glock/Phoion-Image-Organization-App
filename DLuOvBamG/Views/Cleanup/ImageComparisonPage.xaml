@@ -10,7 +10,7 @@
              x:Name="root"
              x:Class="DLuOvBamG.Views.ImageComparisonPage">
 
-    <Grid x:Name="Grid" Margin="10,10,10,10">
+    <Grid x:Name="Grid" Padding="10,10,10,10">
         <Grid.RowDefinitions>
             <RowDefinition Height="10*"></RowDefinition>
             <RowDefinition Height="3*"></RowDefinition>
@@ -62,8 +62,8 @@
             </CarouselView.ItemTemplate>
         </CarouselView>
 
-        <ImageButton Command="{Binding DeletePictures}" Source="delete_64px.png" BackgroundColor="#F5F5F5" 
+        <ImageButton Command="{Binding DeletePictures}" Source="delete_64_px.png" BackgroundColor="{StaticResource bgColor}" 
                      Grid.Row="3" Grid.Column="1" Aspect="AspectFill"></ImageButton>
-        <Label Text="{Binding AmountOfDeletedPics}" Grid.Row="3" Grid.Column="2" VerticalTextAlignment="End" FontAttributes="Bold"></Label>
+        <Label Text="{Binding AmountOfDeletedPics}" Grid.Row="3" Grid.Column="2" VerticalTextAlignment="End" FontAttributes="Bold" TextColor="#ffffff"></Label>
     </Grid>
 </views:CustomBackButtonPage>

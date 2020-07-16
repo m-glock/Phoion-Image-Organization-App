@@ -85,27 +85,34 @@ namespace DLuOvBamG.ViewModels
 
             if (pictures.Count == 0)
             {
-                Picture[] devicePictures = await imageFileStorage.GetPicturesFromDevice(AlbumItems);
+                Picture[] devicePictures = await imageFileStorage.GetPicturesFromDevice(AlbumItems, null);
                 var saved = await SavePicturesInDB(devicePictures);
                 if (saved)
                 {
                     pictures = await LoadImagesFromDB();
                     var categoryTags = await SaveCategoryTagsInDB();
                     var classified = await ClassifyAllPictures(pictures);
-
                 }
             }
             else
             {
+                // set image sources and remove non exist pictures
                 pictures = SetImageSources(pictures);
+                // set album items
                 GroupPicturesByDirectory(pictures);
-                // TODO update database with missing pictures
+
+                // get new pictures taken since last reading date
+                DateTime dateFilter = imageFileStorage.GetAppPropertyReadingDate();
+                Picture[] newDevicePictures = await imageFileStorage.GetPicturesFromDevice(AlbumItems, dateFilter);
+                // update thumbnail of album
+                OrderAllAlbumsByDate();
+
+                var saved = await SavePicturesInDB(newDevicePictures);
+                pictures = await LoadImagesFromDB();
+                pictures.AddRange(newDevicePictures);
             }
 
             Items = pictures;
-            //pictures = SetImageSources(pictures);
-            // GroupPicturesByDate(pictures);
-            //GroupPicturesByDirectory(pictures);
         }
 
         Task<List<Picture>> LoadImagesFromDB()
@@ -113,25 +120,46 @@ namespace DLuOvBamG.ViewModels
             return db.GetPicturesAsync();
         }
 
+        /// <summary>
+        /// Sets ImageSource of all pictures. Deletes Picture from DB if file dont exist
+        /// </summary>
         List<Picture> SetImageSources(List<Picture> pictures)
         {
-            return pictures.Select(picture =>
+            List<Picture> picturesWithSource = new List<Picture>();
+            pictures.ForEach(async picture =>
             {
                 // if file exists
-                picture.ImageSource = ImageSource.FromFile(picture.Uri);
-                // else delete image from db
-                return picture;
-            }).ToList();
+                if (File.Exists(picture.Uri))
+                {
+                    picture.ImageSource = ImageSource.FromFile(picture.Uri);
+                    picturesWithSource.Add(picture);
+                }
+                else
+                {
+                    // else delete image from db
+                    int deletedPicture = await imageFileStorage.DeleteFileAsync(picture);
+                }
+            });
+            return picturesWithSource;
         }
 
-        void GroupPicturesByDate(List<Picture> pictures)
+        void OrderAllAlbumsByDate()
         {
-            var sorted = pictures
+            AlbumItems.ForEach(album =>
+            {
+                List<Picture> orderd =  album.OrderByDescending(item => item.Date).ToList();
+                album.Clear();
+                album.AddRange(orderd);
+            });
+        }
+
+        List<Grouping<string, Picture>> GroupPicturesByDate(List<Picture> pictures)
+        {
+            return pictures
                 .OrderByDescending(item => item.Date)
                 .GroupBy(item => item.Date.Date.ToShortDateString())
                 .Select(itemGroup => new Grouping<string, Picture>(itemGroup.Key, itemGroup))
                 .ToList();
-            GroupedItems = new FlowObservableCollection<Grouping<string, Picture>>(sorted);
         }
 
         void GroupPicturesByDirectory(List<Picture> pictures)
@@ -249,9 +277,14 @@ namespace DLuOvBamG.ViewModels
             {
                 return new Command(async (sender) =>
                 {
+                    // get selected group
                     Grouping<string, Picture> selectedGroup = sender as Grouping<string, Picture>;
-                    GroupPicturesByDate(selectedGroup.ToList());
+                    // get grouped item of selected album
+                    List<Grouping<string, Picture>> grouped = GroupPicturesByDate(selectedGroup.ToList());
+                    GroupedItems = new FlowObservableCollection<Grouping<string, Picture>>(grouped);
+                    // set currently selected group
                     SelectedGroup = selectedGroup.Key;
+                    // navigate to image grid
                     await Navigation.PushAsync(new ImageGrid(selectedGroup.Key), true);
 
                 });
@@ -265,19 +298,23 @@ namespace DLuOvBamG.ViewModels
         public void OnPictureDeleted(PictureDeletedEvent e)
         {
             int deletedPictureId = e.GetPictureId();
-            // find picture
+            // find picture object
             int pictureIndex = Items.FindIndex(pic => pic.Id == deletedPictureId);
             Picture picture = Items[pictureIndex];
             // delte picture from album
             string albumKey = picture.DirectoryName;
             AlbumItems.ForEach(group =>
             {
+                // select correct album
                 if (group.Key == albumKey)
                 {
+                    // get index of picture and delete
                     int groupIndex = group.ToList().FindIndex(pic => pic.Id == deletedPictureId);
                     group.RemoveAt(groupIndex);
                     // re-group pictures from album
-                    GroupPicturesByDate(group.ToList());
+                    List<Grouping<string, Picture>> grouped = GroupPicturesByDate(group.ToList());
+                    GroupedItems = new FlowObservableCollection<Grouping<string, Picture>>(grouped);
+                    return;
                 }
             });
         }

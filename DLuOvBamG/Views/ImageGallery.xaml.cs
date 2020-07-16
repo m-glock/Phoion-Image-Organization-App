@@ -13,13 +13,8 @@ namespace DLuOvBamG.Views{
             FlowListView.Init();
             vm = App.ViewModelLocator.ImageGalleryViewModel;
             BindingContext = vm;
-            vm.Navigation = Navigation;                
-        }
-
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-            vm.GetPictures();   
+            vm.Navigation = Navigation;
+            vm.GetPictures();
         }
     }
 }

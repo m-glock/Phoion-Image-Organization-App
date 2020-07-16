@@ -220,9 +220,6 @@
     <AndroidResource Include="Resources\drawable\SPLASHSCREEN_small_transperency.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\delete_restore_64px.png" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidResource Include="Resources\drawable\edit_72px.png" />
   </ItemGroup>
   <ItemGroup>
