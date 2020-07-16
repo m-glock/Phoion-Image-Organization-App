@@ -276,6 +276,7 @@ namespace DLuOvBamG.ViewModels
                     GroupedItems = new FlowObservableCollection<Grouping<string, Picture>>(grouped);
                     // set currently selected group
                     SelectedGroup = selectedGroup.Key;
+                    App.CurrentDirectory = SelectedGroup;
                     // navigate to image grid
                     await Navigation.PushAsync(new ImageGrid(selectedGroup.Key), true);
 
@@ -284,7 +285,7 @@ namespace DLuOvBamG.ViewModels
         }
         public ICommand OpenCleanupPage => new Command(async () =>
         {
-            await Navigation.PushAsync(new CleanupPage(SelectedGroup));
+            await Navigation.PushAsync(new CleanupPage());
         });
 
         public void OnPictureDeleted(PictureDeletedEvent e)

@@ -17,7 +17,6 @@ namespace DLuOvBamG.ViewModels
         private double blurryPrecision;
         public event PropertyChangedEventHandler PropertyChanged;
         public INavigation Navigation { get; set; }
-        public string Path;
 
         // update number that appear next to the slider
         #region Precisions
@@ -135,7 +134,7 @@ namespace DLuOvBamG.ViewModels
 
         public ICommand StartScan => new Command(async () => {
             await Navigation.PushAsync(new ScanResultPage(ScanOptions));
-            await App.tf.FillPictureLists(ScanOptions, Path);
+            await App.tf.FillPictureLists(ScanOptions, App.CurrentDirectory);
         });
 
     }
