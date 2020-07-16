@@ -13,12 +13,14 @@
             <Color x:Key="PrimeColor">#003d33</Color>
             <Color x:Key="secondColor">#00695c</Color>
             <Color x:Key="bgColor">#d2d5d5</Color>
+            <Color x:Key="bgColorBright">#e6e9e9</Color>
+            
             <!--<Color x:Key="LightTextColor">#003d3</Color>
             <Color x:Key="Primary">#2196F3</Color>
             <Color x:Key="Accent">#96d1ff</Color>-->
 
             <Style TargetType="Label">
-                <Setter Property="TextColor" Value="{StaticResource PrimeColor}"/>
+                <Setter Property="TextColor" Value="Black"/>
                 <Setter Property="FontFamily" Value ="Roboto"/>
             </Style>
             <Style TargetType="Slider">

@@ -1,6 +1,7 @@
 ﻿using DLuOvBamG.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -12,19 +13,13 @@ namespace DLuOvBamG.Services
         private Dictionary<ScanOptionsEnum, List<List<Picture>>> pictures;
         private IClassifier classifier;
         private BrightnessClassifier brightnessClassifier;
-
-        public Dictionary<ScanOptionsEnum, double> oldOptions { get; private set; }
-
+        private string DirectoryPath;
+        private Dictionary<ScanOptionsEnum, double> oldOptions;
         public event EventHandler<ScanEventArgs> ScanWasFinished;
-
-        //public void EventTest(object sender, ScanEventArgs e)
-        //{
-        //    Console.WriteLine(e.Option.ToString() + " super fancy");
-        //}
 
         public TensorflowExecutor()
         {
-            //ScanWasFinished += EventTest;
+            DirectoryPath = "";
             pictures = new Dictionary<ScanOptionsEnum, List<List<Picture>>>();
             classifier = DependencyService.Get<IClassifier>();
             classifier.ThresholdBlurry = ScanOptionsEnum.blurryPics.GetDefaultPresicionValue() * 10;
@@ -33,10 +28,18 @@ namespace DLuOvBamG.Services
             oldOptions = new Dictionary<ScanOptionsEnum, double>();
         }
 
-        public async Task FillPictureLists(Dictionary<ScanOptionsEnum, double> options)
+        public async Task FillPictureLists(Dictionary<ScanOptionsEnum, double> options, string path)
         {
             // TODO make it asynchronous
-            List<Picture> pictureList = App.Database.GetPicturesAsync().Result;
+            List<Picture> pictureList;
+            if (path != "")
+            {
+                pictureList = App.Database.GetPicturesByDirectoryAsync(path).Result;
+            }
+            else
+            {
+                pictureList = App.Database.GetPicturesAsync().Result;
+            }
 
 
 
@@ -44,7 +47,7 @@ namespace DLuOvBamG.Services
             {
                 int threshold = (int)options[option] * 10;
                 // when there is already an entry && the entry has the same slider value
-                if (pictures.ContainsKey(option) && oldOptions[option].Equals(options[option]))
+                if (DirectoryPath.Equals(path) && pictures.ContainsKey(option) && oldOptions[option].Equals(options[option]))
                 {
                     ScanWasFinished?.Invoke(this, new ScanEventArgs(option));
                     continue;
@@ -180,6 +183,7 @@ namespace DLuOvBamG.Services
                 oldOptions[option] = options[option];
             }
 
+            DirectoryPath = path;
         }
 
         public Picture[] GetImagesForDisplay(ScanOptionsEnum option)
