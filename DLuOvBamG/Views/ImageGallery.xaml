@@ -11,6 +11,13 @@
     <ContentPage.BindingContext>
         <vm:ImageGalleryViewModel />
     </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="AbsoluteLayout">
+                <Setter Property="BackgroundColor" Value="{StaticResource bgColorBright}"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <AbsoluteLayout>
         <views:AlbumGrid/>
         <Frame Padding="15,15,15,15" BackgroundColor="{StaticResource PrimeColor}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds=".95,.95,70,70" CornerRadius="50">
