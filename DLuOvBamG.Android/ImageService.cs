@@ -70,15 +70,15 @@ namespace DLuOvBamG.Droid
             );
         }
 
-        public Models.Picture[] GetAllImagesFromDevice(FlowObservableCollection<Grouping<string, Models.Picture>> collection)
+        public Models.Picture[] GetAllImagesFromDevice(FlowObservableCollection<Grouping<string, Models.Picture>> collection, DateTime? dateFilter)
         {
-            Models.Picture[] internalPictures = GetImagesFromUri(InternalContentUri, collection);
+            Models.Picture[] internalPictures = GetImagesFromUri(InternalContentUri, collection, dateFilter);
 
             Models.Picture[] externalPictures = new Models.Picture[0];
             Boolean isSDPresent = Android.OS.Environment.ExternalStorageState.Equals(Android.OS.Environment.MediaMounted);
             if (isSDPresent)
             {
-                externalPictures = GetImagesFromUri(ExternalContentUri, collection);
+                externalPictures = GetImagesFromUri(ExternalContentUri, collection, dateFilter);
             }
 
             if (externalPictures.Length != 0)
@@ -94,7 +94,7 @@ namespace DLuOvBamG.Droid
             }
         }
 
-        private Models.Picture[] GetImagesFromUri(Android.Net.Uri uri, FlowObservableCollection<Grouping<string, Models.Picture>> collection)
+        private Models.Picture[] GetImagesFromUri(Android.Net.Uri uri, FlowObservableCollection<Grouping<string, Models.Picture>> collection, DateTime? dateFilter)
         {
             // A list of which columns to return. Passing null will return all columns, which is inefficient.
             string[] projection = {
@@ -111,8 +111,17 @@ namespace DLuOvBamG.Droid
             // How to order the rows, formatted as an SQL ORDER BY clause
             string orderBy = ImageColumns.Id;
 
+            string selection = null;
+            string[] selectionArgs = null;
+
+            if (dateFilter.HasValue)
+            {
+                DateTimeOffset dateTimeOffset = new DateTimeOffset(dateFilter.Value);
+                selection = ImageColumns.DateAdded + ">?";
+                selectionArgs = new string[] { "" + dateTimeOffset.ToUnixTimeSeconds() };
+            }
             //Stores all the images from the gallery in Cursor
-            ICursor cursor = CurrentContext.ContentResolver.Query(uri, projection, null, null, orderBy);
+            ICursor cursor = CurrentContext.ContentResolver.Query(uri, projection, selection, selectionArgs, orderBy);
             //Total number of images
             int count = cursor.Count;
 
@@ -126,6 +135,7 @@ namespace DLuOvBamG.Droid
             int isPrivateIndex = cursor.GetColumnIndex(ImageColumns.IsPrivate);
             int sizeIndex = cursor.GetColumnIndex(ImageColumns.Size);
             int dateTakenIndex = cursor.GetColumnIndex(ImageColumns.DateTaken);
+            int dateAddedIndex = cursor.GetColumnIndex(ImageColumns.DateAdded);
 
             for (int i = 0; i < count; i++)
             {
@@ -138,7 +148,10 @@ namespace DLuOvBamG.Droid
                 string isPrivate = cursor.GetString(isPrivateIndex);
                 string size = cursor.GetString(sizeIndex);
                 string dateTaken = cursor.GetString(dateTakenIndex);
+                string dateAdded = cursor.GetString(dateAddedIndex);
                 DateTime datetimeTaken = ConvertFromUnixTimestamp(Convert.ToDouble(dateTaken) / 1000);
+                DateTime datetimeAdded = ConvertFromUnixTimestamp(Convert.ToDouble(dateAdded));
+
                 Point geoLocation = GeoService.GetGeoLocations(path);
 
                 Models.Picture newPicture = new Models.Picture

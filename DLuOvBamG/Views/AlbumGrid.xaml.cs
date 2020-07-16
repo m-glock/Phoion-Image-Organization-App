@@ -16,7 +16,6 @@ namespace DLuOvBamG.Views
     {
         public AlbumGrid()
         {
-            Console.WriteLine("init Album Grid");
             InitializeComponent();
         }
     }
