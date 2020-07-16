@@ -292,7 +292,7 @@ namespace DLuOvBamG.ViewModels
         }
         public ICommand OpenCleanupPage => new Command(async () =>
         {
-            await Navigation.PushAsync(new CleanupPage());
+            await Navigation.PushAsync(new CleanupPage(SelectedGroup));
         });
 
         public void OnPictureDeleted(PictureDeletedEvent e)

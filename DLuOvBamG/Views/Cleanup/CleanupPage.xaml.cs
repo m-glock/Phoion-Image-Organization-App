@@ -17,11 +17,12 @@ namespace DLuOvBamG.Views
         private Dictionary<string, ScanOptionViewGroup> ViewGroups;
         private List<Switch> SwitchList;
 
-        public CleanupPage()
+        public CleanupPage(string path)
         {
             InitializeComponent();
             VM = BindingContext as CleanupViewModel;
             VM.Navigation = Navigation;
+            VM.Path = path;
 
             GetOptionElements();
             foreach (ScanOptionViewGroup viewGroup in ViewGroups.Values)

@@ -33,10 +33,12 @@ namespace DLuOvBamG.Services
             oldOptions = new Dictionary<ScanOptionsEnum, double>();
         }
 
-        public async Task FillPictureLists(Dictionary<ScanOptionsEnum, double> options)
+        public async Task FillPictureLists(Dictionary<ScanOptionsEnum, double> options, string path)
         {
             // TODO make it asynchronous
             List<Picture> pictureList = App.Database.GetPicturesAsync().Result;
+            /*if(path != null) 
+            else pictureList = App.Database.GetPicturesAsync().Result;*/
 
             foreach (ScanOptionsEnum option in options.Keys.ToList())
             {
