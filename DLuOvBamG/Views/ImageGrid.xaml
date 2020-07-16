@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage 
+<views:CustomBackButtonPage  xmlns:views="clr-namespace:DLuOvBamG.Views"
     xmlns="http://xamarin.com/schemas/2014/forms" 
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     x:Name="this"
+    EnableBackButtonOverride="True"
     xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
     x:Class="DLuOvBamG.Views.ImageGrid">
-    <ContentPage.Content>
-        <AbsoluteLayout>
-            <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1" Margin="5,0,5,0" AbsoluteLayout.LayoutFlags="All">
-                <flv:FlowListView 
+    <AbsoluteLayout>
+        <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1" Margin="5,0,5,0" AbsoluteLayout.LayoutFlags="All">
+            <flv:FlowListView 
                     FlowColumnCount="4"
                     SeparatorVisibility="None"
                     HasUnevenRows="true"
@@ -20,33 +20,40 @@
                     FlowItemsSource="{Binding GroupedItems}" 
                     IsGroupingEnabled="true"
                     FlowGroupDisplayBinding="{Binding Key}">
-                    <flv:FlowListView.FlowEmptyTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <Label  HorizontalTextAlignment="Start"
+                <flv:FlowListView.FlowEmptyTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Label  HorizontalTextAlignment="Start"
                                         VerticalTextAlignment="Center"
                                         TextColor="Black"
                                         Style="{DynamicResource SubtitleStyle}"
                                         Text="No images in this directory"
                                 ></Label>
-                            </ViewCell>
-                        </DataTemplate>
-                    </flv:FlowListView.FlowEmptyTemplate>
-                    <flv:FlowListView.FlowColumnTemplate>
-                        <DataTemplate>
-                            <Grid Padding="5">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="80" />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Image Aspect="AspectFill" Source="{Binding ImageSource, Mode=OneTime}"/>
-                            </Grid>
-                        </DataTemplate>
-                    </flv:FlowListView.FlowColumnTemplate>
-                </flv:FlowListView>
-            </ScrollView>
-        </AbsoluteLayout>
-    </ContentPage.Content>
-</ContentPage>
+                        </ViewCell>
+                    </DataTemplate>
+                </flv:FlowListView.FlowEmptyTemplate>
+                <flv:FlowListView.FlowColumnTemplate>
+                    <DataTemplate>
+                        <Grid Padding="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="80" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Image Aspect="AspectFill" Source="{Binding ImageSource, Mode=OneTime}"/>
+                        </Grid>
+                    </DataTemplate>
+                </flv:FlowListView.FlowColumnTemplate>
+            </flv:FlowListView>
+        </ScrollView>
+        <Frame Padding="15,15,15,15" BackgroundColor="{StaticResource PrimeColor}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds=".95,.95,70,70" CornerRadius="50">
+            <!-- From https://icons8.com/icons/set/broom-->
+            <Image Source="cleanup_64_px.png" BackgroundColor="{StaticResource PrimeColor}">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding OpenCleanupPage}"></TapGestureRecognizer>
+                </Image.GestureRecognizers>
+            </Image>
+        </Frame>
+    </AbsoluteLayout>
+</views:CustomBackButtonPage>

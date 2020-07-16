@@ -50,7 +50,6 @@ namespace DLuOvBamG.Views
                     new ColumnDefinition{ Width = new GridLength(5, GridUnitType.Star)},
                     new ColumnDefinition{ Width = new GridLength(45, GridUnitType.Star)},
                     new ColumnDefinition{ Width = new GridLength(45, GridUnitType.Star)},
-
                     new ColumnDefinition{ Width = new GridLength(5, GridUnitType.Star)},
                 }
             };
@@ -177,6 +176,7 @@ namespace DLuOvBamG.Views
             {
                 Text = setAmount + " Sets, " + pictureAmount + " Images"
             };
+            setsAndPics.TextColor = Color.Black;
             tuple.Item1.Children.Add(setsAndPics);
             Grid.SetRow(setsAndPics, 1);
             Grid.SetColumn(setsAndPics, 1);

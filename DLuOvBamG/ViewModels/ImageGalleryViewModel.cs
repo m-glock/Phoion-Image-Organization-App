@@ -276,6 +276,7 @@ namespace DLuOvBamG.ViewModels
                     GroupedItems = new FlowObservableCollection<Grouping<string, Picture>>(grouped);
                     // set currently selected group
                     SelectedGroup = selectedGroup.Key;
+                    App.CurrentDirectory = SelectedGroup;
                     // navigate to image grid
                     await Navigation.PushAsync(new ImageGrid(selectedGroup.Key), true);
 

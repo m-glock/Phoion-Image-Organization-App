@@ -22,8 +22,11 @@
         <views:AlbumGrid/>
         <Frame Padding="15,15,15,15" BackgroundColor="{StaticResource PrimeColor}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds=".95,.95,70,70" CornerRadius="50">
             <!-- From https://icons8.com/icons/set/broom-->
-            <ImageButton Source="cleanup_64_px.png" BackgroundColor="{StaticResource PrimeColor}"
-                     Command="{Binding OpenCleanupPage}"/>
+            <Image Source="cleanup_64_px.png" BackgroundColor="{StaticResource PrimeColor}">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding OpenCleanupPage}"></TapGestureRecognizer>
+                </Image.GestureRecognizers>
+            </Image>
         </Frame>
     </AbsoluteLayout>
 </ContentPage>
