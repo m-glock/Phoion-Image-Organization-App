@@ -10,7 +10,15 @@
                  x:Class="DLuOvBamG.Views.AlbumGrid">
     <ContentView.Resources>
         <converter:AlbumCoverConverter x:Key="albumConverter" />
-    </ContentView.Resources>
+         <ResourceDictionary>
+            <Style TargetType="AbsoluteLayout">
+                    <Setter Property="BackgroundColor" Value="{StaticResource bgColorBright}"/>
+                </Style>
+            <Style TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="{StaticResource bgColorBright}"/>
+            </Style>
+        </ResourceDictionary>
+       </ContentView.Resources>
     <ContentView.Content>
         <AbsoluteLayout>
             <ScrollView Margin="5,5,5,5"  AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">

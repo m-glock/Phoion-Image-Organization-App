@@ -23,7 +23,7 @@
                     <flv:FlowListView.FlowEmptyTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <Label  HorizontalTextAlignment="Center"
+                                <Label  HorizontalTextAlignment="Start"
                                         VerticalTextAlignment="Center"
                                         TextColor="Black"
                                         Style="{DynamicResource SubtitleStyle}"
