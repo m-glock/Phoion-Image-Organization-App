@@ -81,43 +81,36 @@ namespace DLuOvBamG.ViewModels
         public async void GetPictures()
         {
             // try to get pictures from db, if this fails load them and put them in db
-            List<Picture> pictures = await LoadImagesFromDB();
+            List<Picture> pictures = await db.GetPicturesAsync();
 
             if (pictures.Count == 0)
             {
                 Picture[] devicePictures = await imageFileStorage.GetPicturesFromDevice(AlbumItems, null);
-                var saved = await SavePicturesInDB(devicePictures);
-                if (saved)
-                {
-                    pictures = await LoadImagesFromDB();
-                    var categoryTags = await SaveCategoryTagsInDB();
-                    var classified = await ClassifyAllPictures(pictures);
-                }
+                bool picturesSaved = await SavePicturesInDB(devicePictures);
+                int[] savedCategoryTags = await SaveCategoryTagsInDB();
+                List<Picture> dbPictures = await db.GetPicturesAsync();
+                ClassifyPictures(dbPictures);
             }
             else
             {
-                // set image sources and remove non exist pictures
+                // set image sources of loaded pictures and remove non exist pictures
                 pictures = SetImageSources(pictures);
-                // set album items
-                GroupPicturesByDirectory(pictures);
-
+                // group pictures and set album items
+                List<Grouping<string,Picture>> groupedPictures = GroupPicturesByDirectory(pictures);
+                AlbumItems = new FlowObservableCollection<Grouping<string, Picture>>(groupedPictures);
                 // get new pictures taken since last reading date
                 DateTime dateFilter = imageFileStorage.GetAppPropertyReadingDate();
                 Picture[] newDevicePictures = await imageFileStorage.GetPicturesFromDevice(AlbumItems, dateFilter);
+                pictures.AddRange(newDevicePictures);
                 // update thumbnail of album
                 OrderAllAlbumsByDate();
-
-                var saved = await SavePicturesInDB(newDevicePictures);
-                pictures = await LoadImagesFromDB();
-                pictures.AddRange(newDevicePictures);
+                // save new pictures in db and classify them
+                bool picturesSaved = await SavePicturesInDB(newDevicePictures);
+                ClassifyPictures(newDevicePictures.ToList());      
             }
 
-            Items = pictures;
-        }
 
-        Task<List<Picture>> LoadImagesFromDB()
-        {
-            return db.GetPicturesAsync();
+            Items = pictures;
         }
 
         /// <summary>
@@ -162,15 +155,14 @@ namespace DLuOvBamG.ViewModels
                 .ToList();
         }
 
-        void GroupPicturesByDirectory(List<Picture> pictures)
+        List<Grouping<string,Picture>> GroupPicturesByDirectory(List<Picture> pictures)
         {
-            var sorted = pictures
+            return pictures
                 .OrderByDescending(item => item.Date)
                 .GroupBy(item => item.DirectoryName)
                 .Select(itemGroup => new Grouping<string, Picture>(itemGroup.Key, itemGroup, itemGroup.Count()))
                 .OrderByDescending(item => item.ColumnCount)
                 .ToList();
-            AlbumItems = new FlowObservableCollection<Grouping<string, Picture>>(sorted);
         }
 
         async Task<bool> SavePicturesInDB(Picture[] pictures)
@@ -202,7 +194,7 @@ namespace DLuOvBamG.ViewModels
             return categoryTagIdArray;
         }
 
-        async Task<bool> ClassifyAllPictures(List<Picture> pictures)
+        async Task<bool> ClassifyPictures(List<Picture> pictures)
         {
             if (pictures.Count > 0)
             {

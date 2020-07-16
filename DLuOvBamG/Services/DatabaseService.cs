@@ -42,12 +42,15 @@ namespace DLuOvBamG.Services
             }
         }
 
-
         public Task<List<Picture>> GetPicturesAsync()
         {
             return Database.Table<Picture>().ToListAsync();
         }
 
+        public Task<List<Picture>> GetPicturesByDirectoryAsync(string directory)
+        {
+            return Database.Table<Picture>().Where(picture => picture.DirectoryName == directory).ToListAsync();
+        }
 
         public Task<Picture> GetPictureAsync(int id)
         {
