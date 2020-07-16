@@ -7,7 +7,14 @@
     mc:Ignorable="d"
     x:Name="this"
     xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
+    xmlns:converter="clr-namespace:DLuOvBamG.Services.Converter"
     x:Class="DLuOvBamG.Views.ImageGrid">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Icon="edit_72px.png"  x:Name="SortToolbarItem"  Text="Sort" Clicked="SortClickedAsync"></ToolbarItem>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Resources>
+        <converter:GroupKeyConverter x:Key="groupKeyConverter" />
+    </ContentPage.Resources>
     <ContentPage.Content>
         <AbsoluteLayout>
             <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1" Margin="5,0,5,0" AbsoluteLayout.LayoutFlags="All">
@@ -17,9 +24,13 @@
                     HasUnevenRows="true"
                     FlowItemTappedCommand="{Binding ItemTappedCommand}"
                     RowHeight="50"
-                    FlowItemsSource="{Binding GroupedItems}" 
+                    FlowItemsSource="{Binding GroupedItems }" 
                     IsGroupingEnabled="true"
-                    FlowGroupDisplayBinding="{Binding Key}">
+                    FlowGroupDisplayBinding="{
+                        Binding Key,
+                        Converter={StaticResource groupKeyConverter},
+                        ConverterParameter='No Information'
+                    }">
                     <flv:FlowListView.FlowEmptyTemplate>
                         <DataTemplate>
                             <ViewCell>

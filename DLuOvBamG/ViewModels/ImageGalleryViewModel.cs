@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Messaging;
 using System.Text.RegularExpressions;
 using Xamarin.Forms.Internals;
+using Xamarin.Essentials;
 
 namespace DLuOvBamG.ViewModels
 {
@@ -25,6 +26,7 @@ namespace DLuOvBamG.ViewModels
         readonly ImageFileStorage imageFileStorage = new ImageFileStorage();
         readonly IClassifier classifier = App.Classifier;
         readonly ImageOrganizationDatabase db = App.Database;
+        readonly GeoService geoService = new GeoService();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -111,7 +113,7 @@ namespace DLuOvBamG.ViewModels
                 pictures = await LoadImagesFromDB();
                 pictures.AddRange(newDevicePictures);
             }
-
+            SetLocations(pictures);
             Items = pictures;
         }
 
@@ -143,6 +145,32 @@ namespace DLuOvBamG.ViewModels
             return picturesWithSource;
         }
 
+        async void SetLocations(List<Picture> pictures)
+        {
+            // filter pictures withoud geo locations and already set location
+            List<Picture> pictureWithGeoLocation = pictures.Where(
+                picture =>  picture.Latitude != "0" && picture.Longitude != "0" && picture.Location == ""
+            ).ToList();
+            // set locations of all pictures
+            if(pictureWithGeoLocation.Count > 0)
+            {
+                var setLocationTasks = pictureWithGeoLocation.Select(picture => SetLocation(picture));
+                await Task.WhenAll(setLocationTasks);
+            }
+        }
+
+        async Task SetLocation(Picture picture)
+        {
+            double latitude = Convert.ToDouble(picture.Latitude);
+            double longitude = Convert.ToDouble(picture.Longitude);
+            Placemark placemark = await geoService.GetPlacemark(latitude, longitude);
+            if(placemark != null)
+            {
+                picture.Location = placemark.Locality;
+                db.SavePictureAsync(picture);
+            }
+        }
+
         void OrderAllAlbumsByDate()
         {
             AlbumItems.ForEach(album =>
@@ -154,6 +182,25 @@ namespace DLuOvBamG.ViewModels
         }
 
         List<Grouping<string, Picture>> GroupPicturesByDate(List<Picture> pictures)
+        {
+            return pictures
+                .OrderByDescending(item => item.Date)
+                .GroupBy(item => item.Date.Date.ToShortDateString())
+                .Select(itemGroup => new Grouping<string, Picture>(itemGroup.Key, itemGroup))
+                .ToList();
+        }
+
+        List<Grouping<string, Picture>> GroupPicturesByLocation(List<Picture> pictures)
+        {
+            var grouped = pictures
+                .OrderByDescending(item => item.Date)
+                .GroupBy(item => item.Location)
+                .Select(itemGroup => new Grouping<string, Picture>(itemGroup.Key, itemGroup))
+                .ToList();
+            return grouped;
+        }
+
+        List<Grouping<string, Picture>> GroupPicturesByCategory(List<Picture> pictures)
         {
             return pictures
                 .OrderByDescending(item => item.Date)
@@ -250,6 +297,32 @@ namespace DLuOvBamG.ViewModels
             db.SavePictureAsync(picture);
         }
 
+        public void OnGroupOptionsSelected(string selectedOption)
+        {
+            // Get current pictures
+            int albumIndex = AlbumItems.IndexOf(album => album.Key == SelectedGroup);
+            List<Picture> albumItems = AlbumItems[albumIndex].ToList();
+
+            // group picutres by selected options
+            List<Grouping<string, Picture>> groupedPictures;
+            switch (selectedOption)
+            {
+                case "Date":
+                    groupedPictures = GroupPicturesByDate(albumItems);
+                    break;
+                case "Location":
+                    groupedPictures = GroupPicturesByLocation(albumItems);
+                    break;
+                case "Category":
+                    groupedPictures = GroupPicturesByCategory(albumItems);
+                    break;
+                default:
+                    groupedPictures = new List<Grouping<string, Picture>>();
+                    break;
+            };
+            GroupedItems = new FlowObservableCollection<Grouping<string, Picture>>(groupedPictures);
+        }
+
         public ICommand ItemTappedCommand
         {
             get
@@ -290,6 +363,7 @@ namespace DLuOvBamG.ViewModels
                 });
             }
         }
+
         public ICommand OpenCleanupPage => new Command(async () =>
         {
             await Navigation.PushAsync(new CleanupPage());

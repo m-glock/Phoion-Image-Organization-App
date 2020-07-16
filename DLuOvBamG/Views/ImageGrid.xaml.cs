@@ -1,4 +1,5 @@
-﻿using DLToolkit.Forms.Controls;
+﻿using Android.Widget;
+using DLToolkit.Forms.Controls;
 using DLuOvBamG.Models;
 using DLuOvBamG.ViewModels;
 using System;
@@ -22,6 +23,13 @@ namespace DLuOvBamG.Views
             vm = App.ViewModelLocator.ImageGalleryViewModel;
             BindingContext = vm;
             this.Title = Title;
+        }
+
+        async void SortClickedAsync (object sender, EventArgs e)
+        {
+            //string StorageFolder = await Application.Current.MainPage.DisplayActionSheet(SystemMessages.PhothotoSaveFolder, "Cancel", null, SystemMessages.InstallationPhothoto, SystemMessages.SerialNumbers);
+            var action = await DisplayActionSheet("Group Options", "Cancel", null, "Date", "Location", "Category");
+            vm.OnGroupOptionsSelected(action);
         }
     }
 }
