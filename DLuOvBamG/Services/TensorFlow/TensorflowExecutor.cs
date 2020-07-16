@@ -231,15 +231,19 @@ namespace DLuOvBamG.Services
 
         public List<Models.Picture> GetNeighboursForPicture(int id)
         {
+            id--;
             List<Picture> returnPics = new List<Picture>();
             // TODO if 10
-            List<Tuple<int, double>> allNeighbours = classifier.FeatureMatrix[id].OrderBy(tupel => tupel.Item2).
-                Take(10).Where(tuple => tuple.Item2 < 0.6f).ToList();
-            foreach (var neighbour in allNeighbours)
+            var allNeighbours = classifier.FeatureMatrix[id].OrderBy(tupel => tupel.Item2);
+            var test = allNeighbours.Where(tuple => tuple.Item2 < 0.5f).ToList();
+            if(test.Count == 0) return returnPics;
+
+            foreach (var neighbour in test)
             {
-                returnPics.Add(App.Database.GetPictureAsync(neighbour.Item1).Result);
+                //if (neighbour.Item1 == 0) continue; 
+                returnPics.Add(App.Database.GetPictureAsync(neighbour.Item1 + 1).Result);
             }
-            int bla = 5;
+            
             return returnPics;
         }
 
