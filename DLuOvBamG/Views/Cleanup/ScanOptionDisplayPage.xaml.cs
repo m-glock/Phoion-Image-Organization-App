@@ -14,6 +14,7 @@ namespace DLuOvBamG.Views
 		private ScanOptionDisplayViewModel VM;
 		private ScanOptionsEnum Option;
 
+
 		public ScanOptionDisplayPage(double optionValue, ScanOptionsEnum option)
 		{
 			InitializeComponent();
@@ -48,7 +49,7 @@ namespace DLuOvBamG.Views
 				Label label = new Label();
 				if (Option.Equals(ScanOptionsEnum.darkPics))
 				{
-					label.Text = groupID == 0 ? "Dunkle Bilder" : "Helle Bilder";
+					label.Text = groupID == 0 ? "Dark Pictures" : "Bright Pictures";
 				}
 				else
 				{
@@ -130,8 +131,7 @@ namespace DLuOvBamG.Views
 		 * */
 		private void ValueChanged(object sender, ValueChangedEventArgs e)
 		{
-			Slider optionElement = sender as Slider;
-			VM.Precision = e.NewValue;
+			VM.Precision = Math.Round(e.NewValue);
 		}
 	}
 }
