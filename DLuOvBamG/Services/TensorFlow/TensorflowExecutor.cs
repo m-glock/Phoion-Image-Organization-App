@@ -234,7 +234,7 @@ namespace DLuOvBamG.Services
             List<Picture> returnPics = new List<Picture>();
             // TODO if 10
             List<Tuple<int, double>> allNeighbours = classifier.FeatureMatrix[id].OrderBy(tupel => tupel.Item2).
-                Take(10).Where(tuple => tuple.Item2 < 0.5f).ToList();
+                Take(10).Where(tuple => tuple.Item2 < 0.6f).ToList();
             foreach (var neighbour in allNeighbours)
             {
                 returnPics.Add(App.Database.GetPictureAsync(neighbour.Item1).Result);

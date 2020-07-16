@@ -62,7 +62,7 @@ namespace DLuOvBamG.ViewModels
             List<Picture> listOfPics = App.tf.GetNeighboursForPicture(Image.Id);
             if (listOfPics.Count < 2)
             {
-                await Page.DisplayAlert("", "No similar pictures were found,", "Okay");
+                await Page.DisplayAlert("", "No similar pictures were found", "Okay");
             }
             else
                 await Page.Navigation.PushAsync(new ImageComparisonPage(listOfPics, Image), true);
