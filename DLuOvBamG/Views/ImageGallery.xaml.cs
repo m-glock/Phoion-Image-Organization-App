@@ -8,6 +8,8 @@ namespace DLuOvBamG.Views{
     public partial class ImageGallery : ContentPage{
 
         ImageGalleryViewModel vm { get; set; }
+
+        private bool firstTry = true;
         public ImageGallery(){
             InitializeComponent();
             FlowListView.Init();
@@ -19,7 +21,12 @@ namespace DLuOvBamG.Views{
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            vm.GetPictures();   
+            if (firstTry)
+            {
+                vm.GetPictures();
+                firstTry = false;
+            }
+             
         }
     }
 }

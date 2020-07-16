@@ -38,7 +38,7 @@ namespace DLuOvBamG.Services
             // TODO make it asynchronous
             List<Picture> pictureList = App.Database.GetPicturesAsync().Result;
 
-            
+
 
             foreach (ScanOptionsEnum option in options.Keys.ToList())
             {
@@ -86,7 +86,7 @@ namespace DLuOvBamG.Services
                             darkPixelsPercent = result[0];
                             brightPixelsPercent = result[1];
                         }
-                        
+
 
                         // TODO check if the threshold works
                         if (darkPixelsPercent > threshold)
@@ -112,7 +112,7 @@ namespace DLuOvBamG.Services
                         // when picture was scanned already
                         if (picture.BlurryPrecision != 0)
                         {
-                            if (picture.BlurryPrecision > (float)(threshold / 100f)) 
+                            if (picture.BlurryPrecision > (float)(threshold / 100f))
                                 blurryPics.Add(picture);
                             continue;
                         }
@@ -140,10 +140,9 @@ namespace DLuOvBamG.Services
                 }
                 else if (option == ScanOptionsEnum.similarPics)
                 {
-                    classifier.FeatureVectors = pictureList.Select(picture => ByteToDoubleArray(picture.FeatureVector)).ToList();
-                    classifier.FillFeatureVectorMatix();
+
                     var matrix = classifier.FeatureMatrix;
-                    // TODO TODO
+                    // TODO TODO spin slider
                     float portion = Math.Abs((float)(threshold / 10f) - 1) / 8;
                     float newThreshold = portion * 0.2f + 0.4f; // 0.4 - 0.6
                     Console.WriteLine(newThreshold + " tadelü");
@@ -222,11 +221,26 @@ namespace DLuOvBamG.Services
             return count;
         }
 
-        private double[] ByteToDoubleArray(byte[] byteArr)
+        public double[] ByteToDoubleArray(byte[] byteArr)
         {
             double[] values = new double[byteArr.Length / 8];
             Buffer.BlockCopy(byteArr, 0, values, 0, values.Length * 8);
             return values;
+        }
+
+
+        public List<Models.Picture> GetNeighboursForPicture(int id)
+        {
+            List<Picture> returnPics = new List<Picture>();
+            // TODO if 10
+            List<Tuple<int, double>> allNeighbours = classifier.FeatureMatrix[id].OrderBy(tupel => tupel.Item2).
+                Take(10).Where(tuple => tuple.Item2 < 0.5f).ToList();
+            foreach (var neighbour in allNeighbours)
+            {
+                returnPics.Add(App.Database.GetPictureAsync(neighbour.Item1).Result);
+            }
+            int bla = 5;
+            return returnPics;
         }
 
     }

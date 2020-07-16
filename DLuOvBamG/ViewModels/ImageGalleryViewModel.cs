@@ -92,6 +92,8 @@ namespace DLuOvBamG.ViewModels
                     pictures = await LoadImagesFromDB();
                     var categoryTags = await SaveCategoryTagsInDB();
                     var classified = await ClassifyAllPictures(pictures);
+                    classifier.FeatureVectors = pictures.Select(picture => App.tf.ByteToDoubleArray(picture.FeatureVector)).ToList();
+                    classifier.FillFeatureVectorMatix();
                     Console.WriteLine("classify ready");
                 }
             }
@@ -99,8 +101,13 @@ namespace DLuOvBamG.ViewModels
             {
                 pictures = SetImageSources(pictures);
                 GroupPicturesByDirectory(pictures);
+                if (classifier.FeatureVectors.Count == 0)
+                    classifier.FeatureVectors = pictures.Select(picture => App.tf.ByteToDoubleArray(picture.FeatureVector)).ToList();
+                classifier.FillFeatureVectorMatix();
                 // TODO update database with missing picturesc
             }
+
+
 
             Items = pictures;
             //pictures = SetImageSources(pictures);

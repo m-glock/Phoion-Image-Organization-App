@@ -295,12 +295,11 @@ namespace DLuOvBamG.Droid
 
             StoreFeatureMatrix();
 
-            //List<List<Tuple<int, double>>> allNeighbours = new List<List<Tuple<int, double>>>();
-            //for (int i = 0; i < featureMatrix.Length; i++)
-            //{
-            //    allNeighbours.Add(featureMatrix[i].OrderBy(tupel => tupel.Item2).Take(10).ToList());
-            //}
+            
         }
+
+
+
 
         public void StoreFeatureMatrix()
         {
