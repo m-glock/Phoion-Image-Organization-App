@@ -84,28 +84,32 @@ namespace DLuOvBamG.ViewModels
         public async void GetPictures()
         {
             // try to get pictures from db, if this fails load them and put them in db
-            List<Picture> pictures = await LoadImagesFromDB();
+            List<Picture> pictures = await db.GetPicturesAsync();
 
             if (pictures.Count == 0)
             {
                 Picture[] devicePictures = await imageFileStorage.GetPicturesFromDevice(AlbumItems, null);
-                var saved = await SavePicturesInDB(devicePictures);
-                if (saved)
-                {
-                    pictures = await LoadImagesFromDB();
-                    var categoryTags = await SaveCategoryTagsInDB();
-                    var classified = await ClassifyAllPictures(pictures);
-                }
+                bool picturesSaved = await SavePicturesInDB(devicePictures);
+
+                pictures = await db.GetPicturesAsync();
+                int[] savedCategoryTags = await SaveCategoryTagsInDB();
+                var classified = await ClassifyPictures(pictures);
+                classifier.FeatureVectors = pictures.Select(picture => App.tf.ByteToDoubleArray(picture.FeatureVector)).ToList();
+                classifier.FillFeatureVectorMatix();
+                Console.WriteLine("classify ready");
+
             }
             else
             {
                 // get new pictures taken since last reading date
                 DateTime dateFilter = imageFileStorage.GetAppPropertyReadingDate();
                 Picture[] newDevicePictures = await imageFileStorage.GetPicturesFromDevice(AlbumItems, dateFilter);
-                
-
-                var saved = await SavePicturesInDB(newDevicePictures);
-                pictures = await LoadImagesFromDB();
+                // save new pictures in db and classify them
+                bool picturesSaved = await SavePicturesInDB(newDevicePictures);
+                await ClassifyPictures(newDevicePictures.ToList());
+                if (classifier.FeatureVectors.Count == 0)
+                    classifier.FeatureVectors = pictures.Select(picture => App.tf.ByteToDoubleArray(picture.FeatureVector)).ToList();
+                classifier.FillFeatureVectorMatix();
                 pictures.AddRange(newDevicePictures);
                 // set image sources and remove non exist pictures
                 pictures = SetImageSources(pictures);
@@ -117,11 +121,6 @@ namespace DLuOvBamG.ViewModels
             }
             SetLocations(pictures);
             Items = pictures;
-        }
-
-        Task<List<Picture>> LoadImagesFromDB()
-        {
-            return db.GetPicturesAsync();
         }
 
         /// <summary>
@@ -177,7 +176,7 @@ namespace DLuOvBamG.ViewModels
         {
             AlbumItems.ForEach(album =>
             {
-                List<Picture> orderd =  album.OrderByDescending(item => item.Date).ToList();
+                List<Picture> orderd = album.OrderByDescending(item => item.Date).ToList();
                 album.Clear();
                 album.AddRange(orderd);
             });
@@ -257,7 +256,7 @@ namespace DLuOvBamG.ViewModels
             return categoryTagIdArray;
         }
 
-        async Task<bool> ClassifyAllPictures(List<Picture> pictures)
+        async Task<bool> ClassifyPictures(List<Picture> pictures)
         {
             if (pictures.Count > 0)
             {
@@ -368,6 +367,7 @@ namespace DLuOvBamG.ViewModels
                     GroupedItems = new FlowObservableCollection<Grouping<string, Picture>>(grouped);
                     // set currently selected group
                     SelectedGroup = selectedGroup.Key;
+                    App.CurrentDirectory = SelectedGroup;
                     // navigate to image grid
                     await Navigation.PushAsync(new ImageGrid(selectedGroup.Key), true);
 

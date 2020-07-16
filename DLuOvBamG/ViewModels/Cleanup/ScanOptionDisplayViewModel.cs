@@ -105,7 +105,7 @@ namespace DLuOvBamG.ViewModels
         {
             Dictionary<ScanOptionsEnum, double> dictChangedValue = new Dictionary<ScanOptionsEnum, double>();
             dictChangedValue.Add(Option, Precision);
-            App.tf.FillPictureLists(dictChangedValue);
+            App.tf.FillPictureLists(dictChangedValue, App.CurrentDirectory);
 
             List<List<Picture>> pictures = App.tf.GetAllPicturesForOption(Option);
             ObservableCollection<ObservableCollection<Picture>> obsvPictures = new ObservableCollection<ObservableCollection<Picture>>();

@@ -13,6 +13,7 @@ namespace DLuOvBamG.Models
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
+        
         public string Uri { get; set; }
 
         [Ignore]
@@ -38,6 +39,7 @@ namespace DLuOvBamG.Models
         public double BlurryPrecision { get; set; }
 
         public double DarkPixelsPercent { get; set; }
+
         public double BrightPixelsPercent { get; set; }
 
         public Byte[] FeatureVector { get; set; }
@@ -52,22 +54,7 @@ namespace DLuOvBamG.Models
         public Picture(string Uri)
         {
             this.Uri = Uri;
-            // this.Date = GetDate(Uri);
             this.CategoryTags = new List<CategoryTag>();
-        }
-
-        private DateTime GetDate(string Uri)
-        {
-            try
-            {
-                IImageService imageService = DependencyService.Get<IImageService>();
-                return imageService.GetDateTaken(Uri);
-            }
-            catch (ArgumentException)
-            {
-                // image is probably stock
-                return DateTime.Now;
-            }
         }
     }
 }

@@ -10,13 +10,25 @@ namespace DLuOvBamG.Views{
     public partial class ImageGallery : ContentPage{
 
         ImageGalleryViewModel vm { get; set; }
+
+        private bool firstTry = true;
         public ImageGallery(){
             InitializeComponent();
             FlowListView.Init();
             vm = App.ViewModelLocator.ImageGalleryViewModel;
             BindingContext = vm;
-            vm.Navigation = Navigation;
-            vm.GetPictures();
+            vm.Navigation = Navigation;                
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            if (firstTry)
+            {
+                vm.GetPictures();
+                firstTry = false;
+            }
+             
         }
 
         async void SortClickedAsync(object sender, EventArgs e)

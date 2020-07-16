@@ -10,7 +10,15 @@
                  x:Class="DLuOvBamG.Views.AlbumGrid">
     <ContentView.Resources>
         <converter:AlbumCoverConverter x:Key="albumConverter" />
-    </ContentView.Resources>
+         <ResourceDictionary>
+            <Style TargetType="AbsoluteLayout">
+                    <Setter Property="BackgroundColor" Value="{StaticResource bgColorBright}"/>
+                </Style>
+            <Style TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="{StaticResource bgColorBright}"/>
+            </Style>
+        </ResourceDictionary>
+       </ContentView.Resources>
     <ContentView.Content>
         <AbsoluteLayout>
             <ScrollView Margin="5,5,5,5"  AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
@@ -31,7 +39,7 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <Frame CornerRadius="10" Margin="0" Padding="0" IsClippedToBounds="True">
+                                <Frame CornerRadius="10" Margin="5" Padding="0" IsClippedToBounds="True">
                                     <Image  Aspect="AspectFill"
                                             Source="{Binding GroupedItems, Converter={StaticResource albumConverter}}"
                                             Grid.Row="0"

@@ -32,37 +32,40 @@ namespace DLuOvBamG.ViewModels
             Messenger.Default.Send(deletedEvent);
         }
 
-        public ICommand GetCategories => new Command(async () => {
+        public ICommand GetCategories => new Command(async () =>
+        {
             await Page.Navigation.PushAsync(new ImageTagPage(Image.Id), true);
         });
 
-        public ICommand GetInfo => new Command(async () => {
+        public ICommand GetInfo => new Command(async () =>
+        {
             await Page.Navigation.PushAsync(new InfoPage(Image), true);
         });
 
-        public ICommand DeleteImage => new Command(async () => {
+        public ICommand DeleteImage => new Command(async () =>
+        {
             int deletedId = await imageFileStorage.DeleteFileAsync(Image);
-            if(deletedId != -1)
+            if (deletedId != -1)
             {
                 OnPictureDeleted(Image.Id);
                 await Page.Navigation.PopAsync();
-            } else
+            }
+            else
             {
                 await Page.DisplayAlert("Not possible", "Image cannot be deleted. It might be read only.", "Okay");
             }
-            
+
         });
 
         public ICommand GetSimilar => new Command(async () =>
         {
-            // TODO finish when Tensorflow functionality in merged
-            // how to search similar images only for one specific image instead of comparin all images against each other?
-
-            /*ScanOptionsEnum option = ScanOptionsEnum.similarPics;
-            List<ScanOptionsEnum> options = new List<ScanOptionsEnum> { option };
-            App.tf.FillPictureLists(options);
-            double optionValue = option.GetDefaultPresicionValue();
-            await Navigation.PushAsync(new ScanOptionDisplayPage(optionValue, option), true);*/
+            List<Picture> listOfPics = App.tf.GetNeighboursForPicture(Image.Id);
+            if (listOfPics.Count < 2)
+            {
+                await Page.DisplayAlert("", "No similar pictures were found", "Okay");
+            }
+            else
+                await Page.Navigation.PushAsync(new ImageComparisonPage(listOfPics, Image), true);
         });
     }
 }

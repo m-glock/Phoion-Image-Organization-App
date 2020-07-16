@@ -50,7 +50,6 @@ namespace DLuOvBamG.Views
                     new ColumnDefinition{ Width = new GridLength(5, GridUnitType.Star)},
                     new ColumnDefinition{ Width = new GridLength(45, GridUnitType.Star)},
                     new ColumnDefinition{ Width = new GridLength(45, GridUnitType.Star)},
-
                     new ColumnDefinition{ Width = new GridLength(5, GridUnitType.Star)},
                 }
             };
@@ -83,7 +82,7 @@ namespace DLuOvBamG.Views
                 VerticalTextAlignment = TextAlignment.Center,
                 HorizontalTextAlignment = TextAlignment.End,
                 FontAttributes = FontAttributes.Bold,
-                Padding = new Thickness(0, 0, 5, 0)
+                Margin = new Thickness(0, 0, 20, 0)
             };
             grid.Children.Add(optionName);
             Grid.SetRow(optionName, 0);
@@ -157,7 +156,7 @@ namespace DLuOvBamG.Views
             // when scan is finished, get all pictures from the TensorFlowExecutor
             Picture[] displayImages = App.tf.GetImagesForDisplay(e.Option);
             if (displayImages == null) displayImages = new Picture[] { };
-
+            if (!IndicatorDict.ContainsKey(e.Option)) return;
             Tuple<Grid, ActivityIndicator> tuple = IndicatorDict[e.Option];
 
             // remove the activity indicator from the grid
@@ -177,6 +176,7 @@ namespace DLuOvBamG.Views
             {
                 Text = setAmount + " Sets, " + pictureAmount + " Images"
             };
+            setsAndPics.TextColor = Color.Black;
             tuple.Item1.Children.Add(setsAndPics);
             Grid.SetRow(setsAndPics, 1);
             Grid.SetColumn(setsAndPics, 1);

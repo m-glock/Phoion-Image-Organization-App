@@ -1,6 +1,7 @@
 ﻿using DLuOvBamG.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -12,19 +13,13 @@ namespace DLuOvBamG.Services
         private Dictionary<ScanOptionsEnum, List<List<Picture>>> pictures;
         private IClassifier classifier;
         private BrightnessClassifier brightnessClassifier;
-
+        private string DirectoryPath;
         private Dictionary<ScanOptionsEnum, double> oldOptions;
-
         public event EventHandler<ScanEventArgs> ScanWasFinished;
-
-        //public void EventTest(object sender, ScanEventArgs e)
-        //{
-        //    Console.WriteLine(e.Option.ToString() + " super fancy");
-        //}
 
         public TensorflowExecutor()
         {
-            //ScanWasFinished += EventTest;
+            DirectoryPath = "";
             pictures = new Dictionary<ScanOptionsEnum, List<List<Picture>>>();
             classifier = DependencyService.Get<IClassifier>();
             classifier.ThresholdBlurry = ScanOptionsEnum.blurryPics.GetDefaultPresicionValue() * 10;
@@ -33,15 +28,27 @@ namespace DLuOvBamG.Services
             oldOptions = new Dictionary<ScanOptionsEnum, double>();
         }
 
-        public async Task FillPictureLists(Dictionary<ScanOptionsEnum, double> options)
+        public async Task FillPictureLists(Dictionary<ScanOptionsEnum, double> options, string path)
         {
             // TODO make it asynchronous
-            List<Picture> pictureList = App.Database.GetPicturesAsync().Result;
+            List<Picture> pictureList;
+            if (path != "")
+            {
+                pictureList = App.Database.GetPicturesByDirectoryAsync(path).Result;
+            }
+            else
+            {
+                pictureList = App.Database.GetPicturesAsync().Result;
+            }
+
+
 
             foreach (ScanOptionsEnum option in options.Keys.ToList())
             {
+                
+                int threshold = (int)options[option] * 10;
                 // when there is already an entry && the entry has the same slider value
-                if (pictures.ContainsKey(option) && oldOptions[option].Equals(options[option]))
+                if (DirectoryPath.Equals(path) && pictures.ContainsKey(option) && oldOptions[option].Equals(options[option]))
                 {
                     ScanWasFinished?.Invoke(this, new ScanEventArgs(option));
                     continue;
@@ -83,14 +90,14 @@ namespace DLuOvBamG.Services
                             darkPixelsPercent = result[0];
                             brightPixelsPercent = result[1];
                         }
-                        
+
 
                         // TODO check if the threshold works
-                        if (darkPixelsPercent > (int)options[option] * 10)
+                        if (darkPixelsPercent > threshold)
                         {
                             darkPictures.Add(picture);
                         }
-                        if (brightPixelsPercent > (int)options[option] * 10)
+                        if (brightPixelsPercent > threshold)
                         {
                             brightPictures.Add(picture);
                         }
@@ -109,7 +116,7 @@ namespace DLuOvBamG.Services
                         // when picture was scanned already
                         if (picture.BlurryPrecision != 0)
                         {
-                            if (picture.BlurryPrecision > 0.5f) // TODO work with threshold
+                            if (picture.BlurryPrecision > (float)(threshold / 100f))
                                 blurryPics.Add(picture);
                             continue;
                         }
@@ -119,8 +126,7 @@ namespace DLuOvBamG.Services
                         if (modelClassificaton.Count > 0 && modelClassificaton[0].TagName == "Blurry")
                         {
                             picture.BlurryPrecision = modelClassificaton[0].Probability;
-                            // TODO work with threshold
-                            if (modelClassificaton[0].Probability > 0.5f)
+                            if (modelClassificaton[0].Probability > (float)(threshold / 100f))
                             {
                                 blurryPics.Add(picture);
                             }
@@ -138,13 +144,16 @@ namespace DLuOvBamG.Services
                 }
                 else if (option == ScanOptionsEnum.similarPics)
                 {
-                    classifier.FeatureVectors = pictureList.Select(picture => ByteToDoubleArray(picture.FeatureVector)).ToList();
-                    classifier.FillFeatureVectorMatix();
+
                     var matrix = classifier.FeatureMatrix;
+                    // TODO TODO spin slider
+                    float portion = Math.Abs((float)(threshold / 10f) - 1) / 8;
+                    float newThreshold = portion * 0.2f + 0.4f; // 0.4 - 0.6
+                    Console.WriteLine(newThreshold + " tadelü");
 
                     for (int i = 0; i < pictureList.Count; i++)
                     {
-                        var similarPics = matrix[i].Where(picture => picture.Item2 < 0.58f).Select(picture => pictureList[picture.Item1]).ToList(); // TODO work with threshold
+                        var similarPics = matrix[i].Where(picture => picture.Item2 < newThreshold).Select(picture => pictureList[picture.Item1]).ToList(); // TODO work with threshold
                         if (similarPics.Count < 3) continue;
                         bool addToOutput = true;
                         for (int j = outputList.Count - 1; j >= 0; j--) // go through all lists in outputlist
@@ -153,7 +162,7 @@ namespace DLuOvBamG.Services
                             var biggerList = list.Count > similarPics.Count ? list : similarPics;
                             var smallerList = list.Count < similarPics.Count ? list : similarPics;
                             var exclusiveList = biggerList.Except(smallerList).ToList();
-                            if (exclusiveList.Count <= biggerList.Count * 0.15f) // when both lists are too similar
+                            if (exclusiveList.Count <= biggerList.Count * 0.16f) // TODO when both lists are too similar
                             {
                                 // when output contains the smaller of the similar lists -> remove it 
                                 if (outputList.Contains(smallerList))
@@ -170,14 +179,12 @@ namespace DLuOvBamG.Services
                     }
 
                 }
-
-                // TODO Event when one of the scans is ready, for each
-
                 pictures[option] = outputList;
                 ScanWasFinished?.Invoke(this, new ScanEventArgs(option));
                 oldOptions[option] = options[option];
             }
 
+            DirectoryPath = path;
         }
 
         public Picture[] GetImagesForDisplay(ScanOptionsEnum option)
@@ -219,11 +226,30 @@ namespace DLuOvBamG.Services
             return count;
         }
 
-        private double[] ByteToDoubleArray(byte[] byteArr)
+        public double[] ByteToDoubleArray(byte[] byteArr)
         {
             double[] values = new double[byteArr.Length / 8];
             Buffer.BlockCopy(byteArr, 0, values, 0, values.Length * 8);
             return values;
+        }
+
+
+        public List<Models.Picture> GetNeighboursForPicture(int id)
+        {
+            id--;
+            List<Picture> returnPics = new List<Picture>();
+            // TODO if 10
+            var allNeighbours = classifier.FeatureMatrix[id].OrderBy(tupel => tupel.Item2);
+            var test = allNeighbours.Where(tuple => tuple.Item2 < 0.5f).ToList();
+            if(test.Count == 0) return returnPics;
+
+            foreach (var neighbour in test)
+            {
+                //if (neighbour.Item1 == 0) continue; 
+                returnPics.Add(App.Database.GetPictureAsync(neighbour.Item1 + 1).Result);
+            }
+            
+            return returnPics;
         }
 
     }

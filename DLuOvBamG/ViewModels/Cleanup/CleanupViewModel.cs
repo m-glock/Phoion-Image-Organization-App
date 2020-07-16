@@ -10,12 +10,13 @@ namespace DLuOvBamG.ViewModels
 {
     public class CleanupViewModel : BaseViewModel, INotifyPropertyChanged
     {
-        public INavigation Navigation { get; set; }
-        public Dictionary<ScanOptionsEnum, double> ScanOptions;
-        public double similarPrecision;
-        public double darkPrecision;
-        public double blurryPrecision;
+
+        private Dictionary<ScanOptionsEnum, double> ScanOptions;
+        private double similarPrecision;
+        private double darkPrecision;
+        private double blurryPrecision;
         public event PropertyChangedEventHandler PropertyChanged;
+        public INavigation Navigation { get; set; }
 
         // update number that appear next to the slider
         #region Precisions
@@ -133,7 +134,7 @@ namespace DLuOvBamG.ViewModels
 
         public ICommand StartScan => new Command(async () => {
             await Navigation.PushAsync(new ScanResultPage(ScanOptions));
-            await App.tf.FillPictureLists(ScanOptions);
+            await App.tf.FillPictureLists(ScanOptions, App.CurrentDirectory);
         });
 
     }
