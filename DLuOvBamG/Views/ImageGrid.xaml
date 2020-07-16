@@ -9,9 +9,6 @@
     xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
     xmlns:converter="clr-namespace:DLuOvBamG.Services.Converter"
     x:Class="DLuOvBamG.Views.ImageGrid">
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Icon="edit_72px.png"  x:Name="SortToolbarItem"  Text="Sort" Clicked="SortClickedAsync"></ToolbarItem>
-    </ContentPage.ToolbarItems>
     <ContentPage.Resources>
         <converter:GroupKeyConverter x:Key="groupKeyConverter" />
     </ContentPage.Resources>

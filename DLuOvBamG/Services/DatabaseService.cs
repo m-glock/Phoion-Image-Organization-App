@@ -79,7 +79,12 @@ namespace DLuOvBamG.Services
 
         public Task<CategoryTag> GetCategoryTagAsync(int id)
         {
-            return Database.Table<CategoryTag>().Where(i => i.Id == id).FirstOrDefaultAsync();
+            return Database.GetWithChildrenAsync<CategoryTag>(id);
+        }
+
+        public Task<List<CategoryTag>> GetCategoryTagsWithPicturesAsync()
+        {
+            return Database.GetAllWithChildrenAsync<CategoryTag>();
         }
 
         public Task<List<CategoryTag>> GetCustomCategoryTagsAsync()
