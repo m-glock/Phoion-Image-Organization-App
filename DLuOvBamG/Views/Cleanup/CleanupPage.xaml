@@ -42,7 +42,7 @@
             <Expander.Header>
                 <FlexLayout>
                     <Switch x:Name="similarSwitch" ClassId="similarPics" Toggled="OptionToggled" Grid.Row="0" Grid.Column="0" />
-                    <Label Margin="15,0,0,0" x:Name="similarLabel" ClassId="similarPics" Grid.Row="0" Grid.Column="2" Text="Ähnliche Bilder" VerticalTextAlignment="Center">
+                    <Label Margin="15,0,0,0" x:Name="similarLabel" ClassId="similarPics" Grid.Row="0" Grid.Column="2" Text="Similar Pictures" VerticalTextAlignment="Center">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OptionTapped" NumberOfTapsRequired="1"></TapGestureRecognizer>
                         </Label.GestureRecognizers>
@@ -71,7 +71,7 @@
             <Expander.Header>
                 <FlexLayout>
                     <Switch x:Name="blurrySwitch"  ClassId="blurryPics" Toggled="OptionToggled" Grid.Row="0" Grid.Column="0" />
-                    <Label Margin="15,0,0,0" x:Name="blurryLabel" ClassId="blurryPics" Grid.Row="0" Grid.Column="2" Text="Unscharfe Bilder" VerticalTextAlignment="Center" >
+                    <Label Margin="15,0,0,0" x:Name="blurryLabel" ClassId="blurryPics" Grid.Row="0" Grid.Column="2" Text="Blurry Picture" VerticalTextAlignment="Center" >
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OptionTapped" NumberOfTapsRequired="1"></TapGestureRecognizer>
                         </Label.GestureRecognizers>
@@ -100,7 +100,7 @@
                 <FlexLayout>
 
                     <Switch x:Name="darkSwitch" ClassId="darkPics" Toggled="OptionToggled" Grid.Row="0" Grid.Column="0"/>
-                    <Label Margin="15,0,0,0" x:Name="darkLabel" ClassId="darkPics" Grid.Row="0" Grid.Column="2" Text="Dunkle Bilder" VerticalTextAlignment="Center" >
+                    <Label Margin="15,0,0,0" x:Name="darkLabel" ClassId="darkPics" Grid.Row="0" Grid.Column="2" Text="Dark Picture" VerticalTextAlignment="Center" >
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OptionTapped" NumberOfTapsRequired="1"></TapGestureRecognizer>
                         </Label.GestureRecognizers>
@@ -124,7 +124,7 @@
         </Expander>
 
 
-        <Button Margin="0, 00, 0, 0" x:Name="ScanButton" Command="{Binding StartScan}" Text="Scan starten" Grid.Row="4" Grid.Column="1"  Grid.ColumnSpan="2"></Button>
+        <Button Margin="0, 00, 0, 0" x:Name="ScanButton" Command="{Binding StartScan}" Text="Start Scan" Grid.Row="4" Grid.Column="1"  Grid.ColumnSpan="2"></Button>
     </Grid>
     
 </ContentPage>

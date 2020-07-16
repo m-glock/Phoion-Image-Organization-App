@@ -156,7 +156,7 @@ namespace DLuOvBamG.Views
             // when scan is finished, get all pictures from the TensorFlowExecutor
             Picture[] displayImages = App.tf.GetImagesForDisplay(e.Option);
             if (displayImages == null) displayImages = new Picture[] { };
-
+            if (!IndicatorDict.ContainsKey(e.Option)) return;
             Tuple<Grid, ActivityIndicator> tuple = IndicatorDict[e.Option];
 
             // remove the activity indicator from the grid

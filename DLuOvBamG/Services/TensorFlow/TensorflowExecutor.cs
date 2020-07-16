@@ -45,6 +45,7 @@ namespace DLuOvBamG.Services
 
             foreach (ScanOptionsEnum option in options.Keys.ToList())
             {
+                
                 int threshold = (int)options[option] * 10;
                 // when there is already an entry && the entry has the same slider value
                 if (DirectoryPath.Equals(path) && pictures.ContainsKey(option) && oldOptions[option].Equals(options[option]))

@@ -107,7 +107,6 @@ namespace DLuOvBamG.ViewModels
             dictChangedValue.Add(Option, Precision);
             App.tf.FillPictureLists(dictChangedValue, App.CurrentDirectory);
 
-            App.tf.FillPictureLists(dictChangedValue);
             List<List<Picture>> pictures = App.tf.GetAllPicturesForOption(Option);
             ObservableCollection<ObservableCollection<Picture>> obsvPictures = new ObservableCollection<ObservableCollection<Picture>>();
             foreach (List<Picture> picturesList in pictures)
