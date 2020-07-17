@@ -2,6 +2,8 @@
 using Xamarin.Forms.Xaml;
 using DLuOvBamG.ViewModels;
 using DLToolkit.Forms.Controls;
+using System;
+using Android;
 
 namespace DLuOvBamG.Views{
     [XamlCompilation(XamlCompilationOptions.Compile)]
@@ -9,24 +11,19 @@ namespace DLuOvBamG.Views{
 
         ImageGalleryViewModel vm { get; set; }
 
-        private bool firstTry = true;
         public ImageGallery(){
             InitializeComponent();
             FlowListView.Init();
             vm = App.ViewModelLocator.ImageGalleryViewModel;
             BindingContext = vm;
-            vm.Navigation = Navigation;                
+            vm.Navigation = Navigation;
+            vm.GetPictures();
         }
 
-        protected override void OnAppearing()
+        async void SortClickedAsync(object sender, EventArgs e)
         {
-            base.OnAppearing();
-            if (firstTry)
-            {
-                vm.GetPictures();
-                firstTry = false;
-            }
-             
+            var action = await DisplayActionSheet("Group Options", "Cancel", null, "Directory", "Date", "Location", "Category");
+            vm.OnGroupOptionsSelected(action);
         }
     }
 }

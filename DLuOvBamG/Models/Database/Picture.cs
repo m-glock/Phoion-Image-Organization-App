@@ -44,6 +44,8 @@ namespace DLuOvBamG.Models
 
         public Byte[] FeatureVector { get; set; }
         
+        public String Location { get; set; }
+
         public Picture()
         {
 

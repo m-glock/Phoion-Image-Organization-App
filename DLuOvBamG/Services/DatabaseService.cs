@@ -49,12 +49,61 @@ namespace DLuOvBamG.Services
 
         public Task<List<Picture>> GetPicturesByDirectoryAsync(string directory)
         {
+            if (directory == "")
+            {
+                return Database.Table<Picture>().ToListAsync();
+            }
             return Database.Table<Picture>().Where(picture => picture.DirectoryName == directory).ToListAsync();
+        }
+
+        private Task<List<Picture>> GetPicturesByLocationAsync(string location)
+        {
+            return Database.Table<Picture>().Where(picture => picture.Location == location).ToListAsync();
+        }
+
+        private async Task<List<Picture>> GetPicturesByDateAsync(string date)
+        {
+            if (date == "")
+            {
+                return await Database.Table<Picture>().ToListAsync();
+            }
+            var searchedDate = DateTime.Parse(date).Date;
+            var list = await Database.Table<Picture>().ToListAsync();
+            return list.Where(pic => pic.Date.Date == searchedDate).ToList();
+        }
+
+        private async Task<List<Picture>> GetPicturesByCategoryAsync(string category)
+        {
+            if(category == "")
+            {
+                return await Database.Table<Picture>().ToListAsync();
+            }
+            var categoryTagList = await Database.Table<CategoryTag>().Where(tag => tag.Name == category).ToListAsync();
+            CategoryTag categoryTag = categoryTagList.First();
+            await Database.GetChildrenAsync(categoryTag);
+            return categoryTag.Pictures;
         }
 
         public Task<Picture> GetPictureAsync(int id)
         {
             return Database.GetWithChildrenAsync<Picture>(id);
+        }
+
+        public Task<List<Picture>> GetPictursByValueAsync(string key, string value)
+        {
+            switch (key)
+            {
+                case "Directory":
+                    return GetPicturesByDirectoryAsync(value);
+                case "Date":
+                    return GetPicturesByDateAsync(value);
+                case "Location":
+                    return GetPicturesByLocationAsync(value);
+                case "Category":
+                    return GetPicturesByCategoryAsync(value);
+                default:
+                    return GetPicturesAsync();
+            }
         }
 
         public Task SavePictureAsync(Picture picture)
@@ -82,7 +131,12 @@ namespace DLuOvBamG.Services
 
         public Task<CategoryTag> GetCategoryTagAsync(int id)
         {
-            return Database.Table<CategoryTag>().Where(i => i.Id == id).FirstOrDefaultAsync();
+            return Database.GetWithChildrenAsync<CategoryTag>(id);
+        }
+
+        public Task<List<CategoryTag>> GetCategoryTagsWithPicturesAsync()
+        {
+            return Database.GetAllWithChildrenAsync<CategoryTag>();
         }
 
         public Task<List<CategoryTag>> GetCustomCategoryTagsAsync()

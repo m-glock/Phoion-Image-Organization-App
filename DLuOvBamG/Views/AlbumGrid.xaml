@@ -39,7 +39,7 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <Frame CornerRadius="10" Margin="0" Padding="0" IsClippedToBounds="True">
+                                <Frame CornerRadius="10" Margin="5" Padding="0" IsClippedToBounds="True">
                                     <Image  Aspect="AspectFill"
                                             Source="{Binding GroupedItems, Converter={StaticResource albumConverter}}"
                                             Grid.Row="0"

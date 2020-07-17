@@ -7,7 +7,7 @@
              xmlns:vm="clr-namespace:DLuOvBamG.ViewModels"
              xmlns:views="clr-namespace:DLuOvBamG.Views"
              x:Class="DLuOvBamG.Views.ImageGallery"
-             Title="Application">
+             Title="phoion">
     <ContentPage.BindingContext>
         <vm:ImageGalleryViewModel />
     </ContentPage.BindingContext>
@@ -18,15 +18,23 @@
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
-    <AbsoluteLayout>
-        <views:AlbumGrid/>
-        <Frame Padding="15,15,15,15" BackgroundColor="{StaticResource PrimeColor}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds=".95,.95,70,70" CornerRadius="50">
-            <!-- From https://icons8.com/icons/set/broom-->
-            <Image Source="cleanup_64_px.png" BackgroundColor="{StaticResource PrimeColor}">
-                <Image.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding OpenCleanupPage}"></TapGestureRecognizer>
-                </Image.GestureRecognizers>
+    <NavigationPage.TitleView>
+        <StackLayout Orientation="Horizontal" BackgroundColor="Transparent">
+            <Label FontAttributes="Bold" FontSize="20" Text="phoion" TextColor="White" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand"/>
+            <Button Text="Sort" TextColor="White" Clicked="SortClickedAsync" HorizontalOptions="End" VerticalOptions="CenterAndExpand" BackgroundColor="Transparent"/>
+        </StackLayout>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <AbsoluteLayout>
+            <views:AlbumGrid/>
+            <Frame Padding="15,15,15,15" BackgroundColor="{StaticResource PrimeColor}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds=".95,.95,70,70" CornerRadius="50">
+                <!-- From https://icons8.com/icons/set/broom-->
+                   <Image Source="cleanup_64_px.png" BackgroundColor="{StaticResource PrimeColor}">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenCleanupPage}"></TapGestureRecognizer>
+                    </Image.GestureRecognizers>
             </Image>
-        </Frame>
-    </AbsoluteLayout>
+            </Frame>
+        </AbsoluteLayout>
+    </ContentPage.Content>
 </ContentPage>

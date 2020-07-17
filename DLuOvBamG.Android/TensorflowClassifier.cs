@@ -319,7 +319,9 @@ namespace DLuOvBamG.Droid
             using (var streamReader = new StreamReader(filePath))
             {
                 string content = streamReader.ReadToEnd();
+                System.Console.WriteLine("start matrix load");
                 MatrixModel loadedModel = JsonConvert.DeserializeObject<MatrixModel>(content);
+                System.Console.WriteLine("end matrix load");
                 FeatureMatrix = loadedModel.FeatureMatrix;
             }
         }

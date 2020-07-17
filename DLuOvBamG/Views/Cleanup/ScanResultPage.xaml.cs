@@ -82,7 +82,7 @@ namespace DLuOvBamG.Views
                 VerticalTextAlignment = TextAlignment.Center,
                 HorizontalTextAlignment = TextAlignment.End,
                 FontAttributes = FontAttributes.Bold,
-                Padding = new Thickness(0, 0, 5, 0)
+                Margin = new Thickness(0, 0, 20, 0)
             };
             grid.Children.Add(optionName);
             Grid.SetRow(optionName, 0);

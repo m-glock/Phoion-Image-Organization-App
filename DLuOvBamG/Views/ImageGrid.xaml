@@ -8,22 +8,30 @@
     x:Name="this"
     EnableBackButtonOverride="True"
     xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
+    xmlns:converter="clr-namespace:DLuOvBamG.Services.Converter"
     x:Class="DLuOvBamG.Views.ImageGrid">
+    <views:CustomBackButtonPage.Resources>
+        <converter:GroupKeyConverter x:Key="groupKeyConverter" />
+    </views:CustomBackButtonPage.Resources>
     <AbsoluteLayout>
-        <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1" Margin="5,0,5,0" AbsoluteLayout.LayoutFlags="All">
-            <flv:FlowListView 
+            <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1" Margin="5,0,5,0" AbsoluteLayout.LayoutFlags="All">
+                <flv:FlowListView 
                     FlowColumnCount="4"
                     SeparatorVisibility="None"
                     HasUnevenRows="true"
                     FlowItemTappedCommand="{Binding ItemTappedCommand}"
                     RowHeight="50"
-                    FlowItemsSource="{Binding GroupedItems}" 
+                    FlowItemsSource="{Binding GroupedItems }" 
                     IsGroupingEnabled="true"
-                    FlowGroupDisplayBinding="{Binding Key}">
-                <flv:FlowListView.FlowEmptyTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <Label  HorizontalTextAlignment="Start"
+                    FlowGroupDisplayBinding="{
+                        Binding Key,
+                        Converter={StaticResource groupKeyConverter},
+                        ConverterParameter='No Information'
+                    }">
+                    <flv:FlowListView.FlowEmptyTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Label  HorizontalTextAlignment="Start"
                                         VerticalTextAlignment="Center"
                                         TextColor="Black"
                                         Style="{DynamicResource SubtitleStyle}"
@@ -47,13 +55,13 @@
                 </flv:FlowListView.FlowColumnTemplate>
             </flv:FlowListView>
         </ScrollView>
-        <Frame Padding="15,15,15,15" BackgroundColor="{StaticResource PrimeColor}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds=".95,.95,70,70" CornerRadius="50">
-            <!-- From https://icons8.com/icons/set/broom-->
+        <!--<Frame Padding="15,15,15,15" BackgroundColor="{StaticResource PrimeColor}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds=".95,.95,70,70" CornerRadius="50">
+            --><!-- From https://icons8.com/icons/set/broom--><!--
             <Image Source="cleanup_64_px.png" BackgroundColor="{StaticResource PrimeColor}">
                 <Image.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding OpenCleanupPage}"></TapGestureRecognizer>
                 </Image.GestureRecognizers>
             </Image>
-        </Frame>
+        </Frame>-->
     </AbsoluteLayout>
 </views:CustomBackButtonPage>
