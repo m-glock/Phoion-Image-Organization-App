@@ -71,6 +71,7 @@ namespace DLuOvBamG.Services
 
                     foreach (var picture in pictureList)
                     {
+                        if(picture.Uri.Contains("product/media/ims")) continue;
                         double darkPixelsPercent = 0;
                         double brightPixelsPercent = 0;
                         if (picture.DarkPixelsPercent > 0)
@@ -113,6 +114,8 @@ namespace DLuOvBamG.Services
                     List<Picture> blurryPics = new List<Picture>();
                     foreach (var picture in pictureList)
                     {
+                        if (picture.Uri.Contains("product/media/ims")) continue;
+
                         // when picture was scanned already
                         if (picture.BlurryPrecision != 0)
                         {
@@ -137,22 +140,19 @@ namespace DLuOvBamG.Services
                         }
                         App.Database.SavePictureAsync(picture);
                     }
-
                     outputList.Add(blurryPics);
-
-
                 }
                 else if (option == ScanOptionsEnum.similarPics)
                 {
 
                     var matrix = classifier.FeatureMatrix;
                     // TODO TODO spin slider
-                    float portion = Math.Abs((float)(threshold / 10f) - 1) / 8;
+                    float portion = 1 - (Math.Abs((float)(threshold / 10f) - 1) / 8);
                     float newThreshold = portion * 0.2f + 0.4f; // 0.4 - 0.6
-                    Console.WriteLine(newThreshold + " tadelü");
 
                     for (int i = 0; i < pictureList.Count; i++)
                     {
+                        if (pictureList[i].Uri.Contains("product/media/ims")) continue;
                         var similarPics = matrix[i].Where(picture => picture.Item2 < newThreshold).Select(picture => pictureList[picture.Item1]).ToList(); // TODO work with threshold
                         if (similarPics.Count < 3) continue;
                         bool addToOutput = true;
@@ -162,7 +162,7 @@ namespace DLuOvBamG.Services
                             var biggerList = list.Count > similarPics.Count ? list : similarPics;
                             var smallerList = list.Count < similarPics.Count ? list : similarPics;
                             var exclusiveList = biggerList.Except(smallerList).ToList();
-                            if (exclusiveList.Count <= biggerList.Count * 0.16f) // TODO when both lists are too similar
+                            if (exclusiveList.Count <= biggerList.Count * 0.50f) // TODO when both lists are too similar
                             {
                                 // when output contains the smaller of the similar lists -> remove it 
                                 if (outputList.Contains(smallerList))

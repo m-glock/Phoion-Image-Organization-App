@@ -93,10 +93,6 @@ namespace DLuOvBamG.ViewModels
                     await ImageComparisonPage.Navigation.PopAsync(true);
                 }
             }
-            else
-            {
-                await ImageComparisonPage.Navigation.PopAsync(true);
-            }
         }
 
         public async Task OnPressedAsync(CarouselViewItem current)
