@@ -49,6 +49,10 @@ namespace DLuOvBamG.Services
 
         public Task<List<Picture>> GetPicturesByDirectoryAsync(string directory)
         {
+            if (directory == "")
+            {
+                return Database.Table<Picture>().ToListAsync();
+            }
             return Database.Table<Picture>().Where(picture => picture.DirectoryName == directory).ToListAsync();
         }
 

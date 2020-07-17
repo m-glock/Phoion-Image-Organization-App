@@ -91,10 +91,11 @@ namespace DLuOvBamG.ViewModels
             {
                 Picture[] devicePictures = await imageFileStorage.GetPicturesFromDevice(AlbumItems, null);
                 bool picturesSaved = await SavePicturesInDB(devicePictures);
+                pictures = devicePictures.ToList();
                 await Task.Run(async () =>
                 {
                     int[] savedCategoryTags = await SaveCategoryTagsInDB();
-                    pictures = await db.GetPicturesAsync();
+                    //pictures = await db.GetPicturesAsync();
                     var classified = await ClassifyPictures(pictures);
                     classifier.FeatureVectors = pictures.Select(picture => App.tf.ByteToDoubleArray(picture.FeatureVector)).ToList();
                     classifier.FillFeatureVectorMatix();
@@ -161,7 +162,7 @@ namespace DLuOvBamG.ViewModels
         {
             // filter pictures withoud geo locations and already set location
             List<Picture> pictureWithGeoLocation = pictures.Where(
-                picture =>  picture.Latitude != "0" && picture.Longitude != "0" && picture.Location == ""
+                picture =>  picture.Latitude != "0" && picture.Longitude != "0" && picture.Location == null
             ).ToList();
             // set locations of all pictures
             if(pictureWithGeoLocation.Count > 0)
