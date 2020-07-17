@@ -21,7 +21,7 @@ namespace DLuOvBamG.Views
             {
                 this.CustomBackButtonAction = () =>
                 {
-                    App.CurrentDirectory = "";
+                    App.CurrentGroup = "";
                     Navigation.PopAsync();
                 }; 
             }

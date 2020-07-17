@@ -21,7 +21,7 @@
     <NavigationPage.TitleView>
         <StackLayout Orientation="Horizontal" BackgroundColor="Transparent">
             <Label FontAttributes="Bold" FontSize="20" Text="phoion" TextColor="White" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand"/>
-            <Button Text="Sort" Clicked="SortClickedAsync" HorizontalOptions="End" VerticalOptions="CenterAndExpand" BackgroundColor="Transparent"/>
+            <Button Text="Sort" TextColor="White" Clicked="SortClickedAsync" HorizontalOptions="End" VerticalOptions="CenterAndExpand" BackgroundColor="Transparent"/>
         </StackLayout>
     </NavigationPage.TitleView>
     <ContentPage.Content>

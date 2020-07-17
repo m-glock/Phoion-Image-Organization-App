@@ -10,14 +10,15 @@ namespace DLuOvBamG
         static IClassifier classifier;
         static ViewModelLocator viewModelLocator;
         public static TensorflowExecutor tf;
-        public static string CurrentDirectory;
+        public static string CurrentSortKey;
+        public static string CurrentGroup;
 
         public App()
         {
             InitializeComponent();
             tf = new TensorflowExecutor();
-            CurrentDirectory = "";
-
+            CurrentSortKey = "";
+            CurrentGroup = "";
             Device.SetFlags(new string[] { "Expander_Experimental" });
             MainPage = new NavigationPage(new ImageGallery());
             

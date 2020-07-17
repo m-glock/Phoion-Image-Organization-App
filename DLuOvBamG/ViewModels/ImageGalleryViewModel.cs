@@ -34,6 +34,7 @@ namespace DLuOvBamG.ViewModels
         private FlowObservableCollection<Grouping<string, Picture>> albumItems;
         private FlowObservableCollection<Grouping<string, Picture>> groupedItems;
         private string SelectedGroup { get; set; }
+        private string SelectedSort { get; set; }
 
         public FlowObservableCollection<Grouping<string, Picture>> GroupedItems
         {
@@ -90,14 +91,15 @@ namespace DLuOvBamG.ViewModels
             {
                 Picture[] devicePictures = await imageFileStorage.GetPicturesFromDevice(AlbumItems, null);
                 bool picturesSaved = await SavePicturesInDB(devicePictures);
-
-                pictures = await db.GetPicturesAsync();
-                int[] savedCategoryTags = await SaveCategoryTagsInDB();
-                var classified = await ClassifyPictures(pictures);
-                classifier.FeatureVectors = pictures.Select(picture => App.tf.ByteToDoubleArray(picture.FeatureVector)).ToList();
-                classifier.FillFeatureVectorMatix();
-                Console.WriteLine("classify ready");
-
+                await Task.Run(async () =>
+                {
+                    int[] savedCategoryTags = await SaveCategoryTagsInDB();
+                    pictures = await db.GetPicturesAsync();
+                    var classified = await ClassifyPictures(pictures);
+                    classifier.FeatureVectors = pictures.Select(picture => App.tf.ByteToDoubleArray(picture.FeatureVector)).ToList();
+                    classifier.FillFeatureVectorMatix();
+                    Console.WriteLine("classify ready");
+                });
             }
             else
             {
@@ -106,19 +108,28 @@ namespace DLuOvBamG.ViewModels
                 Picture[] newDevicePictures = await imageFileStorage.GetPicturesFromDevice(AlbumItems, dateFilter);
                 // save new pictures in db and classify them
                 bool picturesSaved = await SavePicturesInDB(newDevicePictures);
-                await ClassifyPictures(newDevicePictures.ToList());
-                if (classifier.FeatureVectors.Count == 0)
-                    classifier.FeatureVectors = pictures.Select(picture => App.tf.ByteToDoubleArray(picture.FeatureVector)).ToList();
-                classifier.FillFeatureVectorMatix();
                 pictures.AddRange(newDevicePictures);
                 // set image sources and remove non exist pictures
                 pictures = SetImageSources(pictures);
                 // set album items
                 List<Grouping<string, Picture>> grouped = GroupPicturesByDirectory(pictures);
                 AlbumItems = new FlowObservableCollection<Grouping<string, Picture>>(grouped);
+                
                 // update thumbnail of album
                 OrderAllAlbumsByDate();
+
+                await Task.Run(async () =>
+                {
+                    // classify new pictures
+                    await ClassifyPictures(newDevicePictures.ToList());
+                    // fill feature vector matrik
+                    if (classifier.FeatureVectors.Count == 0)
+                        classifier.FeatureVectors = pictures.Select(picture => App.tf.ByteToDoubleArray(picture.FeatureVector)).ToList();
+                    classifier.FillFeatureVectorMatix();
+                });
             }
+            SelectedSort = "Directory";
+            App.CurrentSortKey = "Directory";
             SetLocations(pictures);
             Items = pictures;
         }
@@ -330,6 +341,8 @@ namespace DLuOvBamG.ViewModels
                     AlbumItems = AlbumItems;
                     return;
             };
+            App.CurrentSortKey = selectedOption;
+            SelectedSort = selectedOption;
             AlbumItems = new FlowObservableCollection<Grouping<string, Picture>>(groupedPictures);
         }
 
@@ -367,7 +380,8 @@ namespace DLuOvBamG.ViewModels
                     GroupedItems = new FlowObservableCollection<Grouping<string, Picture>>(grouped);
                     // set currently selected group
                     SelectedGroup = selectedGroup.Key;
-                    App.CurrentDirectory = SelectedGroup;
+                    App.CurrentSortKey = SelectedSort; 
+                    App.CurrentGroup = selectedGroup.Key;
                     // navigate to image grid
                     await Navigation.PushAsync(new ImageGrid(selectedGroup.Key), true);
 

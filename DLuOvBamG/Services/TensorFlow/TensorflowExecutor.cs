@@ -28,13 +28,13 @@ namespace DLuOvBamG.Services
             oldOptions = new Dictionary<ScanOptionsEnum, double>();
         }
 
-        public async Task FillPictureLists(Dictionary<ScanOptionsEnum, double> options, string path)
+        public async Task FillPictureLists(Dictionary<ScanOptionsEnum, double> options, string pictureKey, string pictureValue)
         {
             // TODO make it asynchronous
             List<Picture> pictureList;
-            if (path != "")
+            if (pictureKey != "")
             {
-                pictureList = App.Database.GetPicturesByDirectoryAsync(path).Result;
+                pictureList = await App.Database.GetPictursByValueAsync(pictureKey, pictureValue);
             }
             else
             {
@@ -48,7 +48,7 @@ namespace DLuOvBamG.Services
                 
                 int threshold = (int)options[option] * 10;
                 // when there is already an entry && the entry has the same slider value
-                if (DirectoryPath.Equals(path) && pictures.ContainsKey(option) && oldOptions[option].Equals(options[option]))
+                if (DirectoryPath.Equals(pictureValue) && pictures.ContainsKey(option) && oldOptions[option].Equals(options[option]))
                 {
                     ScanWasFinished?.Invoke(this, new ScanEventArgs(option));
                     continue;
@@ -184,7 +184,7 @@ namespace DLuOvBamG.Services
                 oldOptions[option] = options[option];
             }
 
-            DirectoryPath = path;
+            DirectoryPath = pictureValue;
         }
 
         public Picture[] GetImagesForDisplay(ScanOptionsEnum option)
