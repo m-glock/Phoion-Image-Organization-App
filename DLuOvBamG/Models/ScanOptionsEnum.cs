@@ -27,7 +27,6 @@ namespace DLuOvBamG.Models
             }
         }
 
-        //TODO: finde passende Defaultwerte für alle Optionen
         public static int GetDefaultPresicionValue(this ScanOptionsEnum s1)
         {
             switch (s1)

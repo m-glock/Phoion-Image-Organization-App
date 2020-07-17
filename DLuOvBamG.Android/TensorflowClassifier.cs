@@ -44,9 +44,6 @@ namespace DLuOvBamG.Droid
 
         private string filePath;
 
-        // TODO remove
-        Stopwatch stopWatch = new Stopwatch();
-
         public TensorflowClassifier()
         {
             filePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "matrix.txt");
@@ -115,7 +112,6 @@ namespace DLuOvBamG.Droid
         public async Task<string> testAsync()
         {
             string returnVal = "";
-            stopWatch.Start();
             ChangeModel(ScanOptionsEnum.similarPics);
             string[] listAssets = Android.App.Application.Context.Assets.List("stockImages");
             //Task[] tasks = new Task[listAssets.Length];
