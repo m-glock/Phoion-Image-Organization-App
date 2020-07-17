@@ -66,7 +66,6 @@ namespace DLuOvBamG.Droid
             }
         }
         
-        //TODO: hardware back button working at all for our app?
         public override void OnBackPressed()
         {
             // this is not necessary, but in Android user 

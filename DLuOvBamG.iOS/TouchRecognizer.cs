@@ -132,7 +132,6 @@ namespace DLuOvBamG.iOS
         {
             long id = touch.Handle.ToInt64();
 
-            // TODO: Might require converting to a List for multiple hits
             TouchRecognizer recognizerHit = null;
 
             foreach (UIView view in viewDictionary.Keys)

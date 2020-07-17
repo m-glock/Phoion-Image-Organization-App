@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLuOvBamG.Android", "DLuOvBamG.Android\DLuOvBamG.Android.csproj", "{07D774B6-6CE8-4FA8-9D6F-59061E8A144D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "phoion.Android", "DLuOvBamG.Android\phoion.Android.csproj", "{07D774B6-6CE8-4FA8-9D6F-59061E8A144D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLuOvBamG.iOS", "DLuOvBamG.iOS\DLuOvBamG.iOS.csproj", "{62B80D8E-1947-4FED-A39C-7C596A0EDB33}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "phoion.iOS", "DLuOvBamG.iOS\phoion.iOS.csproj", "{62B80D8E-1947-4FED-A39C-7C596A0EDB33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLuOvBamG", "DLuOvBamG\DLuOvBamG.csproj", "{A3788DAB-3090-4CAC-9349-E87969ECE5F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "phoion", "DLuOvBamG\phoion.csproj", "{A3788DAB-3090-4CAC-9349-E87969ECE5F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

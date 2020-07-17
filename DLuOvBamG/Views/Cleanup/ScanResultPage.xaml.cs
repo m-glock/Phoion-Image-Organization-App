@@ -152,6 +152,7 @@ namespace DLuOvBamG.Views
 
         public void UpdateGrid(object sender, ScanEventArgs e)
         {
+            if (VM.OpenedNewPage) return;
             Console.WriteLine("tapped");
             // when scan is finished, get all pictures from the TensorFlowExecutor
             Picture[] displayImages = App.tf.GetImagesForDisplay(e.Option);

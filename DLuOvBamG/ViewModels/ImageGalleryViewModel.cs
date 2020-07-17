@@ -273,7 +273,7 @@ namespace DLuOvBamG.ViewModels
             if (pictures.Count > 0)
             {
                 var classifyTasks = pictures.Select(picture => ClassifyPicture(picture));
-                await Task.WhenAll(classifyTasks); // TODO bereits durchgeführte klassifizierungen speichern
+                await Task.WhenAll(classifyTasks);
 
                 return true;
             }
