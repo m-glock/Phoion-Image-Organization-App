@@ -27,17 +27,16 @@ namespace DLuOvBamG.Models
             }
         }
 
-        //TODO: finde passende Defaultwerte für alle Optionen
         public static int GetDefaultPresicionValue(this ScanOptionsEnum s1)
         {
             switch (s1)
             {
                 case ScanOptionsEnum.blurryPics:
-                    return 7;
+                    return 5;
                 case ScanOptionsEnum.darkPics:
-                    return 7;
-                case ScanOptionsEnum.similarPics:
                     return 3;
+                case ScanOptionsEnum.similarPics:
+                    return 5;
                 default:
                     return 0;
             }

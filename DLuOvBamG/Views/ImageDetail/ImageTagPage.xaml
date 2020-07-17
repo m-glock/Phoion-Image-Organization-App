@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="DLuOvBamG.Views.ImageTagPage"
-             Title="Kategorie Tags">
+             Title="Category Tags">
     <AbsoluteLayout>
         <ListView  x:Name="tagList" RowHeight="60" ItemsSource="{Binding Tags}"  AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
             <ListView.ItemTemplate>

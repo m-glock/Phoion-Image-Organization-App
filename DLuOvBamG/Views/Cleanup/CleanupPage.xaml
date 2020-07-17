@@ -57,7 +57,7 @@
                         <ColumnDefinition Width="auto"></ColumnDefinition>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Label Margin="5, 0, 3, 0" Text="Präzision:" VerticalTextAlignment="Center" Grid.Column="0"></Label>
+                    <Label Margin="5, 0, 3, 0" Text="Precision:" VerticalTextAlignment="Center" Grid.Column="0"></Label>
                     <Label Margin="0, 0, 15, 0" Text="{Binding SimilarPrecision}" VerticalTextAlignment="Center" Grid.Column="1"></Label>
                     <Slider x:Name="similarSlider" ClassId="similarPics" Grid.Column="2"
                             MaximumTrackColor="gray" Minimum="0" Maximum="9" ValueChanged="ValueChanged"></Slider>
@@ -86,7 +86,7 @@
                         <ColumnDefinition Width="auto"></ColumnDefinition>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Label Margin="5, 0, 3, 0" Text="Präzision:" VerticalTextAlignment="Center" Grid.Column="0"></Label>
+                    <Label Margin="5, 0, 3, 0" Text="Precision:" VerticalTextAlignment="Center" Grid.Column="0"></Label>
                     <Label Margin="0, 0, 15, 0" Text="{Binding BlurryPrecision}" VerticalTextAlignment="Center" Grid.Column="1"></Label>
                     <Slider x:Name="blurrySlider" ClassId="blurryPics" Grid.Column="2"
                             MaximumTrackColor="gray" Minimum="0" Maximum="9" ValueChanged="ValueChanged"></Slider>
@@ -115,7 +115,7 @@
                         <ColumnDefinition Width="auto"></ColumnDefinition>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Label Margin="5, 0, 3, 0" Text="Präzision:" VerticalTextAlignment="Center" Grid.Column="0"></Label>
+                    <Label Margin="5, 0, 3, 0" Text="Precision:" VerticalTextAlignment="Center" Grid.Column="0"></Label>
                     <Label Margin="0, 0, 15, 0" Text="{Binding DarkPrecision}" VerticalTextAlignment="Center" Grid.Column="1"></Label>
                     <Slider x:Name="darkSlider" ClassId="darkPics" Grid.Column="2"
                             MaximumTrackColor="gray" Minimum="0" Maximum="9" ValueChanged="ValueChanged"></Slider>

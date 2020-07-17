@@ -11,9 +11,11 @@ namespace DLuOvBamG.ViewModels
     {
         public INavigation Navigation;
         public Dictionary<ScanOptionsEnum, double> OptionValues;
+        public bool OpenedNewPage;
 
         public ScanResultViewModel() {
             Title = "Scan Results";
+            OpenedNewPage = false;
         }
 
         public ICommand OpenScanOptionDisplayPage => new Command(async (object option) =>
@@ -24,7 +26,10 @@ namespace DLuOvBamG.ViewModels
             {
                 double value = OptionValues[chosenOption];
                 if (Navigation.NavigationStack.Last().GetType() != typeof(ScanOptionDisplayPage))
+                {
+                    OpenedNewPage = true;
                     await Navigation.PushAsync(new ScanOptionDisplayPage(value, chosenOption));
+                }  
             }
         });
     }

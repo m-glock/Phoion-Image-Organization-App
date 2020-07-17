@@ -14,8 +14,8 @@ namespace DLuOvBamG.Views
 
         public InfoPage(Picture image)
         {
+            IV = new ImageInfoViewModel(image); 
             InitializeComponent();
-            IV = new ImageInfoViewModel(image);
             BindingContext = IV;
         }
 

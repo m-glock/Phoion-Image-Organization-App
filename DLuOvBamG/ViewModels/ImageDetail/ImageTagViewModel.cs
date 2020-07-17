@@ -105,7 +105,6 @@ namespace DLuOvBamG.ViewModels
             // remove tags of picture from custom tags
             List<CategoryTag> customTags = CustomTags.ToList();
             List<CategoryTag> pictureTags = Tags.ToList();
-            // TODO: create comparer
             List<CategoryTag> options = customTags.Except(pictureTags).ToList();
             SelectOptions = new ObservableCollection<CategoryTag>(options);
         }
