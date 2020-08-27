@@ -109,13 +109,9 @@ namespace DLuOvBamG.Services
         public Task SavePictureAsync(Picture picture)
         {
             if (picture.Id != 0)
-            {
                 return Database.UpdateWithChildrenAsync(picture);
-            }
             else
-            {
                 return Database.InsertAsync(picture);
-            }
         }
 
         public Task<int> DeletePictureAsync(Picture picture)
@@ -152,25 +148,17 @@ namespace DLuOvBamG.Services
         public int SaveCategoryTag(CategoryTag categoryTag)
         {
             if (categoryTag.Id != 0)
-            {
                 return SynchronousDB.Update(categoryTag);
-            }
             else
-            {
                 return SynchronousDB.Insert(categoryTag);
-            }
         }
 
         public Task<int> SaveCategoryTagAsync(CategoryTag categoryTag)
         {
             if (categoryTag.Id != 0)
-            {
                 return Database.UpdateAsync(categoryTag);
-            }
             else
-            {
                 return Database.InsertAsync(categoryTag);
-            }
         }
 
         public Task<int> DeleteCategoryTagAsync(CategoryTag categoryTag)

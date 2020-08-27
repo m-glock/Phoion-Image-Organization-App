@@ -6,6 +6,7 @@ using Xamarin.Forms;
 using CoreGraphics;
 using Foundation;
 using UIKit;
+using DLuOvBamG.Services.Gestures;
 
 /**
 from https://docs.microsoft.com/en-us/samples/xamarin/xamarin-forms-samples/effects-touchtrackingeffect/
@@ -14,7 +15,7 @@ namespace DLuOvBamG.iOS
 {
     class TouchRecognizer : UIGestureRecognizer
     {
-        /*Element element;        // Forms element for firing events
+        Element element;        // Forms element for firing events
         UIView view;            // iOS UIView 
         Services.Gestures.TouchEffect touchEffect;
         bool capture;
@@ -25,7 +26,7 @@ namespace DLuOvBamG.iOS
         static Dictionary<long, TouchRecognizer> idToTouchDictionary =
             new Dictionary<long, TouchRecognizer>();
 
-        public TouchRecognizer(Element element, UIView view, Gestures.TouchEffect touchEffect)
+        public TouchRecognizer(Element element, UIView view, Services.Gestures.TouchEffect touchEffect)
         {
             this.element = element;
             this.view = view;
@@ -47,7 +48,7 @@ namespace DLuOvBamG.iOS
             foreach (UITouch touch in touches.Cast<UITouch>())
             {
                 long id = touch.Handle.ToInt64();
-                FireEvent(this, id, Services.Gestures.TouchActionType.Pressed, touch, true);
+                FireEvent(this, id, TouchActionType.Pressed, touch, true);
 
                 if (!idToTouchDictionary.ContainsKey(id))
                 {
@@ -69,7 +70,7 @@ namespace DLuOvBamG.iOS
 
                 if (capture)
                 {
-                    FireEvent(this, id, Services.Gestures.TouchActionType.Moved, touch, true);
+                    FireEvent(this, id, TouchActionType.Moved, touch, true);
                 }
                 else
                 {
@@ -77,7 +78,7 @@ namespace DLuOvBamG.iOS
 
                     if (idToTouchDictionary[id] != null)
                     {
-                        FireEvent(idToTouchDictionary[id], id, Services.Gestures.TouchActionType.Moved, touch, true);
+                        FireEvent(idToTouchDictionary[id], id, TouchActionType.Moved, touch, true);
                     }
                 }
             }
@@ -93,7 +94,7 @@ namespace DLuOvBamG.iOS
 
                 if (capture)
                 {
-                    FireEvent(this, id, Services.Gestures.TouchActionType.Released, touch, false);
+                    FireEvent(this, id, TouchActionType.Released, touch, false);
                 }
                 else
                 {
@@ -101,7 +102,7 @@ namespace DLuOvBamG.iOS
 
                     if (idToTouchDictionary[id] != null)
                     {
-                        FireEvent(idToTouchDictionary[id], id, Services.Gestures.TouchActionType.Released, touch, false);
+                        FireEvent(idToTouchDictionary[id], id, TouchActionType.Released, touch, false);
                     }
                 }
                 idToTouchDictionary.Remove(id);
@@ -118,11 +119,11 @@ namespace DLuOvBamG.iOS
 
                 if (capture)
                 {
-                    FireEvent(this, id, Services.Gestures.TouchActionType.Cancelled, touch, false);
+                    FireEvent(this, id, TouchActionType.Cancelled, touch, false);
                 }
                 else if (idToTouchDictionary[id] != null)
                 {
-                    FireEvent(idToTouchDictionary[id], id, Services.Gestures.TouchActionType.Cancelled, touch, false);
+                    FireEvent(idToTouchDictionary[id], id, TouchActionType.Cancelled, touch, false);
                 }
                 idToTouchDictionary.Remove(id);
             }
@@ -147,28 +148,28 @@ namespace DLuOvBamG.iOS
             {
                 if (idToTouchDictionary[id] != null)
                 {
-                    FireEvent(idToTouchDictionary[id], id, Services.Gestures.TouchActionType.Exited, touch, true);
+                    FireEvent(idToTouchDictionary[id], id, TouchActionType.Exited, touch, true);
                 }
                 if (recognizerHit != null)
                 {
-                    FireEvent(recognizerHit, id, Services.Gestures.TouchActionType.Entered, touch, true);
+                    FireEvent(recognizerHit, id, TouchActionType.Entered, touch, true);
                 }
                 idToTouchDictionary[id] = recognizerHit;
             }
         }
 
-        void FireEvent(TouchRecognizer recognizer, long id, Services.Gestures.TouchActionType actionType, UITouch touch, bool isInContact)
+        void FireEvent(TouchRecognizer recognizer, long id, TouchActionType actionType, UITouch touch, bool isInContact)
         {
             // Convert touch location to Xamarin.Forms Point value
             CGPoint cgPoint = touch.LocationInView(recognizer.View);
             Point xfPoint = new Point(cgPoint.X, cgPoint.Y);
 
             // Get the method to call for firing events
-            Action<Element, Services.Gestures.TouchActionEventArgs> onTouchAction = recognizer.touchEffect.OnTouchAction;
+            Action<Element, TouchActionEventArgs> onTouchAction = recognizer.touchEffect.OnTouchAction;
 
             // Call that method
             onTouchAction(recognizer.element,
-                new Services.Gestures.TouchActionEventArgs(id, actionType, xfPoint, isInContact));
-        }*/
+                new TouchActionEventArgs(id, actionType, xfPoint, isInContact));
+        }
     }
 }

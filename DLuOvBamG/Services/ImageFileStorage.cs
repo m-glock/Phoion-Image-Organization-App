@@ -1,5 +1,4 @@
-﻿using Android.Graphics;
-using DLToolkit.Forms.Controls;
+﻿using DLToolkit.Forms.Controls;
 using DLuOvBamG.Models;
 using System;
 using System.IO;
@@ -19,9 +18,7 @@ namespace DLuOvBamG.Services
 
             var status = await CheckAndRequestExternalStorageWritePermissionAsync();
             if (status != PermissionStatus.Granted)
-            {
                 return -1;
-            }
 
             try 
             {
@@ -74,9 +71,7 @@ namespace DLuOvBamG.Services
         {
             var status = await Permissions.CheckStatusAsync<Permissions.StorageRead>();
             if (status != PermissionStatus.Granted)
-            {
                 status = await Permissions.RequestAsync<Permissions.StorageRead>();
-            }
 
             return status;
         }
@@ -85,9 +80,7 @@ namespace DLuOvBamG.Services
         {
             var status = await Permissions.CheckStatusAsync<Permissions.StorageWrite>();
             if (status != PermissionStatus.Granted)
-            {
                 status = await Permissions.RequestAsync<Permissions.StorageWrite>();
-            }
 
             return status;
         }
@@ -99,13 +92,9 @@ namespace DLuOvBamG.Services
 
             // set readout date to app properties
             if (App.Current.Properties.ContainsKey("reading_date"))
-            {
                 App.Current.Properties["reading_date"] = nowString;
-            }
             else
-            {
                 App.Current.Properties.Add("reading_date", nowString);
-            }
             App.Current.SavePropertiesAsync();
         }
 
@@ -119,7 +108,6 @@ namespace DLuOvBamG.Services
                 return origin.AddSeconds(Convert.ToDouble(dateString));
             }
             return readingDate;
-
         }
     }
 }

@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Windows.Input;
-using Android.App;
 using DLuOvBamG.Models;
 using DLuOvBamG.Services;
 using DLuOvBamG.Views;
 using GalaSoft.MvvmLight.Messaging;
 using Xamarin.Forms;
-
-
 
 namespace DLuOvBamG.ViewModels
 {

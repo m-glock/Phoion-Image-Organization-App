@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Android.Content.Res;
 using Android.Graphics;
@@ -24,26 +22,29 @@ namespace DLuOvBamG.Droid
     {
         private Interpreter interpreter;
         private List<string> labels;
-
-        private string[] modelFiles = { "modelBlur.tflite", "converted_modelKuhmuhMilch.tflite" };
-        private string[] labelFiles = { "labelsBlur.txt", "labelsSqueezenet.txt" };
-
-        private int thresholdBlurry;
-        private int thresholdSimilar = 10;
-
-        int IClassifier.ThresholdBlurry { get => thresholdBlurry; set => thresholdBlurry = value; }
-        int IClassifier.ThresholdSimilar { get => thresholdSimilar; set => thresholdSimilar = value; }
-        Tuple<int, double>[][] IClassifier.FeatureMatrix { get => FeatureMatrix; set => FeatureMatrix = value; }
-        List<double[]> IClassifier.FeatureVectors { get => FeatureVectors; set => FeatureVectors = value; }
-
-        public event EventHandler<ClassificationEventArgs> ClassificationCompleted;
-
-        public List<double[]> FeatureVectors = new List<double[]>();
-        // int -> index; double -> distance
-        public Tuple<int, double>[][] FeatureMatrix;
-
         private string filePath;
 
+        private string[] modelFiles = { "modelBlur.tflite", "converted_model_classify.tflite" };
+        private string[] labelFiles = { "labelsBlur.txt", "labelsSqueezenet.txt" };
+
+        // thresholds that determine when a picture is blurry or when two pictures are similar to each other
+        private int thresholdBlurry;
+        private int thresholdSimilar = 10;
+        int IClassifier.ThresholdBlurry { get => thresholdBlurry; set => thresholdBlurry = value; }
+        int IClassifier.ThresholdSimilar { get => thresholdSimilar; set => thresholdSimilar = value; }
+
+        // distance matrix and feature vectors for determining the distance between pictures for similarity
+        Tuple<int, double>[][] IClassifier.FeatureMatrix { get => FeatureMatrix; set => FeatureMatrix = value; }
+        List<double[]> IClassifier.FeatureVectors { get => FeatureVectors; set => FeatureVectors = value; }
+        public List<double[]> FeatureVectors = new List<double[]>();
+        public Tuple<int, double>[][] FeatureMatrix;
+
+        // event when classification is completed and scan can be started
+        public event EventHandler<ClassificationEventArgs> ClassificationCompleted;
+
+        /*
+         * read out file with distance matrix information from last scan, if it exists
+         */
         public TensorflowClassifier()
         {
             filePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "matrix.txt");
@@ -53,6 +54,9 @@ namespace DLuOvBamG.Droid
             }
         }
 
+        /*
+         * switch between blurry and similar tf models 
+         */
         public void ChangeModel(ScanOptionsEnum type)
         {
             int finalType = -1;
@@ -71,7 +75,6 @@ namespace DLuOvBamG.Droid
             labels = LoadLabelList(labelFiles[finalType]);
         }
 
-        // For tflite file
         private ByteBuffer GetByteBuffer(string path)
         {
             AssetFileDescriptor assetDescriptor = Android.App.Application.Context.Assets.OpenFd(path);
@@ -171,8 +174,6 @@ namespace DLuOvBamG.Droid
             int[] pixels = new int[width * height];
             resizedBitmap.GetPixels(pixels, 0, resizedBitmap.Width, 0, 0, resizedBitmap.Width, resizedBitmap.Height);
 
-
-
             Byte[] imageBytes = new byte[4 * width * height * 3];
             int counter = 0;
             foreach (int pixel in pixels)
@@ -194,7 +195,7 @@ namespace DLuOvBamG.Droid
 
         public async Task<List<ModelClassification>> ClassifySimilar(byte[] bytes)
         {
-            await Task.Delay(0); // await cheat, temporary
+            await Task.Delay(0);
 
             Tensor tensor = interpreter.GetInputTensor(0);
             int[] shape = tensor.Shape();
@@ -246,9 +247,6 @@ namespace DLuOvBamG.Droid
             // only select pictures that are bigger than a given threshold
             sortedList = sortedList.FindAll(x => System.Math.Round(x.Probability * 100, 2) > 40);
 
-            // Notify all listeners
-            //ClassificationCompleted?.Invoke(this, new ClassificationEventArgs(classificationResults));
-
             if (sortedList.Count > 0)
             {
                 ModelClassification top = sortedList.First();
@@ -265,6 +263,7 @@ namespace DLuOvBamG.Droid
             for (int i = 0; i < vector.Length; i++)
                 magnitude += Math.Pow(vector[i], 2);
             magnitude = Math.Sqrt(magnitude);
+
             // normalize
             for (int i = 0; i < vector.Length; i++)
                 vector[i] = (float)(vector[i] / magnitude);
@@ -290,18 +289,14 @@ namespace DLuOvBamG.Droid
             }
 
             StoreFeatureMatrix();
-
-            
         }
-
-
-
 
         public void StoreFeatureMatrix()
         {
             MatrixModel matrixToSave = new MatrixModel();
             matrixToSave.InitializeArray(FeatureVectors.Count);
             matrixToSave.FillArray(FeatureMatrix);
+
             string json = JsonConvert.SerializeObject(matrixToSave);
             using (var file = System.IO.File.Open(filePath, FileMode.Create, FileAccess.Write))
             using (var strm = new StreamWriter(file))
@@ -335,7 +330,6 @@ namespace DLuOvBamG.Droid
             float[][] outputLabels = new float[1][] { new float[labels.Count] };
             var outputLabelsConverted = Java.Lang.Object.FromArray(outputLabels);
 
-
             interpreter.Run(byteBuffer, outputLabelsConverted);
 
             // Classification Results
@@ -349,7 +343,6 @@ namespace DLuOvBamG.Droid
             }
 
             var sortedList = result.OrderByDescending(x => x.Probability).ToList();
-            //sortedList = sortedList.FindAll(x => System.Math.Round(x.Probability * 100, 2) > thresholdBlurry);
 
             // Notify all listeners
             ClassificationCompleted?.Invoke(this, new ClassificationEventArgs(result));
@@ -364,5 +357,3 @@ namespace DLuOvBamG.Droid
 
     }
 }
-
-

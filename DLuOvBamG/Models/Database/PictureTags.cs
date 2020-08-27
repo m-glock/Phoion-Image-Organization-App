@@ -4,7 +4,6 @@ using SQLiteNetExtensions.Attributes;
 namespace DLuOvBamG.Models
 {
     [Table("PictureTags")]
-
     public class PictureTags
     {
         [ForeignKey(typeof(Picture))]

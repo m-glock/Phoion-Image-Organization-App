@@ -1,10 +1,4 @@
 ﻿using DLuOvBamG.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Xamarin.Forms;
 
 namespace DLuOvBamG.Services
 {
@@ -35,9 +29,6 @@ namespace DLuOvBamG.Services
             }
         }
 
-        public ViewModelLocator()
-        {
-
-        }
+        public ViewModelLocator() { }
     }
 }

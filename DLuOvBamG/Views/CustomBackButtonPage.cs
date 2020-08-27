@@ -3,11 +3,12 @@ using Xamarin.Forms;
 
 namespace DLuOvBamG.Views
 {
+    /*
+     * from: https://theconfuzedsourcecode.wordpress.com/2017/03/12/lets-override-navigation-bar-back-button-click-in-xamarin-forms/
+     * Gets or Sets the Back button click overriden custom action
+     */
     public class CustomBackButtonPage : ContentPage
     {
-        /// <summary>
-        /// Gets or Sets the Back button click overriden custom action
-        /// </summary>
         public Action CustomBackButtonAction { get; set; }
 
         public static readonly BindableProperty EnableBackButtonOverrideProperty =
@@ -17,9 +18,9 @@ namespace DLuOvBamG.Views
                typeof(CustomBackButtonPage),
                false);
 
-        /// <summary>
-        /// Gets or Sets Custom Back button overriding state
-        /// </summary>
+        /*
+         * Gets or Sets Custom Back button overriding state
+         */
         public bool EnableBackButtonOverride
         {
             get

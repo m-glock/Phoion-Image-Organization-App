@@ -11,7 +11,8 @@ using Android.Views;
 [assembly: ExportEffect(typeof(DLuOvBamG.Droid.TouchEffect), "TouchEffect")]
 
 /**
- from https://docs.microsoft.com/en-us/samples/xamarin/xamarin-forms-samples/effects-touchtrackingeffect/
+ * enables custom handling of low-level touch such as press/release
+ * from https://docs.microsoft.com/en-us/samples/xamarin/xamarin-forms-samples/effects-touchtrackingeffect/
  */
 namespace DLuOvBamG.Droid
 {

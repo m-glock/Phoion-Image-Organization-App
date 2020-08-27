@@ -8,7 +8,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace DLuOvBamG.ViewModels
@@ -72,6 +71,7 @@ namespace DLuOvBamG.ViewModels
             }
         }
         #endregion
+
         public ImageComparisonViewModel(ImageComparisonPage page, List<CarouselViewItem> picsForCarousel)
         {
             ImageComparisonPage = page;
@@ -175,7 +175,7 @@ namespace DLuOvBamG.ViewModels
 
         private void OnPictureDeleted(int deletedId)
         {
-            //picture id
+            // picture id
             PictureDeletedEvent deletedEvent = new PictureDeletedEvent(deletedId);
             Messenger.Default.Send(deletedEvent);
         }

@@ -14,10 +14,9 @@ namespace DLuOvBamG
         public List<double[]> FeatureVectors { get; set; }
         public Tuple<int, double>[][] FeatureMatrix { get; set; }
 
-        event EventHandler<ClassificationEventArgs> ClassificationCompleted;
-
         Task<List<ModelClassification>> ClassifySimilar(byte[] bytes);
         List<ModelClassification> ClassifyBlurry(byte[] bytes);
+        event EventHandler<ClassificationEventArgs> ClassificationCompleted;
 
         void FillFeatureVectorMatix();
 

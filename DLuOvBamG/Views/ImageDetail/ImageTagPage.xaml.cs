@@ -1,9 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
-using DLuOvBamG.Models;
+﻿using Xamarin.Forms;
 using DLuOvBamG.ViewModels;
 
 namespace DLuOvBamG.Views

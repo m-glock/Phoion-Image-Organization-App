@@ -14,7 +14,6 @@ namespace DLuOvBamG.Models
         {
             TagName = tagName;
             Probability = probability;
-            //FeatureVector = featureVector;
         }
     }
 

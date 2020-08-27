@@ -6,6 +6,7 @@
              mc:Ignorable="d"
              x:Class="DLuOvBamG.Views.ImageTagPage"
              Title="Category Tags">
+    
     <AbsoluteLayout>
         <ListView  x:Name="tagList" RowHeight="60" ItemsSource="{Binding Tags}"  AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
             <ListView.ItemTemplate>
@@ -19,13 +20,13 @@
                                 HorizontalOptions="End"
                                 BindingContext="{Binding Source={x:Reference tagList}, Path=BindingContext}"
                                 Command="{Binding DeleteButtonClicked}"
-                                CommandParameter="{Binding Source={x:Reference Item}, Path=BindingContext}"
-                            />
+                                CommandParameter="{Binding Source={x:Reference Item}, Path=BindingContext}" />
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        
         <Frame Padding="15,15,15,15" AbsoluteLayout.LayoutFlags="PositionProportional" BackgroundColor="{StaticResource PrimeColor}"  AbsoluteLayout.LayoutBounds=".95,.95,70,70" CornerRadius="50">
             <Image Source="@mipmap/edit.png" BackgroundColor="{StaticResource PrimeColor}">
                 <Image.GestureRecognizers>
@@ -34,4 +35,5 @@
             </Image>
         </Frame>
     </AbsoluteLayout>
+    
 </ContentPage>

@@ -1,12 +1,10 @@
 ﻿using System.IO;
 using Android.Graphics;
 
-
 namespace DLuOvBamG
 {
     public static class ImageResizer
     {
-
         public static byte[] ResizeImage(byte[] imageData, float width, float height)
         {
             return ResizeImageAndroid(imageData, width, height);
@@ -17,26 +15,26 @@ namespace DLuOvBamG
             // Load the bitmap 
             Bitmap originalImage = BitmapFactory.DecodeByteArray(imageData, 0, imageData.Length);
             
-            float ZielHoehe = 0;
-            float ZielBreite = 0;
+            float DesiredHeight = 0;
+            float DesiredWidth = 0;
             
-            var Hoehe = originalImage.Height;
-            var Breite = originalImage.Width;
+            var OriginalHeight = originalImage.Height;
+            var OriginalWidth = originalImage.Width;
             
-            if (Hoehe > Breite) // Höhe (71 für Avatar) ist Master
+            if (OriginalHeight > OriginalWidth) // height (71 for avatar) is master
             {
-                ZielHoehe = height;
-                float teiler = Hoehe / height;
-                ZielBreite = Breite / teiler;
+                DesiredHeight = height;
+                float divider = OriginalHeight / height;
+                DesiredWidth = OriginalWidth / divider;
             }
-            else // Breite (61 für Avatar) ist Master
+            else // width (61 for avatar) is master
             {
-                ZielBreite = width;
-                float teiler = Breite / width;
-                ZielHoehe = Hoehe / teiler;
+                DesiredWidth = width;
+                float divider = OriginalWidth / width;
+                DesiredHeight = OriginalHeight / divider;
             }
             
-            Bitmap resizedImage = Bitmap.CreateScaledBitmap(originalImage, (int)ZielBreite, (int)ZielHoehe, false);
+            Bitmap resizedImage = Bitmap.CreateScaledBitmap(originalImage, (int)DesiredWidth, (int)DesiredHeight, false);
             
             using (MemoryStream ms = new MemoryStream())
             {
@@ -44,6 +42,5 @@ namespace DLuOvBamG
                 return ms.ToArray();
             }
         }
-
     }
 }

@@ -8,17 +8,19 @@
                  xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
                  xmlns:converter="clr-namespace:DLuOvBamG.Services.Converter"
                  x:Class="DLuOvBamG.Views.AlbumGrid">
+        
     <ContentView.Resources>
         <converter:AlbumCoverConverter x:Key="albumConverter" />
-         <ResourceDictionary>
+        <ResourceDictionary>
             <Style TargetType="AbsoluteLayout">
-                    <Setter Property="BackgroundColor" Value="{StaticResource bgColorBright}"/>
-                </Style>
+                <Setter Property="BackgroundColor" Value="{StaticResource bgColorBright}"/>
+            </Style>
             <Style TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="{StaticResource bgColorBright}"/>
             </Style>
         </ResourceDictionary>
-       </ContentView.Resources>
+    </ContentView.Resources>
+        
     <ContentView.Content>
         <AbsoluteLayout>
             <ScrollView Margin="5,5,5,5"  AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
@@ -28,17 +30,20 @@
                     HasUnevenRows="true"
                     RowHeight="50"
                     FlowItemsSource="{Binding AlbumItems}" 
-                    FlowItemTappedCommand="{Binding GroupedItemTappedCommand}"
-                >
+                    FlowItemTappedCommand="{Binding GroupedItemTappedCommand}">
+                    
                     <flv:FlowListView.FlowColumnTemplate>
                         <DataTemplate>
                             <Grid Padding="3">
+                                
                                 <Grid.RowDefinitions >
                                     <RowDefinition Height="100"/>
                                 </Grid.RowDefinitions>
+                                
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
+                                
                                 <Frame CornerRadius="10" Margin="5" Padding="0" IsClippedToBounds="True">
                                     <Image  Aspect="AspectFill"
                                             Source="{Binding GroupedItems, Converter={StaticResource albumConverter}}"
@@ -61,8 +66,10 @@
                             </Grid>
                         </DataTemplate>
                     </flv:FlowListView.FlowColumnTemplate>
+                    
                 </flv:FlowListView>
             </ScrollView>
         </AbsoluteLayout>
     </ContentView.Content>
+        
 </ContentView>

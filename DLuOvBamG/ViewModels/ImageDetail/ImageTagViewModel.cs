@@ -1,13 +1,10 @@
 ﻿using DLuOvBamG.Models;
 using DLuOvBamG.Services;
 using DLuOvBamG.Views;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -23,17 +20,15 @@ namespace DLuOvBamG.ViewModels
 
         private ObservableCollection<CategoryTag> customTags { get; set; }
         private ObservableCollection<CategoryTag> selectOptions { get; set; }
+        private ObservableCollection<CategoryTag> tags { get; set; }
 
+        #region propertychanged
         public ObservableCollection<CategoryTag> SelectOptions
         {
             set
             {
-
                 selectOptions = value;
-                if (PropertyChanged != null)
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs("SelectOptions"));
-                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SelectOptions"));
             }
 
             get
@@ -41,17 +36,13 @@ namespace DLuOvBamG.ViewModels
                 return selectOptions;
             }
         } 
+
         public ObservableCollection<CategoryTag> CustomTags
         {
             set
             {
-
                 customTags = value;
-
-                if (PropertyChanged != null)
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs("CustomTags"));
-                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CustomTags"));
             }
 
             get
@@ -59,19 +50,13 @@ namespace DLuOvBamG.ViewModels
                 return customTags;
             }
         }
-        private ObservableCollection<CategoryTag> tags { get; set; }
 
         public ObservableCollection<CategoryTag> Tags
         {
             set
             {
-
                 tags = value;
-
-                if (PropertyChanged != null)
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs("Tags"));
-                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Tags"));
             }
 
             get
@@ -81,10 +66,9 @@ namespace DLuOvBamG.ViewModels
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
 
-        public ImageTagViewModel()
-        {
-        }
+        public ImageTagViewModel() { }
 
         public async void GetCategoryTagsOfPicture(int pictureId)
         {

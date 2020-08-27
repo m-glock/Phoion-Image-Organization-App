@@ -1,5 +1,4 @@
-﻿using DLuOvBamG.Views;
-using System;
+﻿using System;
 
 namespace DLuOvBamG.Models
 {
@@ -12,7 +11,7 @@ namespace DLuOvBamG.Models
 
     static class ScanOptionsMethods
     {
-        public static String GetTextForDisplay(this ScanOptionsEnum s1)
+        public static string GetTextForDisplay(this ScanOptionsEnum s1)
         {
             switch (s1)
             {
@@ -39,21 +38,6 @@ namespace DLuOvBamG.Models
                     return 5;
                 default:
                     return 0;
-            }
-        }
-
-        public static String GetNameForGalleryPage(this ScanOptionsEnum s1)
-        {
-            switch (s1)
-            {
-                case ScanOptionsEnum.blurryPics:
-                    return "openBlurryPicsPage";
-                case ScanOptionsEnum.darkPics:
-                    return "openDarkPicsPage";
-                case ScanOptionsEnum.similarPics:
-                    return "openSimilarPicsPage";
-                default:
-                    return null;
             }
         }
     }

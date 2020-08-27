@@ -21,11 +21,6 @@ namespace DLuOvBamG
             CurrentGroup = "";
             Device.SetFlags(new string[] { "Expander_Experimental" });
             MainPage = new NavigationPage(new ImageGallery());
-            
-            
-            // Debug
-            // classifier.test();
-            
         }
 
         public static IClassifier Classifier
@@ -33,9 +28,7 @@ namespace DLuOvBamG
             get
             {
                 if(classifier == null)
-                {
                     classifier = DependencyService.Get<IClassifier>();
-                }
                 return classifier;
             }
         }
@@ -45,9 +38,7 @@ namespace DLuOvBamG
             get
             {
                 if (database == null)
-                {
                     database = new ImageOrganizationDatabase();
-                }
                 return database;
             }
         }
@@ -57,23 +48,15 @@ namespace DLuOvBamG
             get 
             {
                 if (viewModelLocator == null)
-                {
                     viewModelLocator = new ViewModelLocator();
-                }
                 return viewModelLocator;
             }
         }
 
-        protected override void OnStart()
-        {
-        }
+        protected override void OnStart() { }
 
-        protected override void OnSleep()
-        {
-        }
+        protected override void OnSleep() { }
 
-        protected override void OnResume()
-        {
-        }
+        protected override void OnResume() { }
     }
 }

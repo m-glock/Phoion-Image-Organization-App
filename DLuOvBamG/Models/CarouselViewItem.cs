@@ -6,10 +6,12 @@ namespace DLuOvBamG.Models
     {
         public Picture Picture { get; }
         public string Uri { get; }
+
         // double value for opacity of image in UI
         public double markedForDeletion { get; set; }
         private string ComparingPictureUri;
         public string currentUri;
+
         public bool IsTouched { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
 

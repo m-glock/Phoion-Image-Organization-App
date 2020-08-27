@@ -1,11 +1,9 @@
 ﻿using DLuOvBamG.Models;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
 using Xamarin.Forms;
-using System.Runtime.Serialization;
 using DLuOvBamG.Views;
 using DLuOvBamG.Services;
 using System.IO;
@@ -13,10 +11,8 @@ using System.Linq;
 using DLToolkit.Forms.Controls;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Messaging;
-using System.Text.RegularExpressions;
 using Xamarin.Forms.Internals;
 using Xamarin.Essentials;
-using System.Diagnostics;
 
 namespace DLuOvBamG.ViewModels
 {
@@ -29,22 +25,21 @@ namespace DLuOvBamG.ViewModels
         readonly ImageOrganizationDatabase db = App.Database;
         readonly GeoService geoService = new GeoService();
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private FlowObservableCollection<Grouping<string, Picture>> albumItems;
         private FlowObservableCollection<Grouping<string, Picture>> groupedItems;
         private string SelectedGroup { get; set; }
         private string SelectedSort { get; set; }
+        public List<Picture> Items { get; set; }
+        public INavigation Navigation;
+        public event PropertyChangedEventHandler PropertyChanged;
 
+        #region propertyChanged
         public FlowObservableCollection<Grouping<string, Picture>> GroupedItems
         {
             set
             {
                 groupedItems = value;
-                if (PropertyChanged != null)
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs("GroupedItems"));
-                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("GroupedItems"));
             }
 
             get
@@ -58,10 +53,7 @@ namespace DLuOvBamG.ViewModels
             set
             {
                 albumItems = value;
-                if (PropertyChanged != null)
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs("AlbumItems"));
-                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AlbumItems"));
             }
 
             get
@@ -69,9 +61,7 @@ namespace DLuOvBamG.ViewModels
                 return albumItems;
             }
         }
-
-        public List<Picture> Items { get; set; }
-        public INavigation Navigation;
+        #endregion
 
         public ImageGalleryViewModel()
         {
@@ -95,7 +85,6 @@ namespace DLuOvBamG.ViewModels
                 await Task.Run(async () =>
                 {
                     int[] savedCategoryTags = await SaveCategoryTagsInDB();
-                    //pictures = await db.GetPicturesAsync();
                     var classified = await ClassifyPictures(pictures);
                     classifier.FeatureVectors = pictures.Select(picture => App.tf.ByteToDoubleArray(picture.FeatureVector)).ToList();
                     classifier.FillFeatureVectorMatix();
@@ -135,9 +124,9 @@ namespace DLuOvBamG.ViewModels
             Items = pictures;
         }
 
-        /// <summary>
-        /// Sets ImageSource of all pictures. Deletes Picture from DB if file dont exist
-        /// </summary>
+        /*
+         * Sets ImageSource of all pictures. Deletes Picture from DB if file dont exist
+         */
         List<Picture> SetImageSources(List<Picture> pictures)
         {
             List<Picture> picturesWithSource = new List<Picture>();
@@ -164,6 +153,7 @@ namespace DLuOvBamG.ViewModels
             List<Picture> pictureWithGeoLocation = pictures.Where(
                 picture =>  picture.Latitude != "0" && picture.Longitude != "0" && picture.Location == null
             ).ToList();
+
             // set locations of all pictures
             if(pictureWithGeoLocation.Count > 0)
             {
@@ -213,7 +203,9 @@ namespace DLuOvBamG.ViewModels
             return grouped;
         }
 
-        // create a group for each category tag
+        /*
+         * create a group for each category tag
+         */
         async Task<List<Grouping<string, Picture>>> GroupPicturesByCategoryAsync(List<Picture> pictures)
         {
             var tags = await db.GetCategoryTagsWithPicturesAsync();
@@ -236,7 +228,6 @@ namespace DLuOvBamG.ViewModels
                 .Select(itemGroup => new Grouping<string, Picture>(itemGroup.Key, itemGroup, itemGroup.Count()))
                 .OrderByDescending(item => item.ColumnCount)
                 .ToList();
-            
         }
 
         async Task<bool> SavePicturesInDB(Picture[] pictures)
@@ -290,10 +281,10 @@ namespace DLuOvBamG.ViewModels
             }
             byte[] fileBytes = imageService.GetFileBytes(picture.Uri);
             classifier.ChangeModel(ScanOptionsEnum.similarPics);
+
             // get classifications from classifier
             List<ModelClassification> modelClassifications = await classifier.ClassifySimilar(fileBytes);
             var currentVector = GetBytes(classifier.FeatureVectors[classifier.FeatureVectors.Count - 1]);
-
 
             // map strings to CategoryTag objects
             modelClassifications.ForEach(classification =>
@@ -307,6 +298,7 @@ namespace DLuOvBamG.ViewModels
 
             // find or insert all category tag objects
             categoryTags.ForEach(categoryTag => categoryTag.FindOrInsert());
+
             // add the categoryTags, now with id, to the picture and update it
             categoryTags.ForEach(categoryTag =>
             {
@@ -318,10 +310,6 @@ namespace DLuOvBamG.ViewModels
 
         public async void OnGroupOptionsSelected(string selectedOption)
         {
-            // Get current pictures
-            // int albumIndex = AlbumItems.IndexOf(album => album.Key == SelectedGroup);
-            // List<Picture> albumItems = AlbumItems[albumIndex].ToList();
-
             // group picutres by selected options
             List<Grouping<string, Picture>> groupedPictures;
             switch (selectedOption)
@@ -342,6 +330,7 @@ namespace DLuOvBamG.ViewModels
                     AlbumItems = AlbumItems;
                     return;
             };
+
             App.CurrentSortKey = selectedOption;
             SelectedSort = selectedOption;
             AlbumItems = new FlowObservableCollection<Grouping<string, Picture>>(groupedPictures);
@@ -376,13 +365,16 @@ namespace DLuOvBamG.ViewModels
                 {
                     // get selected group
                     Grouping<string, Picture> selectedGroup = sender as Grouping<string, Picture>;
+
                     // get grouped item of selected album
                     List<Grouping<string, Picture>> grouped = GroupPicturesByDate(selectedGroup.ToList());
                     GroupedItems = new FlowObservableCollection<Grouping<string, Picture>>(grouped);
+
                     // set currently selected group
                     SelectedGroup = selectedGroup.Key;
                     App.CurrentSortKey = SelectedSort; 
                     App.CurrentGroup = selectedGroup.Key;
+
                     // navigate to image grid
                     await Navigation.PushAsync(new ImageGrid(selectedGroup.Key), true);
 
@@ -398,10 +390,12 @@ namespace DLuOvBamG.ViewModels
         public void OnPictureDeleted(PictureDeletedEvent e)
         {
             int deletedPictureId = e.GetPictureId();
+
             // find picture object
             int pictureIndex = Items.FindIndex(pic => pic.Id == deletedPictureId);
             Picture picture = Items[pictureIndex];
             Items.RemoveAt(pictureIndex);
+
             // delte picture from album
             string albumKey = SelectedGroup;
             AlbumItems.ForEach(group =>
@@ -412,6 +406,7 @@ namespace DLuOvBamG.ViewModels
                     // get index of picture and delete
                     int groupIndex = group.ToList().FindIndex(pic => pic.Id == deletedPictureId);
                     group.RemoveAt(groupIndex);
+
                     // re-group pictures from album
                     List<Grouping<string, Picture>> grouped = GroupPicturesByDate(group.ToList());
                     GroupedItems = new FlowObservableCollection<Grouping<string, Picture>>(grouped);

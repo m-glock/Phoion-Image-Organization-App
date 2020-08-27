@@ -34,8 +34,7 @@
             </CarouselView.ItemTemplate>
         </CarouselView>
 
-        <CheckBox x:Name="DeleteCheckbox" Grid.Row="1" Grid.Column="3" CheckedChanged="DeleteCheckboxChecked">
-        </CheckBox>
+        <CheckBox x:Name="DeleteCheckbox" Grid.Row="1" Grid.Column="3" CheckedChanged="DeleteCheckboxChecked"></CheckBox>
 
         <CarouselView x:Name="ImageMainView" ItemsSource="{Binding PictureList}" Position="{Binding CarouselViewPosition}" CurrentItemChanged="CurrentItemChanged" 
                       Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4">
@@ -50,6 +49,7 @@
                             <ColumnDefinition Width="93*"></ColumnDefinition>
                             <ColumnDefinition Width="7*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
+                        
                         <Image Source="{Binding CurrentUri}" Opacity="{Binding MarkedForDeletion}"
                                Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2">
                             <Image.Effects>
@@ -67,4 +67,5 @@
                      Grid.Row="3" Grid.Column="1" Aspect="AspectFill"></ImageButton>
         <Label Text="{Binding AmountOfDeletedPics}" Grid.Row="3" Grid.Column="2" VerticalTextAlignment="End" FontAttributes="Bold" TextColor="#ffffff"></Label>
     </Grid>
+    
 </views:CustomBackButtonPage>

@@ -92,7 +92,6 @@ namespace DLuOvBamG.Views
             StackLayout.Children.Add(grid);
         }
 
-
         private Grid CreateImageGrid(List<Picture> displayImages)
         {
             int[] spaceDistribution;

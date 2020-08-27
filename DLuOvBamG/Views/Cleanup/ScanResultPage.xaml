@@ -7,9 +7,11 @@
              mc:Ignorable="d"
              x:Class="DLuOvBamG.Views.ScanResultPage"
              Title="{Binding Title}">
+    
     <ContentPage.BindingContext>
         <vm:ScanResultViewModel />
     </ContentPage.BindingContext>
+    
     <ContentPage.Resources>
         <ResourceDictionary>
             <Style TargetType="Label">
@@ -17,6 +19,7 @@
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
+    
     <StackLayout x:Name="StackLayout" Padding="10,50,0,10">
         <!-- content is dynamically generated and inserted -->
     </StackLayout>

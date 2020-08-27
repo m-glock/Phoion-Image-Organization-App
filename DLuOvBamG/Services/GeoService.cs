@@ -1,10 +1,8 @@
 ﻿using Android.Media;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -100,13 +98,13 @@ namespace DLuOvBamG.Services
             }
             catch (FeatureNotSupportedException fnsEx)
             {
-                return empty;
                 // Feature not supported on device
+                return empty;
             }
             catch (Exception ex)
             {
-                return empty;
                 // Handle exception that may have occurred in geocoding
+                return empty;
             }
         }
     }

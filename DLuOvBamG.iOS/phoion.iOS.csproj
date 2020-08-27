@@ -145,5 +145,11 @@
       <Version>1.0.2</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DLuOvBamG\phoion.csproj">
+      <Project>{A3788DAB-3090-4CAC-9349-E87969ECE5F4}</Project>
+      <Name>phoion</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

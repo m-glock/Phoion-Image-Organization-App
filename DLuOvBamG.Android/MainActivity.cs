@@ -25,6 +25,7 @@ namespace DLuOvBamG.Droid
             Android.Glide.Forms.Init(this);
             LoadApplication(new App());
 
+            // for custom back button access
             Android.Support.V7.Widget.Toolbar toolbar = this.FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
         }
@@ -35,64 +36,51 @@ namespace DLuOvBamG.Droid
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
+        /*
+         * code for custom back button action
+         * from: https://theconfuzedsourcecode.wordpress.com/2017/03/12/lets-override-navigation-bar-back-button-click-in-xamarin-forms/
+         */
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            // check if the current item id 
-            // is equals to the back button id
             if (item.ItemId == 16908332)
             {
-                // retrieve the current xamarin forms page instance
                 try
                 {
                     var currentpage = (CustomBackButtonPage)Xamarin.Forms.Application.Current.MainPage.Navigation.NavigationStack.LastOrDefault();
-
-                    // check if the page has subscribed to 
-                    // the custom back button event
                     if (currentpage?.CustomBackButtonAction != null)
-                    {
-                        // invoke the Custom back button action
                         currentpage?.CustomBackButtonAction.Invoke();
-                    }
-                } catch(InvalidCastException ex){ }
-                // if its not subscribed then go ahead 
-                // with the default back button action
+                }
+                catch (InvalidCastException ex)
+                {
+                    // Do nothing
+                };
+
                 return base.OnOptionsItemSelected(item);
             }
             else
             {
-                // since its not the back button 
-                //click, pass the event to the base
                 return base.OnOptionsItemSelected(item);
             }
         }
-        
+
+        /*
+         * code for custom back button action for the hardware button
+         */
         public override void OnBackPressed()
         {
-            // this is not necessary, but in Android user 
-            // has both Nav bar back button and
-            // physical back button its safe 
-            // to cover the both events
             try
             {
-                // retrieve the current xamarin forms page instance
                 var currentpage = (CustomBackButtonPage)Xamarin.Forms.Application.Current.MainPage.Navigation.NavigationStack.LastOrDefault();
 
-                // check if the page has subscribed to 
-                // the custom back button event
                 if (currentpage?.CustomBackButtonAction != null)
-                {
                     currentpage?.CustomBackButtonAction.Invoke();
-                }
                 else
-                {
                     base.OnBackPressed();
-                }
             }
             catch (InvalidCastException e)
             {
                 base.OnBackPressed();
             }
-            
         }
     }
 }

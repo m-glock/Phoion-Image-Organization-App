@@ -14,7 +14,6 @@ namespace DLuOvBamG.Views
 		private ScanOptionDisplayViewModel VM;
 		private ScanOptionsEnum Option;
 
-
 		public ScanOptionDisplayPage(double optionValue, ScanOptionsEnum option)
 		{
 			InitializeComponent();
@@ -43,7 +42,7 @@ namespace DLuOvBamG.Views
 
 		public void AddCollectionViewToPage(int groupID)
         {
-			//get correct text for collectionview label
+			// get correct text for collectionview label
 			if (Option.Equals(ScanOptionsEnum.darkPics) || Option.Equals(ScanOptionsEnum.similarPics))
 			{
 				Label label = new Label();
@@ -104,8 +103,8 @@ namespace DLuOvBamG.Views
 		}
 
 		/*
-		 * If one Image is clicked, either open comparison view or just image detail view
-		 * */
+		 * If one image is clicked, either open comparison view or just image detail view
+		 */
 		void OnCollectionViewSelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			CollectionView view = (CollectionView)sender;
@@ -128,7 +127,7 @@ namespace DLuOvBamG.Views
 
 		/*
 		 * reload page if slider value has changed
-		 * */
+		 */
 		private void ValueChanged(object sender, ValueChangedEventArgs e)
 		{
 			VM.Precision = Math.Round(e.NewValue);

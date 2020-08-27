@@ -20,6 +20,7 @@ namespace DLuOvBamG.ViewModels
 		public event PropertyChangedEventHandler PropertyChanged;
         private ScanOptionsEnum Option;
 
+        #region propertychanged
         public double Precision
         {
             set
@@ -51,6 +52,7 @@ namespace DLuOvBamG.ViewModels
                 return pictures;
             }
         }
+        #endregion
 
         public ScanOptionDisplayViewModel(ScanOptionsEnum option, ObservableCollection<ObservableCollection<Picture>> pictures, INavigation navigation)
         {

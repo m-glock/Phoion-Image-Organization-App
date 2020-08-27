@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -95,27 +93,19 @@ namespace DLuOvBamG.Services
                         double maxX = Math.Max(0, Application.Current.MainPage.Width - ((Content.Width * Content.Scale) / 2));
 
                         if (newX < minX)
-                        {
                             newX = minX;
-                        }
 
                         if (newX > maxX)
-                        {
                             newX = maxX;
-                        }
 
                         double minY = Math.Min(0, 0 - ((Content.Height * Content.Scale) / 2));
                         double maxY = Math.Max(0, Application.Current.MainPage.Height - ((Content.Height * Content.Scale) / 2));
 
                         if (newY < minY)
-                        {
                             newY = minY;
-                        }
 
                         if (newY > maxY)
-                        {
                             newY = maxY;
-                        }
 
                         Content.TranslationX = newX;
                         Content.TranslationY = newY;

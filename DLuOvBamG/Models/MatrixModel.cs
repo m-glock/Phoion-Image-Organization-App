@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DLuOvBamG.Models
 {
     public class MatrixModel
     {
         public Tuple<int, double>[][] FeatureMatrix { get; set; }
-        public MatrixModel()
-        {
-           
-        }
+        public MatrixModel() { }
 
         public void InitializeArray(int size)
         {

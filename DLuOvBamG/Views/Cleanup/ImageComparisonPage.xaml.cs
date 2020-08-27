@@ -91,7 +91,6 @@ namespace DLuOvBamG.Views
             DeleteCheckbox.CheckedChanged -= DeleteCheckboxChecked;
             DeleteCheckbox.IsChecked = currentItem.IsMarkedForDeletion();
             DeleteCheckbox.CheckedChanged += DeleteCheckboxChecked;
-            
         }
 
         /*

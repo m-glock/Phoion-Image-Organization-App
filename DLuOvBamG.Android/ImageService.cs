@@ -1,6 +1,4 @@
-﻿using Android.Graphics;
-using Android.Media;
-using Android.Net;
+﻿using Android.Media;
 using Android.Content;
 using Android.Database;
 using Android.Provider;
@@ -11,7 +9,6 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Xamarin.Forms;
 using static Android.Provider.MediaStore.Images;
-using System.Collections.Generic;
 using DLToolkit.Forms.Controls;
 using DLuOvBamG.Models;
 using System.Linq;
@@ -27,6 +24,7 @@ namespace DLuOvBamG.Droid
         private Context CurrentContext = Android.App.Application.Context;
         private static readonly Regex r = new Regex(":");
         private static GeoService GeoService = new GeoService();
+
         public DateTime GetDateTaken(string filePath)
         {
             if (!File.Exists(filePath))
@@ -41,8 +39,6 @@ namespace DLuOvBamG.Droid
 
         public byte[] GetFileBytes(string filePath)
         {
-
-
             if (!File.Exists(filePath))
             {
                 throw new ArgumentException("file does not exist path:{0}", filePath);
@@ -70,11 +66,11 @@ namespace DLuOvBamG.Droid
             );
         }
 
-        public Models.Picture[] GetAllImagesFromDevice(FlowObservableCollection<Grouping<string, Models.Picture>> collection, DateTime? dateFilter)
+        public Picture[] GetAllImagesFromDevice(FlowObservableCollection<Grouping<string, Picture>> collection, DateTime? dateFilter)
         {
-            Models.Picture[] internalPictures = GetImagesFromUri(InternalContentUri, collection, dateFilter);
+            Picture[] internalPictures = GetImagesFromUri(InternalContentUri, collection, dateFilter);
 
-            Models.Picture[] externalPictures = new Models.Picture[0];
+            Picture[] externalPictures = new Picture[0];
             Boolean isSDPresent = Android.OS.Environment.ExternalStorageState.Equals(Android.OS.Environment.MediaMounted);
             if (isSDPresent)
             {
@@ -83,7 +79,7 @@ namespace DLuOvBamG.Droid
 
             if (externalPictures.Length != 0)
             {
-                Models.Picture[] result = new Models.Picture[internalPictures.Length + externalPictures.Length];
+                Picture[] result = new Picture[internalPictures.Length + externalPictures.Length];
                 internalPictures.CopyTo(result, 0);
                 externalPictures.CopyTo(result, internalPictures.Length);
                 return result;
@@ -94,7 +90,7 @@ namespace DLuOvBamG.Droid
             }
         }
 
-        private Models.Picture[] GetImagesFromUri(Android.Net.Uri uri, FlowObservableCollection<Grouping<string, Models.Picture>> collection, DateTime? dateFilter)
+        private Picture[] GetImagesFromUri(Android.Net.Uri uri, FlowObservableCollection<Grouping<string, Picture>> collection, DateTime? dateFilter)
         {
             // A list of which columns to return. Passing null will return all columns, which is inefficient.
             string[] projection = {
@@ -126,7 +122,7 @@ namespace DLuOvBamG.Droid
             int count = cursor.Count;
 
             //Create an array to store path to all the images
-            Models.Picture[] arrPictures = new Models.Picture[count];
+            Picture[] arrPictures = new Picture[count];
             int pathIndex = cursor.GetColumnIndex(ImageColumns.Data);
             int bucketIndex = cursor.GetColumnIndex(ImageColumns.BucketDisplayName);
             int idIndex = cursor.GetColumnIndex(ImageColumns.Id);
@@ -154,7 +150,7 @@ namespace DLuOvBamG.Droid
 
                 Point geoLocation = GeoService.GetGeoLocations(path);
 
-                Models.Picture newPicture = new Models.Picture
+                Picture newPicture = new Picture
                 {
                     Uri = path,
                     Date = datetimeTaken,
@@ -169,6 +165,7 @@ namespace DLuOvBamG.Droid
                 arrPictures[i] = newPicture;
                 AddPictureToGroup(collection, newPicture);
             }
+
             // The cursor should be freed up after use with close()
             cursor.Close();
             Console.WriteLine("all pictures done");
@@ -198,8 +195,4 @@ namespace DLuOvBamG.Droid
             return origin.AddSeconds(timestamp);
         }
     }
-
-
 }
-
-

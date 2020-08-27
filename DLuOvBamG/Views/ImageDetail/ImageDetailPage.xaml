@@ -7,14 +7,10 @@
              x:Class="DLuOvBamG.Views.ImageDetailPage"
              Title="Picture">
 
-
-
     <Grid ColumnSpacing="0">
         <Grid.RowDefinitions>
-
             <RowDefinition Height="*"/>
             <RowDefinition Height="50" />
-            <!--<RowDefinition Height="50"/>-->
         </Grid.RowDefinitions>
          <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -22,11 +18,13 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
+        
         <ctrl:PinchAndPanContainer Grid.Row="0" Grid.ColumnSpan="4">
              <ctrl:PinchAndPanContainer.Content>
                 <Image HeightRequest="100" Aspect="AspectFit" Source="{Binding Image.Uri}"/>
              </ctrl:PinchAndPanContainer.Content>
         </ctrl:PinchAndPanContainer>
+        
         <Grid  BackgroundColor="{StaticResource PrimeColor}" Grid.Row="1" Grid.Column="0">
             <ImageButton BackgroundColor="Transparent" x:Name ="categories" Source="@mipmap/category.png" VerticalOptions="Center" HeightRequest ="32" WidthRequest="32" HorizontalOptions="Center" Command="{Binding GetCategories}"></ImageButton>
         </Grid>
@@ -39,6 +37,6 @@
         <Grid  Grid.Row="1" Grid.Column="3" BackgroundColor="{StaticResource PrimeColor}" >
             <ImageButton BackgroundColor="Transparent" x:Name="similar" Source="@mipmap/photolibrary.png"  VerticalOptions="Center" HorizontalOptions="Center" HeightRequest ="32" WidthRequest="32"  Command="{Binding GetSimilar}" ></ImageButton>
         </Grid>
-        <!--<Label x:Name="debugTestString" BackgroundColor="White" Text="{Binding debugString}"  Grid.Row="2" Grid.ColumnSpan="4"/>-->
     </Grid>    
+    
 </ContentPage>

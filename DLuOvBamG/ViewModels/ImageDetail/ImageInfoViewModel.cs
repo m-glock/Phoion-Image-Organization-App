@@ -1,8 +1,6 @@
-﻿using Android.Media;
-using DLuOvBamG.Models;
+﻿using DLuOvBamG.Models;
 using DLuOvBamG.Services;
 using System;
-using System.ComponentModel;
 using System.Linq;
 using Xamarin.Essentials;
 

@@ -2,7 +2,6 @@
 using DLuOvBamG.Models;
 using System;
 
-
 namespace DLuOvBamG.Services
 {
     public interface IImageService

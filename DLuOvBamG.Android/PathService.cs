@@ -1,5 +1,4 @@
 ﻿using DLuOvBamG.Services;
-using Android.App;
 using Xamarin.Forms;
 using DLuOvBamG.Droid;
 
@@ -32,7 +31,8 @@ namespace DLuOvBamG.Droid
             }
         }
 
-        public string DcimFolder { 
+        public string DcimFolder 
+        { 
             get
             {
                 string directoryType = Android.OS.Environment.DirectoryDcim;

@@ -10,7 +10,6 @@ namespace DLuOvBamG.ViewModels
 {
     public class CleanupViewModel : BaseViewModel, INotifyPropertyChanged
     {
-
         private Dictionary<ScanOptionsEnum, double> ScanOptions;
         private double similarPrecision;
         private double darkPrecision;
@@ -136,6 +135,5 @@ namespace DLuOvBamG.ViewModels
             await Navigation.PushAsync(new ScanResultPage(ScanOptions));
             await App.tf.FillPictureLists(ScanOptions, App.CurrentSortKey, App.CurrentGroup);
         });
-
     }
 }

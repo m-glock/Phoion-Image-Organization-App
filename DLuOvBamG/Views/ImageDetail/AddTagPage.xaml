@@ -5,12 +5,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="DLuOvBamG.Views.AddTagPage">
+    
     <ContentPage.Padding>
         <OnPlatform x:TypeArguments="Thickness">
             <On Platform="iOS" Value="0,40,0,0" />
             <On Platform="Android" Value="0" />
         </OnPlatform>
     </ContentPage.Padding>
+    
     <ContentPage.Content>
         <Grid BackgroundColor="{StaticResource bgColor}">
             <StackLayout HorizontalOptions="Fill" VerticalOptions="Center">
@@ -27,6 +29,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
+                
                 <Label
                     Text="Add new tag"
                     Style="{DynamicResource SubtitleStyle}"
@@ -45,20 +48,19 @@
                     SelectedItem="{Binding SelectedCustomTag}"
                     Grid.Row="1"
                     Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                />
+                    Grid.ColumnSpan="2"/>
                 <Entry
                     Placeholder="Enter new tag"
                     Text="{Binding CustomTagInput}"
                     HorizontalOptions="FillAndExpand"
                     Grid.Row="3"
                     Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                />
+                    Grid.ColumnSpan="2"/>
                 <Button Text="Save" Command="{Binding SaveNewTag}" Grid.Row="5" Grid.Column="1" />
                 <Button Text="Dismiss" Command="{Binding CloseEditPage}" Grid.Row="5" Grid.Column="0" BackgroundColor="Transparent"/>
             </Grid>
         </StackLayout>
       </Grid>
     </ContentPage.Content>
+    
 </ContentPage>

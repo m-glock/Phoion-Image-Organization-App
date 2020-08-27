@@ -37,8 +37,8 @@
     <EnableLLVM>false</EnableLLVM>
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
     <BundleAssemblies>false</BundleAssemblies>
-    <EmbedAssembliesIntoApk>false</EmbedAssembliesIntoApk>
-    <AndroidUseSharedRuntime>true</AndroidUseSharedRuntime>
+    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -107,14 +107,14 @@
     <AndroidAsset Include="Assets\mobilenet_v2_1.0_224.tflite" />
     <AndroidAsset Include="Assets\converted_model.tflite" />
     <AndroidAsset Include="Assets\modelBlur.tflite" />
-    <AndroidAsset Include="Assets\converted_modelTroelf.tflite" />
+    <AndroidAsset Include="Assets\converted_model2.tflite" />
     <EmbeddedResource Include="Assets\Roboto-Regular.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Assets\Roboto-Bold.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <AndroidAsset Include="Assets\converted_modelKuhmuhMilch.tflite" />
+    <AndroidAsset Include="Assets\converted_model_classify.tflite" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />

@@ -15,6 +15,7 @@
                     <ColumnDefinition Width="auto"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
+                
                 <Label Margin="5, 0, 3, 0" Text="Precision:" FontAttributes="Bold" Grid.Column="0"></Label>
                 <Label Margin="0, 0, 15, 0" Text="{Binding Precision}" Grid.Column="1"></Label>
                 <Slider x:Name="Slider" MaximumTrackColor="gray" WidthRequest="220" Maximum="9" Minimum="1" Grid.Column="2"

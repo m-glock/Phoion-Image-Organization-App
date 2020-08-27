@@ -37,7 +37,6 @@
 
         <Label Padding="0, 40, 0, 40" x:Name="ChooseOptions" Text="Choose one or more options to optimize your gallery." Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"></Label>
 
-
         <Expander Margin="0,0,0,30" Tapped="OptionTapped" ClassId="similarPics" x:Name="similarExpander" Grid.Row="1" Grid.Column="1">
             <Expander.Header>
                 <FlexLayout>
@@ -63,9 +62,7 @@
                             MaximumTrackColor="gray" Minimum="0" Maximum="9" ValueChanged="ValueChanged"></Slider>
                 </Grid>
             </Frame>
-
         </Expander>
-
 
         <Expander Margin="0,0,0,30" Tapped="OptionTapped" ClassId="blurryPics" x:Name="blurryExpander" Grid.Row="2" Grid.Column="1">
             <Expander.Header>
@@ -94,7 +91,6 @@
             </Frame>
         </Expander>
         
-
         <Expander Margin="0,0,0,30" Tapped="OptionTapped" ClassId="darkPics" x:Name="darkExpander" Grid.Row="3" Grid.Column="1">
             <Expander.Header>
                 <FlexLayout>
@@ -122,7 +118,6 @@
                 </Grid>
             </Frame>
         </Expander>
-
 
         <Button Margin="0, 00, 0, 0" x:Name="ScanButton" Command="{Binding StartScan}" Text="Start Scan" Grid.Row="4" Grid.Column="1"  Grid.ColumnSpan="2"></Button>
     </Grid>
